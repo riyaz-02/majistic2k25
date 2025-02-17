@@ -1,10 +1,9 @@
 <?php
 // Define available merchandise
 $merchandise = [
-    ['name' => 'T-Shirt', 'price' => 250, 'image' => 'images/merchandise/1.jpg', 'description' => 'Exclusive maJIStic 2k25 swags to flaunt your style. Limited stock available!', 'category' => 'Apparel'],
-    ['name' => 'Mug', 'price' => 150, 'image' => 'images/merchandise/3.jpg', 'description' => 'Official maJIStic 2k25 Coffee Mug. Start your day with a sip of style!', 'category' => 'Accessories'],
-    ['name' => 'Cap', 'price' => 200, 'image' => 'images/merchandise/4.jpg', 'description' => 'Stay cool with this trendy maJIStic 2k25 cap.', 'category' => 'Accessories'],
-    ['name' => 'T-Shirt', 'price' => 300, 'image' => 'images/merchandise/2.jpg', 'description' => 'Official maJIStic 2k25 T-Shirts. Available in multiple sizes and designs!', 'category' => 'Apparel'],
+    ['name' => 'T-Shirt', 'price' => 250, 'image' => 'images/merchandise/1_Merch.jpg', 'description' => 'Exclusive maJIStic 2k25 swags to flaunt your style. Limited stock available!', 'category' => 'Apparel'],
+    ['name' => 'Cap', 'price' => 200, 'image' => 'images/merchandise/4_Merch.jpg', 'description' => 'Stay cool with this trendy maJIStic 2k25 cap.', 'category' => 'Accessories']
+    
 ];
 ?>
 <!DOCTYPE html>
@@ -25,101 +24,113 @@ $merchandise = [
             background-attachment: fixed;
             color: white;
         }
+        #header-merchant {
+        background-color:rgb(17, 103, 87); /* Dark background */
+        color: white; /* White text */
+        text-align: center; /* Centered text */
+        padding: 1rem; /* Equivalent to py-3 */
+        margin-top: 50px; /* Gap top */
+        position: relative;
+        }
+
+/* Other styles */
     </style>
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
     <!-- Header -->
-    <header class="bg-dark text-white text-center py-3">
-        <h1>maJIStic 2k25 Merchandise</h1>
+    <header  id="header-merchant">
+        <h1>Merchandise</h1>
         <p>Grab your exclusive swag now!</p>
     </header>
-    
-    <!-- Filter Section -->
-    <div class="container my-4">
-        <h4>Filter by Category:</h4>
-        <select id="filterCategory" class="form-select mb-3">
-            <option value="all">All</option>
-            <option value="Apparel">Apparel</option>
-            <option value="Accessories">Accessories</option>
-        </select>
-        <input type="text" id="searchText" class="form-control mb-3" placeholder="Search for items...">
-        <h4>Sort by:</h4>
-        <select id="sortOption" class="form-select">
-            <option value="default">Default</option>
-            <option value="priceAsc">Price: Low to High</option>
-            <option value="priceDesc">Price: High to Low</option>
-            <option value="nameAsc">Name: A to Z</option>
-            <option value="nameDesc">Name: Z to A</option>
-        </select>
-    </div>
-    <!-- Merchandise Section -->
-    <div class="container my-5">
-        <div class="row g-4" id="merchandiseContainer">
-            <?php foreach ($merchandise as $item): ?>
-                <div class="col-md-6 merchandise-item" data-category="<?= $item['category'] ?>" data-name="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">
-                    <div class="card h-100">
-                        <img src="<?= $item['image'] ?>" class="card-img-top" alt="<?= $item['name'] ?>">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= $item['name'] ?></h5>
-                            <p class="card-text"><?= $item['description'] ?></p>
-                            <h6 class="text-success">₹<?= $item['price'] ?></h6>
-                            <button class="btn btn-primary w-100 add-to-cart" data-item="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">Add to Cart</button>
+
+<!-- Merchandise Section -->
+<div class="container my-5" style="max-width: 800px; margin: auto; position: relative;">
+    <div class="row g-4" id="merchandiseContainer">
+        <div class="col-md-12 d-flex align-items-start">
+            <!-- Merchandise Items -->
+            <div class="row g-4" style="flex-grow: 1;">
+                <?php foreach ($merchandise as $item): ?>
+                    <div class="col-md-6 merchandise-item" data-category="<?= $item['category'] ?>" data-name="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">
+                        <div class="card h-100">
+                            <img src="<?= $item['image'] ?>" class="card-img-top" alt="<?= $item['name'] ?>">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= $item['name'] ?></h5>
+                                <p class="card-text"><?= $item['description'] ?></p>
+                                <h6 class="text-success">₹<?= $item['price'] ?></h6>
+                                <button class="btn btn-primary w-100 add-to-cart" data-item="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">Add to Cart</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-    <!-- Cart Section -->
-    <div class="container my-5">
-        <h4>Your Cart:</h4>
-        <ul id="cartItems" class="list-group"></ul>
-        <h5 class="mt-3">Total: ₹<span id="cartTotal">0</span></h5>
-        <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#checkoutModal" id="checkoutBtn" disabled>Proceed to Checkout</button>
-    </div>
+                <?php endforeach; ?>
+            </div>
 
-
-    
-    <!-- Checkout Modal -->
-    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="checkoutModalLabel">Checkout</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="checkoutForm" method="POST">
-                        <div class="mb-3">
-                            <label for="buyerName" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="buyerName" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="JIS_ID" class="form-label">JIS_ID</label>
-                            <input type="text" class="form-control" id="jis_id" name="jis_id" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="buyerEmail" class="form-label">Your Email</label>
-                            <input type="email" class="form-control" id="buyerEmail" name="buyer_email" required>
-                        </div>
-                        
-                        <input type="hidden" name="cart_data" id="cartData">
-                        <button type="submit" class="btn btn-success w-100">Proceed to Pay</button>
-                    </form>
-                </div>
+            <!-- Cart Section -->
+            <div style="max-width: 300px; margin-left: 20px;"> <!-- Added margin-left for gap -->
+                <h4>Your Cart:</h4>
+                <ul id="cartItems" class="list-group"></ul>
+                <h5 class="mt-3">Total: ₹<span id="cartTotal">0</span></h5>
+                <button class="btn btn-success mt-3" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#checkoutModal" 
+                    id="checkoutBtn" 
+                    disabled 
+                    style="transition: transform 0.2s; cursor: pointer;"
+                    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.2)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                    Proceed to Checkout
+                </button>
             </div>
         </div>
     </div>
+</div>
+        <!-- Checkout Modal -->
+        <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="checkoutModalLabel">Checkout</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: red; opacity: 1;"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="checkoutForm" method="POST">
+                            <div class="mb-3">
+                                <label for="buyerName" class="form-label">Your Name</label>
+                                <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="JIS_ID" class="form-label">JIS_ID</label>
+                                <input type="text" class="form-control" id="jis_id" name="jis_id" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="buyerEmail" class="form-label">Your Email</label>
+                                <input type="email" class="form-control" id="buyerEmail" name="buyer_email" required>
+                            </div>
+                            
+                            <input type="hidden" name="cart_data" id="cartData">
+                            <button type="submit" 
+                                class="btn btn-success w-100" 
+                                style="transition: transform 0.2s; cursor: pointer;"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.2)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                                Proceed to Pay
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     <!-- Footer -->
+    
+    <?php include 'includes/footer.php'; ?>
+  
+    <?php include 'includes/scripts.php'; ?>
+    <!--  
     <footer class="bg-dark text-white text-center py-3">
         <p>&copy; 2025 maJIStic 2k25. All Rights Reserved.</p>
-    </footer>
-    <!-- JavaScript -->
+    </footer> -->
+   
+     
     <script>
         // Cart management with reduce item quantity
         const cart = [];
@@ -222,7 +233,7 @@ $merchandise = [
         document.getElementById('checkoutForm').addEventListener('submit', function (event) {
             event.preventDefault();
             const jisId = document.getElementById('jis_id').value;
-            this.action = `merchant_payment.php?jis_id=${jisId}`;
+            this.action = merchant_payment.php?jis_id=${jisId};
             this.submit();
         });
     </script>

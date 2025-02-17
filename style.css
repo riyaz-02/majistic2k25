@@ -1282,28 +1282,66 @@ body {
 .form-container label {
     margin-right: 10px;
     color: white;
+    font-size: 18px; /* Increase label font size */
 }
 .form-container p {
     color: white;
 }
 
+/* Modern, stylish, and animated input fields */
 .form-container input, .form-container select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #00d0ff21;
     color: #fff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
 }
 
+.form-container input:focus, .form-container select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    outline: none;
+    background-color: #00d0ff40;
+}
+
+.form-container input::placeholder, .form-container select::placeholder {
+    color: #ccc;
+    opacity: 1;
+}
+
+.form-container select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ccc" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 8px 10px;
+}
+
+.form-container input[type="radio"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+
 .form-container button {
-    padding: 10px;
+    padding: 12px 24px;
     background: #5cb85c;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px; /* Increase button font size */
     margin-top: 20px;
 }
 
@@ -2097,6 +2135,7 @@ footer .fa-whatsapp {
     color: white;
     width: 50%;
     margin: 0 auto;
+    text-align: center;
 }
 
 .info-card ul {
@@ -2105,6 +2144,7 @@ footer .fa-whatsapp {
 }
 
 .info-card ul li {
+    font-size: 18px;
     padding-left: 20px; /* Add padding to align text */
     position: relative; /* Position relative for custom bullets */
 }
