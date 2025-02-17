@@ -457,8 +457,8 @@ include 'src/main/registration_outhouse_handler.php';
             if (teamMemberCount < maxTeamMembers) {
                 var newTeamMember = document.createElement('div');
                 newTeamMember.className = 'team-member';
-                newTeamMember.innerHTML = '<input type="text" name="team_members[]" placeholder="Team Member Name" style="flex: 1; margin-right: 10px;" required>' +
-                                          '<input type="tel" name="team_members_contact[]" placeholder="10-digit number" pattern="\\d{10}" style="flex: 1; margin-right: 10px;" required>' +
+                newTeamMember.innerHTML = '<input type="text" name="team_members[]" placeholder="Team Member Name (Required)" style="flex: 1; margin-right: 10px;" required>' +
+                                          '<input type="tel" name="team_members_contact[]" placeholder="Contact Number (Optional)" pattern="\\d{10}" style="flex: 1; margin-right: 10px;">' +
                                           '<span class="delete-member" onclick="removeTeamMember(this)"><i class="fas fa-trash"></i></span>';
                 teamMembersContainer.appendChild(newTeamMember);
             } else {
