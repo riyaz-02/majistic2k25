@@ -46,6 +46,10 @@
     pagination: {
       el: ".swiper-pagination",
       clickable: true
+    },
+    autoplay: {
+      delay: 5000, // Auto change slides every 5 seconds
+      disableOnInteraction: false
     }
   });
 

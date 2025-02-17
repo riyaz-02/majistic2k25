@@ -32,8 +32,77 @@ $merchandise = [
         margin-top: 50px; /* Gap top */
         position: relative;
         }
-
-/* Other styles */
+        .merchandise-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+            backdrop-filter: blur(10px); /* Blur effect */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            margin: 20px 40px; /* Add gap between cards */
+        }
+        .merchandise-item img {
+            width: 100%;
+            height: 200px; /* Fixed height for images */
+            object-fit: cover; /* Ensure images cover the area */
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .merchandise-item .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+        .merchandise-item .card-title {
+            color: white;
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+        .merchandise-item .card-text {
+            color: white;
+            flex-grow: 1;
+            margin-bottom: 10px;
+        }
+        .merchandise-item .btn {
+            margin-top: 10px;
+        }
+        .cart-box {
+            background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+            backdrop-filter: blur(10px); /* Blur effect */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px;
+        }
+        .cart-box h4 {
+            margin-bottom: 20px;
+        }
+        .cart-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .cart-box ul li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .cart-box ul li button {
+            margin-left: 10px;
+        }
+        .cart-box h5 {
+            margin-top: 20px;
+        }
+        .cart-box button {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .card {
+            background: none; /* Remove background */
+        }
     </style>
 </head>
 <body>
@@ -45,11 +114,11 @@ $merchandise = [
     </header>
 
 <!-- Merchandise Section -->
-<div class="container my-5" style="max-width: 800px; margin: auto; position: relative;">
-    <div class="row g-4" id="merchandiseContainer">
-        <div class="col-md-12 d-flex align-items-start">
-            <!-- Merchandise Items -->
-            <div class="row g-4" style="flex-grow: 1;">
+<div class="container my-5" style="max-width: 1200px; margin: auto; position: relative;">
+    <div class="row g-4">
+        <!-- Merchandise Items -->
+        <div class="col-md-8">
+            <div class="row g-4">
                 <?php foreach ($merchandise as $item): ?>
                     <div class="col-md-6 merchandise-item" data-category="<?= $item['category'] ?>" data-name="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">
                         <div class="card h-100">
@@ -64,9 +133,11 @@ $merchandise = [
                     </div>
                 <?php endforeach; ?>
             </div>
+        </div>
 
-            <!-- Cart Section -->
-            <div style="max-width: 300px; margin-left: 20px;"> <!-- Added margin-left for gap -->
+        <!-- Cart Section -->
+        <div class="col-md-4">
+            <div class="cart-box">
                 <h4>Your Cart:</h4>
                 <ul id="cartItems" class="list-group"></ul>
                 <h5 class="mt-3">Total: ₹<span id="cartTotal">0</span></h5>

@@ -137,18 +137,18 @@ include 'src/main/registration_handler.php';
         }
 
         /* CSS for Register Button */
-#registerButton {
+        #registerButton {
   position: relative;
   overflow: hidden;
   border: 1px solid #18181a;
-  color: #18181a;
+  color:rgb(250, 250, 253);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 15px;
   padding: 12px 24px;
   cursor: pointer;
-  background: #fff;
+  background:rgb(86, 241, 92);
   user-select: none;
   border-radius: 8px;
   min-width: 150px;
@@ -195,7 +195,6 @@ include 'src/main/registration_handler.php';
   transform: translateY(0);
 }
 
-
 /* CSS for Payment Button */
 p.mt-2 {
   color: white; /* Color for the paragraph text */
@@ -207,26 +206,27 @@ p.mt-2 {
 
 #paymentLink {
   align-self: center;
-  background-color:rgb(86, 241, 92); /* Initial background color */
-  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+  background-color: rgb(86, 241, 92); /* Initial background color */
+  border-radius: 10px; /* Adjusted border radius */
   border-style: solid;
   border-width: 2px;
   border-color: #41403e; /* Keep the border color the same */
   box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
   box-sizing: border-box;
-  color: #41403e; /* Text color */
+  color:rgb(251, 250, 246); /* Text color */
   cursor: pointer;
   display: inline-block;
   font-family: Neucha, sans-serif;
-  font-size: 1rem;
-  line-height: 23px;
+  font-size: 0.9rem; /* Slightly decreased font size */
+  line-height: 20px; /* Adjusted line height */
   outline: none;
-  padding: .75rem;
+  padding: 0.5rem 1rem; /* Adjusted padding for height and width */
   text-decoration: none;
   transition: all 235ms ease-in-out; /* Smooth transition */
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  margin-left: 10px; /* Add margin to create space above the button */
 }
 
 #paymentLink:hover {
@@ -241,6 +241,8 @@ p.mt-2 {
 }
 
 
+
+ /* payment button  */
 #finalPay {
   align-items: center;
   background-color: #4CAF50; /* A vibrant green for the button */
@@ -556,8 +558,8 @@ p.mt-2 {
                             <span>Register</span>
                             <span>Hurry Up!</span>
                         </button>
-                        <p class="mt-2">Already registered but payment pending?</p>
-                        <a href="#" id="paymentLink">Pay Now</a>
+                        <p class="mt-2">Already registered but payment pending? <a href="#" id="paymentLink">Pay Now</a></p>
+                        
                     </form>
                 <?php endif; ?>
             </div>
@@ -779,4 +781,3 @@ p.mt-2 {
     </script>
 </body> 
 </html>
-

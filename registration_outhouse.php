@@ -160,6 +160,230 @@ include 'src/main/registration_outhouse_handler.php';
             color: white;
             text-align: center; /* Center align the text */
         }
+
+
+          /* CSS for Register Button */
+#registerButton {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #18181a;
+  color:rgb(250, 250, 253);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  padding: 12px 24px;
+  cursor: pointer;
+  background:rgb(86, 241, 92);
+  user-select: none;
+  border-radius: 8px;
+  min-width: 150px;
+  transition: color 0.3s ease;
+}
+
+#registerButton span:first-child {
+  position: relative;
+  transition: opacity 0.3s ease;
+  z-index: 20;
+}
+
+#registerButton span:last-child {
+  position: absolute;
+  color: white;
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+#registerButton:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #4CAF50;
+  transition: all 0.4s cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 10;
+}
+
+#registerButton:hover:after {
+  top: 0;
+}
+
+#registerButton:hover span:first-child {
+  opacity: 0;
+}
+
+#registerButton:hover span:last-child {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* CSS for Payment Button */
+p.mt-2 {
+  color: white; /* Color for the paragraph text */
+  font-size: 16px; /* Font size for the paragraph */
+  margin: 0; /* Remove default margin */
+  display: flex; /* Use flexbox to align items in a row */
+  align-items: center; /* Center align items vertically */
+}
+
+#paymentLink {
+  align-self: center;
+  background-color: rgb(86, 241, 92); /* Initial background color */
+  border-radius: 10px; /* Adjusted border radius */
+  border-style: solid;
+  border-width: 2px;
+  border-color: #41403e; /* Keep the border color the same */
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color:rgb(251, 250, 246); /* Text color */
+  cursor: pointer;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 0.9rem; /* Slightly decreased font size */
+  line-height: 20px; /* Adjusted line height */
+  outline: none;
+  padding: 0.5rem 1rem; /* Adjusted padding for height and width */
+  text-decoration: none;
+  transition: all 235ms ease-in-out; /* Smooth transition */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin-left: 10px; /* Add margin to create space above the button */
+}
+
+#paymentLink:hover {
+  background-color: #4CAF50; /* Change background color to green on hover */
+  color: #fff; /* Change text color to white on hover */
+  box-shadow: rgba(76, 175, 80, 0.5) 2px 8px 8px -5px; /* Slight green shadow */
+  transform: translate3d(0, 2px, 0);
+}
+
+#paymentLink:focus {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px; /* Focus shadow */
+}
+
+
+/* add member button */
+
+#addTeamMemberButton {
+    background-color: rgb(87, 214, 91); /* Initial background color */
+    border: none; /* Remove default border */
+    border-radius: 10px; /* Rounded corners */
+    color:rgb(231, 230, 226); /* Text color */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-family: Neucha, sans-serif; /* Font family */
+    font-size: 1rem; /* Font size */
+    padding: 0.5rem 1rem; /* Padding for height and width */
+    transition: all 235ms ease-in-out; /* Smooth transition */
+    outline: none; /* Remove outline */
+}
+
+#addTeamMemberButton:hover {
+    background-color: #4CAF50; /* Change background color on hover */
+    color: #fff; /* Change text color to white on hover */
+    transform: scale(0.95); /* Zoom-out effect */
+    box-shadow: rgba(0, 0, 0, 0.2) 2px 4px 8px; /* Add shadow on hover */
+}
+
+#addTeamMemberButton:focus {
+    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 4px; /* Focus shadow */
+}
+
+
+/* after clicking register - Submit and cancel button */
+
+.outhouse-modal-buttons {
+    display: flex; /* Use flexbox to align buttons */
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 20px; /* Space between buttons */
+    margin-top: 20px; /* Optional: Add some space above the buttons */
+}
+
+#confirmButton, #cancelButton {
+    background-color: rgb(86, 241, 92); /* Initial background color for confirm button */
+    border: none; /* Remove default border */
+    border-radius: 10px; /* Rounded corners */
+    color: #41403e; /* Text color */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-family: Neucha, sans-serif; /* Font family */
+    font-size: 1rem; /* Font size */
+    padding: 0.5rem 1rem; /* Padding for height and width */
+    transition: all 235ms ease-in-out; /* Smooth transition */
+    outline: none; /* Remove outline */
+}
+
+#confirmButton:hover {
+    background-color: #4CAF50; /* Change background color on hover */
+    color: #fff; /* Change text color to white on hover */
+    transform: scale(0.95); /* Zoom-out effect */
+    box-shadow: rgba(0, 0, 0, 0.2) 2px 4px 8px; /* Add shadow on hover */
+}
+
+#cancelButton {
+    background-color: rgb(241, 86, 86); /* Initial background color for cancel button */
+}
+
+#cancelButton:hover {
+    background-color: #f44336; /* Change background color on hover */
+    color: #fff; /* Change text color to white on hover */
+    transform: scale(0.95); /* Zoom-out effect */
+    box-shadow: rgba(0, 0, 0, 0.2) 2px 4px 8px; /* Add shadow on hover */
+}
+
+#confirmButton:focus, #cancelButton:focus {
+    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 4px; /* Focus shadow */
+}
+
+
+/* if already register - Submit and cancel button */
+
+.out-house-modal-buttons {
+    display: flex; /* Use flexbox to align buttons */
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 20px; /* Space between buttons */
+    margin-top: 20px; /* Optional: Add some space above the buttons */
+}
+
+.out-house-modal-buttons button {
+    border: none; /* Remove default border */
+    border-radius: 10px; /* Rounded corners */
+    color: #fff; /* Text color */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-family: Neucha, sans-serif; /* Font family */
+    font-size: 1rem; /* Font size */
+    padding: 0.5rem 1rem; /* Padding for height and width */
+    transition: all 235ms ease-in-out; /* Smooth transition */
+    outline: none; /* Remove outline */
+}
+
+.out-house-modal-buttons button[type="submit"] {
+    background-color: rgb(86, 241, 92); /* Green background for submit button */
+}
+
+.out-house-modal-buttons button[type="submit"]:hover {
+    background-color: #4CAF50; /* Darker green on hover */
+    transform: scale(1.05); /* Zoom-in effect */
+    box-shadow: rgba(0, 0, 0, 0.2) 2px 4px 8px; /* Add shadow on hover */
+}
+
+.cancel-button {
+    background-color: rgb(241, 86, 86); /* Red background for cancel button */
+}
+
+.cancel-button:hover {
+    background-color: #f44336; /* Darker red on hover */
+    transform: scale(1.05); /* Zoom-in effect */
+    box-shadow: rgba(0, 0, 0, 0.2) 2px 4px 8px; /* Add shadow on hover */
+}
+
+.out-house-modal-buttons button:focus {
+    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 4px; /* Focus shadow */
+}
+
     </style>
 </head>
 <body>
@@ -317,8 +541,8 @@ include 'src/main/registration_outhouse_handler.php';
                             <span>Register</span>
                             <span>Hurry Up!</span>
                         </button>
-                        <p class="mt-2">Already registered but payment pending?</p>
-                        <a href="#" id="paymentLink">Pay Now</a>
+                        <p class="mt-2">Already registered but payment pending? <a href="#" id="paymentLink">Pay Now</a></p>
+                        
                     </form>
                 <?php endif; ?>
             </div>
@@ -329,7 +553,7 @@ include 'src/main/registration_outhouse_handler.php';
         <div class="modal-content">
             <p>Please review your entered details carefully before proceeding. Once you confirm, no changes can be made to your registration.</p>
             <p>If everything looks correct, click 'Confirm' to complete your registration. If you need to make changes, click 'Cancel' to go back and edit your information.</p>
-            <div class="modal-buttons">
+            <div class="outhouse-modal-buttons">
                 <button id="confirmButton">Confirm</button>
                 <button id="cancelButton">Cancel</button>
             </div>
@@ -349,9 +573,9 @@ include 'src/main/registration_outhouse_handler.php';
                     <label for="modal_contact_number">Contact Number:</label>
                     <input type="tel" id="modal_contact_number" name="modal_contact_number" required>
                 </div>
-                <div class="modal-buttons">
+                <div class="out-house-modal-buttons">
                     <button type="submit">Submit</button>
-                    <button type="button" onclick="closeModal('paymentModal')">Cancel</button>
+                    <button type="button" onclick="closeModal('paymentModal')" class="cancel-button">Cancel</button>
                 </div>
             </form>
         </div>
