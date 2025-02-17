@@ -428,7 +428,7 @@ p.mt-2 {
                 <img id="bannerImage" src="https://i.ibb.co/VWLkTX5j/banner1.png" alt="Event Banner">
             </div>
             <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
-                <img class="majisticheadlogo" src="images/majisticlogo.png" alt="maJIStic Logo">
+                <img class="majisticheadlogo" src="images/majistic2k25_white.png" alt="maJIStic Logo">
                 <?php if ($registration_success): ?>
                     <div class="success-message" style="width: 500px; background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: center; border-radius: 10px; border: 1px solid #888;">                        <p><?php echo $message; ?></p>
                         <table class="verification-table">
