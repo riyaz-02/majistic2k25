@@ -1,0 +1,230 @@
+<?php
+// Define available merchandise
+$merchandise = [
+    ['name' => 'T-Shirt', 'price' => 250, 'image' => 'images/merchandise/1.jpg', 'description' => 'Exclusive maJIStic 2k25 swags to flaunt your style. Limited stock available!', 'category' => 'Apparel'],
+    ['name' => 'Mug', 'price' => 150, 'image' => 'images/merchandise/3.jpg', 'description' => 'Official maJIStic 2k25 Coffee Mug. Start your day with a sip of style!', 'category' => 'Accessories'],
+    ['name' => 'Cap', 'price' => 200, 'image' => 'images/merchandise/4.jpg', 'description' => 'Stay cool with this trendy maJIStic 2k25 cap.', 'category' => 'Accessories'],
+    ['name' => 'T-Shirt', 'price' => 300, 'image' => 'images/merchandise/2.jpg', 'description' => 'Official maJIStic 2k25 T-Shirts. Available in multiple sizes and designs!', 'category' => 'Apparel'],
+];
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchandise - maJIStic 2k25</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include 'includes/links.php'; ?>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <?php include 'includes/header.php'; ?>
+    <!-- Header -->
+    <header class="bg-dark text-white text-center py-3">
+        <h1>maJIStic 2k25 Merchandise</h1>
+        <p>Grab your exclusive swag now!</p>
+    </header>
+    
+    <!-- Filter Section -->
+    <div class="container my-4">
+        <h4>Filter by Category:</h4>
+        <select id="filterCategory" class="form-select mb-3">
+            <option value="all">All</option>
+            <option value="Apparel">Apparel</option>
+            <option value="Accessories">Accessories</option>
+        </select>
+        <input type="text" id="searchText" class="form-control mb-3" placeholder="Search for items...">
+        <h4>Sort by:</h4>
+        <select id="sortOption" class="form-select">
+            <option value="default">Default</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+            <option value="nameAsc">Name: A to Z</option>
+            <option value="nameDesc">Name: Z to A</option>
+        </select>
+    </div>
+    <!-- Merchandise Section -->
+    <div class="container my-5">
+        <div class="row g-4" id="merchandiseContainer">
+            <?php foreach ($merchandise as $item): ?>
+                <div class="col-md-6 merchandise-item" data-category="<?= $item['category'] ?>" data-name="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">
+                    <div class="card h-100">
+                        <img src="<?= $item['image'] ?>" class="card-img-top" alt="<?= $item['name'] ?>">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= $item['name'] ?></h5>
+                            <p class="card-text"><?= $item['description'] ?></p>
+                            <h6 class="text-success">₹<?= $item['price'] ?></h6>
+                            <button class="btn btn-primary w-100 add-to-cart" data-item="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <!-- Cart Section -->
+    <div class="container my-5">
+        <h4>Your Cart:</h4>
+        <ul id="cartItems" class="list-group"></ul>
+        <h5 class="mt-3">Total: ₹<span id="cartTotal">0</span></h5>
+        <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#checkoutModal" id="checkoutBtn" disabled>Proceed to Checkout</button>
+    </div>
+
+
+    
+    <!-- Checkout Modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checkoutModalLabel">Checkout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="checkoutForm" method="POST">
+                        <div class="mb-3">
+                            <label for="buyerName" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyerName" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="JIS_ID" class="form-label">JIS_ID</label>
+                            <input type="text" class="form-control" id="jis_id" name="jis_id" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyerEmail" class="form-label">Your Email</label>
+                            <input type="email" class="form-control" id="buyerEmail" name="buyer_email" required>
+                        </div>
+                        
+                        <input type="hidden" name="cart_data" id="cartData">
+                        <button type="submit" class="btn btn-success w-100">Proceed to Pay</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2025 maJIStic 2k25. All Rights Reserved.</p>
+    </footer>
+    <!-- JavaScript -->
+    <script>
+        // Cart management with reduce item quantity
+        const cart = [];
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function () {
+                const itemName = this.getAttribute('data-item');
+                const itemPrice = parseInt(this.getAttribute('data-price'));
+                // Check if item already exists in the cart
+                const existingItem = cart.find(item => item.name === itemName);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+                }
+                updateCart();
+            });
+        });
+        // Update cart UI
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                li.innerHTML = `${item.name} - ₹${item.price} x ${item.quantity}
+                                <button class="btn btn-danger btn-sm reduce-quantity" data-item="${item.name}">-</button>`;
+                cartItemsContainer.appendChild(li);
+            });
+            cartTotal.textContent = total;
+            checkoutBtn.disabled = cart.length === 0;
+            // Pass cart data to hidden input
+            document.getElementById('cartData').value = JSON.stringify(cart);
+            // Handle reduce item quantity
+            document.querySelectorAll('.reduce-quantity').forEach(button => {
+                button.addEventListener('click', function () {
+                    const itemName = this.getAttribute('data-item');
+                    const item = cart.find(item => item.name === itemName);
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                    } else {
+                        const index = cart.findIndex(item => item.name === itemName);
+                        cart.splice(index, 1); // Remove item if quantity is 1
+                    }
+                    updateCart();
+                });
+            });
+        }
+        // Filter and Search functionality
+        document.getElementById('filterCategory').addEventListener('change', updateFilter);
+        document.getElementById('searchText').addEventListener('input', updateFilter);
+        function updateFilter() {
+            const selectedCategory = document.getElementById('filterCategory').value;
+            const searchText = document.getElementById('searchText').value.toLowerCase();
+            document.querySelectorAll('.merchandise-item').forEach(item => {
+                const itemCategory = item.dataset.category;
+                const itemName = item.dataset.name.toLowerCase();
+                const itemDescription = item.querySelector('.card-text').textContent.toLowerCase();
+                if ((selectedCategory === 'all' || itemCategory === selectedCategory) &&
+                    (itemName.includes(searchText) || itemDescription.includes(searchText))) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        // Sorting functionality
+        document.getElementById('sortOption').addEventListener('change', function () {
+            const sortOption = this.value;
+            const items = Array.from(document.querySelectorAll('.merchandise-item'));
+            let sortedItems = [];
+            switch (sortOption) {
+                case 'priceAsc':
+                    sortedItems = items.sort((a, b) => a.dataset.price - b.dataset.price);
+                    break;
+                case 'priceDesc':
+                    sortedItems = items.sort((a, b) => b.dataset.price - a.dataset.price);
+                    break;
+                case 'nameAsc':
+                    sortedItems = items.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+                    break;
+                case 'nameDesc':
+                    sortedItems = items.sort((a, b) => b.dataset.name.localeCompare(a.dataset.name));
+                    break;
+                default:
+                    sortedItems = items;
+                    break;
+            }
+            // Reorder the items in the DOM
+            const container = document.getElementById('merchandiseContainer');
+            sortedItems.forEach(item => {
+                container.appendChild(item);
+            });
+        });
+
+        // Modify form action to include JIS_ID in the URL
+        document.getElementById('checkoutForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const jisId = document.getElementById('jis_id').value;
+            this.action = `merchant_payment.php?jis_id=${jisId}`;
+            this.submit();
+        });
+    </script>
+</body>
+</html>

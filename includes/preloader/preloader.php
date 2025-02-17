@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 600px;
+            animation: pulse 2s infinite;
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            opacity: 0;
+            animation: zoomOut 1s ease-in forwards;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards 0.8s;
+        }
+
+        .loading-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: white;
+            animation: progress 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes progress {
+            0% { width: 0; }
+            50% { width: 100%; }
+            100% { width: 0; }
+        }
+
+        @keyframes zoomOut {
+            0% {
+                opacity: 0;
+                transform: scale(3);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes zoomInOut {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .logo-container {
+                width: 70%;
+            }
+
+            .loading-bar {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-container {
+                width: 80%;
+            }
+
+            .loading-bar {
+                width: 100px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="preloader">
+        <div class="logo-container">
+        <img src="../../images/majisticlogo.png" alt="Majistic Logo" class="logo">        </div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <script>
+        // Add this to your PHP file to hide preloader after page loads
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            setTimeout(() => {
+                preloader.style.transition = 'opacity 0.5s ease';
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }, 500); // Adjust time as needed
+        });
+    </script>
+</body>
+</html>
+
+
+

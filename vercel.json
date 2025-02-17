@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.php",
+      "use": "vercel-php"
+    },
+    {
+      "src": "registration_event.php",
+      "use": "vercel-php"
+    },
+    {
+      "src": "payment.php",
+      "use": "vercel-php"
+    },
+    {
+      "src": "update_payment_status.php",
+      "use": "vercel-php"
+    },
+    {
+      "src": "verify_payment.php",
+      "use": "vercel-php"
+    },
+    {
+      "src": "includes/*.php",
+      "use": "vercel-php"
+    },
+    {
+      "src": "images/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "style.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "styles.scss",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "js/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.php"
+    }
+  ]
+}

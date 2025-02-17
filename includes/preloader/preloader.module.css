@@ -1,0 +1,87 @@
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.logoContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 2;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+.loadingText {
+  margin-top: 20px;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  opacity: 0.8;
+  animation: fadeInOut 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .logoContainer {
+    width: 70%;
+    height: auto;
+  }
+
+  .loadingText {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoContainer {
+    width: 80%;
+    height: auto;
+  }
+
+  .loadingText {
+    font-size: 12px;
+  }
+}
+
