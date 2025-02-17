@@ -1311,7 +1311,7 @@ body {
 
 .form-container input::placeholder, .form-container select::placeholder {
     color: #ccc;
-    opacity: 1;
+    opacity: 0.4;
 }
 
 .form-container select {

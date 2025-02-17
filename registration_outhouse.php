@@ -292,11 +292,10 @@ include 'src/main/registration_outhouse_handler.php';
                             <label for="competition_name">Competition Name:</label>
                             <select id="competition_name" name="competition_name" required onchange="updateBanner()">
                                 <option value="">--Select Competition--</option>
-                                <option value="dance">Dance Competition</option>
-                                <option value="drama">Drama Competition</option>
-                                <option value="band">Band Competition</option>
-                                <option value="fashion">Fashion Show Competition</option>
-                                <option value="recitation">Recitation Competition</option>
+                                <option value="Taal Se Taal Mila (Dance)">Taal Se Taal Mila (Dance Competition)</option>
+                                <option value="Actomania (Drama)">Actomania (Drama Competition)</option>
+                                <option value="Jam Room (Band)">Jam Room (Band Competition)</option>
+                                <option value="Glam It Up(Fashion Show)">Fashion Show Competition</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -489,20 +488,17 @@ include 'src/main/registration_outhouse_handler.php';
             var competition = document.getElementById('competition_name').value;
             var bannerImage = document.getElementById('bannerImage');
             switch (competition) {
-                case 'dance':
+                case 'Taal Se Taal Mila (Dance)':
                     bannerImage.src = 'https://i.ibb.co/0V1Cxvnr/dance.png';
                     break;
-                case 'drama':
+                case 'Actomania (Drama)':
                     bannerImage.src = 'https://i.ibb.co/vvLXHMDF/drama.jpg';
                     break;
-                case 'band':
+                case 'Jam Room (Band)':
                     bannerImage.src = 'https://i.ibb.co/5h1Kw4KB/band.jpg';
                     break;
-                case 'fashion':
+                case 'Glam It Up(Fashion Show)':
                     bannerImage.src = 'https://i.ibb.co/9drCNqN/fashion.jpg';
-                    break;
-                case 'recitation':
-                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
                     break;
                 default:
                     bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';

@@ -628,6 +628,7 @@ p.mt-2 {
         });
         document.getElementById('inhouse_no').addEventListener('change', function() {
             document.getElementById('competition_group').style.display = 'none';
+            document.getElementById('competition').value = ''; // Clear competition selection
         });
 
         var modal = document.getElementById('confirmationModal');
@@ -697,16 +698,16 @@ p.mt-2 {
             var selectedCompetition = this.value;
             var bannerImage = document.getElementById('bannerImage');
             switch (selectedCompetition) {
-                case 'dance':
+                case 'Taal Se Taal Mila (Dance)':
                     bannerImage.src = 'https://i.ibb.co/0V1Cxvnr/dance.png';
                     break;
-                case 'drama':
+                case 'Actomania (Drama)':
                     bannerImage.src = 'https://i.ibb.co/vvLXHMDF/drama.jpg';
                     break;
-                case 'band':
+                case 'Jam Room (Band)':
                     bannerImage.src = 'https://i.ibb.co/5h1Kw4KB/band.jpg';
                     break;
-                case 'fashion':
+                case 'Glam It Up(Fashion Show)':
                     bannerImage.src = 'https://i.ibb.co/9drCNqN/fashion.jpg';
                     break;
                 default:
@@ -716,27 +717,55 @@ p.mt-2 {
         });
 
         function validateForm() {
-            var studentName = document.getElementById('student_name').value;
-            var jisId = document.getElementById('jis_id').value;
-            var mobile = document.getElementById('mobile').value;
+            var studentName = document.getElementById('student_name').value.trim();
+            var jisId = document.getElementById('jis_id').value.trim();
+            var mobile = document.getElementById('mobile').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var rollNo = document.getElementById('roll_no').value.trim();
+            var department = document.getElementById('department').value.trim();
+            var gender = document.getElementById('gender').value.trim();
 
-            // Validate student name (no numeric values allowed)
-            if (/\d/.test(studentName)) {
-                alert('Student name should not contain numeric values.');
+            // Validate student name (no numeric values allowed and not empty)
+            if (studentName === "" || /\d/.test(studentName)) {
+                alert('Student name should not be empty or contain numeric values.');
                 return false;
             }
 
             // Validate JIS ID format
             var jisIdPattern = /^JIS\/\d{4}\/\d{4}$/;
-            if (!jisIdPattern.test(jisId)) {
-                alert('JIS ID should be in the format JIS/2025/0001.');
+            if (jisId === "" || !jisIdPattern.test(jisId)) {
+                alert('JIS ID should be in the format JIS/2025/0001 and not be empty.');
                 return false;
             }
 
             // Validate mobile number (10 digits)
             var mobilePattern = /^\d{10}$/;
-            if (!mobilePattern.test(mobile)) {
-                alert('Mobile number should be 10 digits.');
+            if (mobile === "" || !mobilePattern.test(mobile)) {
+                alert('Mobile number should be 10 digits and not be empty.');
+                return false;
+            }
+
+            // Validate email
+            if (email === "") {
+                alert('Email should not be empty.');
+                return false;
+            }
+
+            // Validate roll number
+            if (rollNo === "") {
+                alert('Roll number should not be empty.');
+                return false;
+            }
+
+            // Validate department
+            if (department === "") {
+                alert('Department should not be empty.');
+                return false;
+            }
+
+            // Validate gender
+            if (gender === "") {
+                alert('Gender should not be empty.');
                 return false;
             }
 
