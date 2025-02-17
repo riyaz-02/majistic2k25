@@ -545,11 +545,10 @@ p.mt-2 {
                             <label for="competition">Select Competition:</label>
                             <select id="competition" name="competition">
                                 <option value="">--Select Competition--</option>
-                                <option value="dance">Dance Competition</option>
-                                <option value="drama">Drama Competition</option>
-                                <option value="band">Band Competition</option>
-                                <option value="fashion">Fashion Show Competition</option>
-                                <option value="recitation">Recitation Competition</option>
+                                <option value="Taal Se Taal Mila (Dance)">Taal Se Taal Mila (Dance Competition)</option>
+                                <option value="Actomania (Drama)">Actomania (Drama Competition)</option>
+                                <option value="Jam Room (Band)">Jam Room (Band Competition)</option>
+                                <option value="Glam It Up(Fashion Show)">Fashion Show Competition</option>
                             </select>
                         </div>
                         <!-- <button type="button" id="registerButton">Register</button> -->
@@ -709,9 +708,6 @@ p.mt-2 {
                     break;
                 case 'fashion':
                     bannerImage.src = 'https://i.ibb.co/9drCNqN/fashion.jpg';
-                    break;
-                case 'recitation':
-                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
                     break;
                 default:
                     bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
