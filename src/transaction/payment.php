@@ -14,11 +14,11 @@ if (!$registration_id) {
 if ($is_inhouse) {
     $query = $conn->prepare("SELECT * FROM registrations WHERE jis_id = ?");
     $query->bind_param("s", $registration_id);
-    $amount = 250; // Amount for inhouse registration
+    $amount = 300; // Amount for inhouse registration
 } else if ($is_outhouse) {
     $query = $conn->prepare("SELECT * FROM registrations_outhouse WHERE email = ?");
     $query->bind_param("s", $registration_id);
-    $amount = 1000; // Amount for outhouse registration
+    $amount = 9000; // Amount for outhouse registration
 } else {
     die("Invalid registration type.");
 }
