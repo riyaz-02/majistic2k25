@@ -159,7 +159,10 @@
   <div class="modal-content">
     <span class="close" onclick="closeModal('modal1')">&times;</span>
     <h2>Taal Se Taal Mila</h2>
-    <p>Groove to Win, Dance to Shine! Join us for an electrifying dance competition where you can showcase your moves and win amazing prizes.</p>
+    <p>Taal-Darpana: An exhilarating inter-college dance competition where the stage ignites with dynamic choreography, mesmerizing moves, and boundless creativity. Dancers from diverse backgrounds come together to showcase their talent, passion, and cultural flair, creating an unforgettable spectacle of rhythm and expression.
+
+EVENT CO-ORDINATORS: 
+Upasana Paul (+91 6291324934)  </p>
   </div>
 </div>
 
@@ -167,7 +170,10 @@
   <div class="modal-content">
     <span class="close" onclick="closeModal('modal2')">&times;</span>
     <h2>Actomania</h2>
-    <p>Lights, Camera, Action—Steal the Show! Participate in our drama competition and let your acting skills shine on stage.</p>
+    <p>A captivating inter-college drama competition where the spotlight shines on aspiring actors and storytellers. From gripping narratives to powerful performances, this event brings together the best of theatrical talent, showcasing creativity, emotion, and the magic of live performance on stage.
+
+EVENT CO-ORDINATORS:  
+Dipanwita Lahiri  (+91-8653384930)   </p>
   </div>
 </div>
 
@@ -183,7 +189,10 @@
   <div class="modal-content">
     <span class="close" onclick="closeModal('modal4')">&times;</span>
     <h2>Jam Room</h2>
-    <p>Feel the Beat, Rock the Street! Participate in our band competition and let your music resonate with the crowd.</p>
+    <p>A thrilling inter-college band competition where talented musicians clash in electrifying performances, showcasing their passion, creativity, and musical prowess. From heart-pounding beats to soul-stirring melodies, this event celebrates the vibrant spirit of music, uniting college bands in a symphony of talent and rhythm.
+
+    EVENT CO-ORDINATORS:  
+    Ayush Agarwal (+91-6297076034 )</p> 
   </div>
 </div>
 
@@ -191,7 +200,9 @@
   <div class="modal-content">
     <span class="close" onclick="closeModal('modal5')">&times;</span>
     <h2>Fashion Fiesta</h2>
-    <p>Walk the Ramp, Own the Glam! Join our fashion show and showcase your style and elegance on the ramp.</p>
+    <p>GlaM It Up: A dazzling inter-college fashion competition where style meets creativity on the runway. Fashion enthusiasts and designers come together to showcase their innovative designs, pushing the boundaries of couture and trendsetting. From avant-garde creations to classic elegance, this event celebrates the artistry and diversity of fashion in a glamorous showcase.
+    EVENT CO-ORDINATORS :
+      </p>
   </div>
 </div>
 

@@ -50,9 +50,9 @@
                     </div><!-- .entry-header -->
 
                     <div class="event-dates">
-                        <h2>DATES REVEALING SOON</h2>
-                        <!-- <h2></i>  <sup>th</sup> & <sup>nd</sup> March 2025</h2> -->
-                        <!-- <p></p><i class="bi bi-calendar-day"></i> -->
+                        <!--<h2>DATES REVEALING SOON</h2> -->
+                        <h2></i> 11 <sup>th</sup> & 12 <sup>th</sup> April 2025</h2> 
+                        <p></p><i class="bi bi-calendar-day"></i> 
                         <!-- <h2 class="mt-2"><i class="bi bi-geo-alt-fill"></i> JIS College of Engineering</h2> -->
                     </div><!-- .event-dates -->
 
@@ -97,8 +97,8 @@
     <div class="modal-content">
         <img class="majisticheadlogo" src="images/majisticlogo.png" alt="maJIStic Logo">
         <h2 class="align-center MT-3">REGISTER FOR maJIStic 2k25</h2>
-        <button onclick="window.open('registration_inhouse.php', '_blank')" class="modal-option mt-2">Inhouse Student</button>
-        <button onclick="window.open('registration_outhouse.php', '_blank')" class="modal-option" >Outhouse Student</button>
+        <button onclick="window.open('registration_inhouse.php', '_blank')" class="modal-option mt-2">In-house Student</button>
+        <button onclick="window.open('registration_outhouse.php', '_blank')" class="modal-option" >Out-house Student</button>
         <button class="modal-option" onclick="window.open('merchandise.php', '_blank')">Merchandise</button>
         <button class="close-btn" id = "close-btn" >Close</button>
     </div>

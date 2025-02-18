@@ -15,7 +15,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
   // Set the countdown target date to 21 March 2025
-  const targetDate = new Date("2025-03-21T00:00:00");
+  const targetDate = new Date("2025-04-11T10:00:00");
 
   // Update countdown every second
   const countdownInterval = setInterval(function () {

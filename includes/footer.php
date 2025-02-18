@@ -33,8 +33,8 @@
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>Contact maJIStic</h5>
             <a href="mailto:majistic@jiscollege.ac.in"><i class="fa-solid fa-envelope"></i> majistic@jiscollege.ac.in</a><br>
-            <a href="tel:+1234567890"><i class="fa-solid fa-phone"></i> +1234567890</a><br>
-            <a href="tel:+0987654321"><i class="fa-solid fa-phone"></i> +0987654321</a>
+            <a href="tel:+1234567890"><i class="fa-solid fa-phone"></i> +91 1234567890</a><br>
+            <a href="tel:+0987654321"><i class="fa-solid fa-phone"></i> +91 9876543210</a><br>
         </div>
     </div>
     <div class="copyright">
