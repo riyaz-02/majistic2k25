@@ -88,7 +88,8 @@ body {
 # site-header
 ------------------------------------------------------------*/
 body {
-    background: url(images/middle-cover1.jpg);
+    /*background: url(images/green_2.jpg);*/
+    background-color: #555355;
     object-fit: cover;
     background-blend-mode: color-burn;
 }
@@ -250,8 +251,8 @@ body {
 -----------------------------------------------------------*/
 .hero-content {
     padding: 150px 0;
-    background: url("images/cover.jpg") no-repeat;
-    background-size: cover;
+    background: transparent;
+    /*background-size: cover;
     background-attachment: fixed; /* Add parallax effect */
     position: relative;
     min-height: 100vh; /* Adjust minimum height for more space */
@@ -308,7 +309,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0; /* Cover the entire hero-content */
-    background: rgba(0, 0, 0, 0.651); /* Semi-transparent black overlay */
+    /*  background: rgba(0, 0, 0, 0.651); /* Semi-transparent black overlay */
     pointer-events: none; /* Allow clicks to pass through */
 }
 
@@ -319,7 +320,7 @@ body {
     left: 0;
     right: 0;
     height: 200px; /* Adjust height as needed */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.664) 100%); /* Transparent to black */
+    /*background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.664) 100%); /* Transparent to black */
     pointer-events: none; /* Allow clicks to pass through */
 }
 

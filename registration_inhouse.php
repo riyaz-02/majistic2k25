@@ -416,11 +416,11 @@ p.mt-2 {
         </script>
     <?php endif; ?>
     <section class="registration-container">
-    <h1 style="text-align: center; color: white; margin-bottom: 20px;">Inhouse Students Registration</h1>
+    <h1 style="text-align: center; color: white; margin-bottom: 20px;">In-house Students Registration</h1>
         <div class="info-card">
             <ul>
                 <li>✅ Please ensure that all your details are correct before submitting the registration form.</li>
-                <li>🎟️ Event Ticket Price is <del>Rs. 400</del> Rs. 250 [Early Bird]</li>
+                <li>🎟️ Event Ticket Price is <del>Rs. 500</del> Rs. 400 [Early Bird]</li>
                 <li>📞 For any queries, contact <strong>maJIStic support</strong></li>
                 <li>🛍️ For Merchandise, go to the <a href="merchandise.php"><strong>Merchandise page</strong></a></li>
             </ul>
@@ -496,6 +496,7 @@ p.mt-2 {
                                 <option value="">--Select Gender--</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
+                                <option value="female">Prefer not say</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -526,7 +527,7 @@ p.mt-2 {
                                 <option value="Diploma ME">Diploma ME</option>
                                 <option value="Diploma CE">Diploma CE</option>
                                 <option value="Diploma EE">Diploma EE</option>
-                                <option value="B. Pharmacy">B. Pharmacy</option>                            </select>
+                                <option value="B. Pharmacy">Pharmacy</option>                            </select>
                         </div>
                         <div class="form-group">
                             <label for="mobile">Mobile Number:</label>
@@ -547,10 +548,12 @@ p.mt-2 {
                             <label for="competition">Select Competition:</label>
                             <select id="competition" name="competition">
                                 <option value="">--Select Competition--</option>
-                                <option value="Taal Se Taal Mila (Dance)">Taal Se Taal Mila (Dance Competition)</option>
-                                <option value="Actomania (Drama)">Actomania (Drama Competition)</option>
-                                <option value="Jam Room (Band)">Jam Room (Band Competition)</option>
-                                <option value="Glam It Up(Fashion Show)">Fashion Show Competition</option>
+                                <option value="Jam Room (Band Events)">Jam Room (Band Events)</option>
+                                <option value="Taal Se Taal Mila (Dance Events)">Taal Se Taal Mila (Dance Events)</option>
+                                <option value="Fashion Fiesta (Fashion Show)">Fashion Fiesta (Fashion Show)</option>
+                                <option value="Actomania (Drama)">Actomania (Drama)</option>
+                                <option value="The Poetry Slam (Recitation)">The Poetry Slam (Recitation)</option>
+                                <option value="Mic Hunters (Anchoring)">Mic Hunters (Anchoring)</option>
                             </select>
                         </div>
                         <!-- <button type="button" id="registerButton">Register</button> -->
