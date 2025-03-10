@@ -46,14 +46,14 @@
             <div class="row">
                 <div class="col-12">
                     <div class="entry-header">
-                    <!<img src="images/majistic2k25_white.png"></img>
+                    <img src="images/majistic2k25_white.png"></img>
                     </div>
                     <!-- .entry-header -->
 
                     <div class="event-dates">
                         <!--<h2>DATES REVEALING SOON</h2> -->
                         <h2></i> 11 <sup>th</sup> & 12 <sup>th</sup> April 2025</h2> 
-                        <p></p><i class="bi bi-calendar-day"></i> 
+                        
                         <!-- <h2 class="mt-2"><i class="bi bi-geo-alt-fill"></i> JIS College of Engineering</h2> -->
                     </div><!-- .event-dates -->
 

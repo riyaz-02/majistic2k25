@@ -234,7 +234,7 @@ Dipanwita Lahiri  (+91-8653384930)   </p>
     clickable: true
   },
   autoplay: {
-    delay: 3000,
+    delay: 8000,
     disableOnInteraction: false
   }
 });
