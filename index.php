@@ -114,16 +114,15 @@
 </section>
 
 <!--- After Movies -->
-<section class="aftermovies">
+<section class="aftermovies" id="aftermovie-section">
     <div class="heading-container" id="aftermovies">
         <h1 class="text-center display-4 font-weight-bold section-title">AFTERMOVIES</h1>
     </div>
-    <div class="container mt-1">
+    <div class="container-fluid p-0">
         <div id="video-container" class="text-center">
             <!-- Responsive iframe container -->
             <div class="video-responsive">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/55DF9m2XX4U"
-                    frameborder="0" allowfullscreen></iframe>
+                <div id="youtube-player"></div>
             </div>
         </div>
     </div>
@@ -510,7 +509,116 @@
                 observer.observe(heading);
             });
         });
+
+        // YouTube player auto-play implementation
+        // Load the YouTube IFrame Player API asynchronously
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Variable to store the YouTube player instance
+        var player;
+        
+        // Function called when YouTube API is ready
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '100%',
+                width: '100%',
+                videoId: '55DF9m2XX4U', // Same video ID as the original iframe
+                playerVars: {
+                    'autoplay': 0,
+                    'mute': 1,
+                    'start': 3, // Start from the 3rd second
+                    'controls': 0, // Hide controls
+                    'showinfo': 0,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'disablekb': 1, // Disable keyboard controls
+                    'iv_load_policy': 3, // Hide annotations
+                    'fs': 0, // Hide fullscreen button
+                    'playsinline': 1 // Play inline on mobile
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Set up Intersection Observer once the player is ready
+            const videoSection = document.getElementById('aftermovie-section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Play the video when section is visible
+                        if (player && player.getPlayerState() !== 1) { // 1 is YT.PlayerState.PLAYING
+                            player.playVideo();
+                        }
+                    } else {
+                        // Pause when out of view
+                        if (player && player.getPlayerState() === 1) {
+                            player.pauseVideo();
+                        }
+                    }
+                });
+            }, { threshold: 0.3 }); // Trigger when 30% of the section is visible
+            
+            observer.observe(videoSection);
+            
+            // Set up click handler for mute/unmute functionality
+            const videoContainer = document.getElementById('video-container');
+            videoContainer.addEventListener('click', function() {
+                if (player.isMuted()) {
+                    player.unMute();
+                    // You can add a visual indicator for unmuted state if desired
+                } else {
+                    player.mute();
+                    // You can add a visual indicator for muted state if desired
+                }
+            });
+        }
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+	const isDesktop = () => window.innerWidth > 767.9;
+
+	let gap = 15;
+
+	if (isDesktop()) gap = 0.0285 * window.innerWidth;
+
+	const sliders = [];
+
+	["#horizontal-ticker-ltr", "#horizontal-ticker-rtl"].forEach(
+		(query, index) => {
+			sliders.push(
+				new Swiper(query, {
+					loop: true,
+					slidesPerView: "auto",
+					spaceBetween: gap,
+					speed: 8000,
+					allowTouchMove: false,
+					autoplay: {
+						delay: 0,
+						reverseDirection: index,
+						disableOnInteraction: false
+					}
+				})
+			);
+		}
+	);
+
+	window.addEventListener("resize", () => {
+		isDesktop() ? (gap = 0.0285 * window.innerWidth) : (gap = 15);
+
+		sliders.forEach((slider) => {
+			slider.params.spaceBetween = gap;
+			slider.update();
+		});
+	});
+});
+</script>
 </body>
 <style>
     .base-template__wrapper {
@@ -586,44 +694,60 @@
 	}
 }
 
+/* YouTube player styling */
+.aftermovies .container-fluid {
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+}
+
+.video-responsive {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.video-responsive #youtube-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* Add a mute/unmute indicator */
+.video-responsive::after {
+    content: "Click to toggle sound";
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.video-responsive:hover::after {
+    opacity: 1;
+}
+
+/* Ensure the aftermovies section spans full width */
+#aftermovie-section {
+    padding: 0;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#aftermovie-section .heading-container {
+    margin-bottom: 30px;
+}
+
 </style>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-	const isDesktop = () => window.innerWidth > 767.9;
-
-	let gap = 15;
-
-	if (isDesktop()) gap = 0.0285 * window.innerWidth;
-
-	const sliders = [];
-
-	["#horizontal-ticker-ltr", "#horizontal-ticker-rtl"].forEach(
-		(query, index) => {
-			sliders.push(
-				new Swiper(query, {
-					loop: true,
-					slidesPerView: "auto",
-					spaceBetween: gap,
-					speed: 8000,
-					allowTouchMove: false,
-					autoplay: {
-						delay: 0,
-						reverseDirection: index,
-						disableOnInteraction: false
-					}
-				})
-			);
-		}
-	);
-
-	window.addEventListener("resize", () => {
-		isDesktop() ? (gap = 0.0285 * window.innerWidth) : (gap = 15);
-
-		sliders.forEach((slider) => {
-			slider.params.spaceBetween = gap;
-			slider.update();
-		});
-	});
-});
-</script>
 </html>

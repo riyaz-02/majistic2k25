@@ -35,7 +35,7 @@ body {
 /* Custom styles for section titles */
 .section-title {
     color: #ffffff; /* Change to your desired color */
-    font-family: "Almendra SC", serif;
+    font-family: "Roboto", sans-serif; /* Change to your desired font */
     font-size: 70px;
     font-weight: 400;
     font-style: normal;
@@ -278,7 +278,7 @@ body {
     align-items: center;
     overflow: hidden; /* Prevent scrolling */
     z-index: 1; /* Ensure it is below other sections */
-    top: -6rem;
+    top: 3rem;
 }
 
 .hero-content .container {
@@ -552,8 +552,8 @@ body {
 
 .event-dates h2 {
   text-transform: uppercase;
-  background-image: linear-gradient(to right top, #3437ff, #1265ff, #2facff, #4dfff6, #12ebbc);
-   background-size: 50% auto;
+  background-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,78,200,1) 100%);;
+    background-size: 100% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: 'Poppins', sans-serif;
@@ -660,8 +660,9 @@ body {
 ## hero-content entry-footer
 ------------------------------------------------------------*/
 .hero-content .entry-footer {
-    margin-top: 70px; /* Space above the entry footer */
+    margin-top: 3rem; /* Space above the entry footer */
     text-align: center; /* Center align the footer content */
+    margin-bottom: 10rem;
 }
 
 .hero-content .entry-footer .btn {
