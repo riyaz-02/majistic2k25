@@ -370,7 +370,7 @@
         }
         
         .checkout-btn {
-            background: linear-gradient(90deg, var(--accent), darken(var(--accent), 10%));
+            background: linear-gradient(90deg, var(--accent), #d48e1e);
             border: none;
             color: var(--dark);
             font-weight: 700;
@@ -446,7 +446,7 @@
         }
         
         .pay-btn {
-            background: linear-gradient(90deg, var(--accent), darken(var(--accent), 10%));
+            background: linear-gradient(90deg, var(--accent), #d48e1e);
             border: none;
             color: var(--dark);
             font-weight: 700;
@@ -505,10 +505,90 @@
                 margin-bottom: 1.5rem;
             }
         }
+
+        /* Notification Style */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #15a88a;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animation for Add to Cart Button */
+        .animate-click {
+            animation: clickEffect 0.3s ease;
+        }
+
+        @keyframes clickEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
+
+    <!-- Merchandise Data -->
+    <?php
+    $merchandise = [
+        [
+            'name' => 'maJIStic 2k25 T-Shirt',
+            'category' => 'Apparel',
+            'description' => 'Official maJIStic 2k25 T-Shirt with vibrant design. Made of 100% cotton for ultimate comfort.',
+            'price' => 599,
+            'image' => 'https://via.placeholder.com/300x250.png?text=T-Shirt'
+        ],
+        [
+            'name' => 'maJIStic Hoodie',
+            'category' => 'Apparel',
+            'description' => 'Stay warm with this stylish maJIStic 2k25 hoodie. Perfect for the fest season!',
+            'price' => 1299,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Hoodie'
+        ],
+        [
+            'name' => 'Event Cap',
+            'category' => 'Accessories',
+            'description' => 'Limited edition cap with maJIStic 2k25 logo. Adjustable fit for all sizes.',
+            'price' => 399,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Cap'
+        ],
+        [
+            'name' => 'maJIStic Tote Bag',
+            'category' => 'Accessories',
+            'description' => 'Eco-friendly tote bag with maJIStic 2k25 branding. Perfect for carrying your essentials.',
+            'price' => 299,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Tote+Bag'
+        ],
+        [
+            'name' => 'Festival Wristband',
+            'category' => 'Accessories',
+            'description' => 'Exclusive wristband for maJIStic 2k25 attendees. Show your fest spirit!',
+            'price' => 199,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Wristband'
+        ],
+        [
+            'name' => 'Graphic Tee',
+            'category' => 'Apparel',
+            'description' => 'A trendy graphic tee with unique maJIStic 2k25 artwork. Limited stock!',
+            'price' => 699,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Graphic+Tee'
+        ]
+    ];
+    ?>
 
     <!-- Page Header -->
     <header class="container page-header">
@@ -789,4 +869,45 @@
                 case 'priceDesc':
                     sortedItems = items.sort((a, b) => parseInt(b.dataset.price) - parseInt(a.dataset.price));
                     break;
-                case 'nameA
+                case 'nameAsc':
+                    sortedItems = items.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+                    break;
+                case 'nameDesc':
+                    sortedItems = items.sort((a, b) => b.dataset.name.localeCompare(a.dataset.name));
+                    break;
+                case 'featured':
+                default:
+                    sortedItems = items.sort((a, b) => {
+                        // Assuming the original order in the PHP array is the "featured" order
+                        return items.indexOf(a) - items.indexOf(b);
+                    });
+                    break;
+            }
+            
+            // Clear and re-append sorted items
+            container.innerHTML = '';
+            sortedItems.forEach(item => container.appendChild(item));
+            
+            // Reapply filter after sorting
+            updateFilter();
+        });
+
+        // Notification function
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
