@@ -9,6 +9,376 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <?php include 'includes/links.php'; ?>
+</head>
+<body>
+    <?php include 'includes/header.php'; ?>
+
+    <!-- Merchandise Data -->
+    <?php
+    $merchandise = [
+        [
+            'name' => 'maJIStic 2k25 T-Shirt',
+            'category' => 'Apparel',
+            'description' => 'Official maJIStic 2k25 T-Shirt with vibrant design. Made of 100% cotton for ultimate comfort.',
+            'price' => 599,
+            'image' => 'https://via.placeholder.com/300x250.png?text=T-Shirt'
+        ],
+        [
+            'name' => 'maJIStic Hoodie',
+            'category' => 'Apparel',
+            'description' => 'Stay warm with this stylish maJIStic 2k25 hoodie. Perfect for the fest season!',
+            'price' => 1299,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Hoodie'
+        ],
+        [
+            'name' => 'Event Cap',
+            'category' => 'Accessories',
+            'description' => 'Limited edition cap with maJIStic 2k25 logo. Adjustable fit for all sizes.',
+            'price' => 399,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Cap'
+        ],
+        [
+            'name' => 'maJIStic Tote Bag',
+            'category' => 'Accessories',
+            'description' => 'Eco-friendly tote bag with maJIStic 2k25 branding. Perfect for carrying your essentials.',
+            'price' => 299,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Tote+Bag'
+        ],
+        [
+            'name' => 'Festival Wristband',
+            'category' => 'Accessories',
+            'description' => 'Exclusive wristband for maJIStic 2k25 attendees. Show your fest spirit!',
+            'price' => 199,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Wristband'
+        ],
+        [
+            'name' => 'Graphic Tee',
+            'category' => 'Apparel',
+            'description' => 'A trendy graphic tee with unique maJIStic 2k25 artwork. Limited stock!',
+            'price' => 699,
+            'image' => 'https://via.placeholder.com/300x250.png?text=Graphic+Tee'
+        ]
+    ];
+    ?>
+
+    <!-- Page Header -->
+    <header class="container page-header">
+        <h1><i class="fas fa-tshirt me-2"></i>EXCLUSIVE MERCHANDISE</h1>
+        <p>Grab your limited-edition maJIStic 2k25 swag and make a statement!</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- Filters Section -->
+        <div class="filters-section mb-4">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label for="searchText" class="form-label">Search</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-0"><i class="fas fa-search text-white-50"></i></span>
+                        <input type="text" class="form-control" id="searchText" placeholder="Search merchandise...">
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label for="filterCategory" class="form-label">Category</label>
+                    <select class="form-select" id="filterCategory">
+                        <option value="all" selected>All Categories</option>
+                        <option value="Apparel">Apparel</option>
+                        <option value="Accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="sortOption" class="form-label">Sort By</label>
+                    <select class="form-select" id="sortOption">
+                        <option value="featured" selected>Featured</option>
+                        <option value="priceAsc">Price: Low to High</option>
+                        <option value="priceDesc">Price: High to Low</option>
+                        <option value="nameAsc">Name: A to Z</option>
+                        <option value="nameDesc">Name: Z to A</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Products List -->
+            <div class="col-lg-8">
+                <div class="row g-4" id="merchandiseContainer">
+                    <?php foreach ($merchandise as $index => $item): ?>
+                    <div class="col-md-6 mb-4 merchandise-item" data-category="<?= $item['category'] ?>" data-name="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">
+                        <div class="product-card">
+                            <?php if ($index === 0): ?>
+                            <span class="badge">New Arrival</span>
+                            <?php endif; ?>
+                            <div class="product-image-container">
+                                <img src="<?= $item['image'] ?>" class="product-image" alt="<?= $item['name'] ?>">
+                            </div>
+                            <div class="product-info">
+                                <div>
+                                    <div class="product-category"><?= $item['category'] ?></div>
+                                    <h3 class="product-title"><?= $item['name'] ?></h3>
+                                    <p class="product-description"><?= $item['description'] ?></p>
+                                </div>
+                                <div>
+                                    <div class="product-price"><span class="price-currency">₹</span><?= $item['price'] ?></div>
+                                    <button class="add-to-cart-btn w-100 add-to-cart" data-item="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">
+                                        <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Cart -->
+            <div class="col-lg-4">
+                <div class="cart-container">
+                    <h3 class="cart-title"><i class="fas fa-shopping-bag me-2"></i>Your Cart</h3>
+                    <div class="cart-items" id="cartItems">
+                        <div class="cart-empty" id="emptyCart">
+                            <i class="fas fa-shopping-cart mb-3" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                            <p>Your cart is empty</p>
+                        </div>
+                    </div>
+                    <div class="cart-summary">
+                        <div class="cart-total">
+                            <span class="cart-total-label">Total</span>
+                            <span class="cart-total-amount">₹<span id="cartTotal">0</span></span>
+                        </div>
+                        <button class="checkout-btn w-100" id="checkoutBtn" data-bs-toggle="modal" data-bs-target="#checkoutModal" disabled>
+                            <i class="fas fa-lock me-2"></i>Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checkoutModalLabel"><i class="fas fa-shopping-bag me-2"></i>Complete Your Purchase</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="checkoutForm" method="POST">
+                        <div class="mb-3">
+                            <label for="buyerName" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jis_id" class="form-label">JIS ID</label>
+                            <input type="text" class="form-control" id="jis_id" name="jis_id" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyerEmail" class="form-label">Your Email</label>
+                            <input type="email" class="form-control" id="buyerEmail" name="buyer_email" required>
+                        </div>
+                        
+                        <input type="hidden" name="cart_data" id="cartData">
+                        <button type="submit" class="pay-btn w-100">
+                            <i class="fas fa-credit-card me-2"></i>Proceed to Payment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php include 'includes/footer.php'; ?>
+    <?php include 'includes/scripts.php'; ?>
+    
+    <script>
+        // Cart management
+        const cart = [];
+        const emptyCartElement = document.getElementById('emptyCart');
+        
+        // Add to cart functionality
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                // Add animation effect
+                this.classList.add('animate-click');
+                setTimeout(() => this.classList.remove('animate-click'), 300);
+                
+                const itemName = this.getAttribute('data-item');
+                const itemPrice = parseInt(this.getAttribute('data-price'));
+                
+                // Check if item already exists in the cart
+                const existingItem = cart.find(item => item.name === itemName);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+                }
+                
+                updateCart();
+                
+                // Show notification
+                showNotification(`${itemName} added to cart!`);
+            });
+        });
+        
+        // Update cart UI
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            // Clear cart items
+            while (cartItemsContainer.firstChild) {
+                cartItemsContainer.removeChild(cartItemsContainer.firstChild);
+            }
+            
+            // Show/hide empty cart message
+            if (cart.length === 0) {
+                cartItemsContainer.appendChild(emptyCartElement);
+                checkoutBtn.disabled = true;
+            } else {
+                emptyCartElement.remove();
+                checkoutBtn.disabled = false;
+                
+                let total = 0;
+                
+                // Add cart items
+                cart.forEach(item => {
+                    total += item.price * item.quantity;
+                    
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    
+                    cartItem.innerHTML = `
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">₹${item.price.toLocaleString()}</div>
+                        </div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn reduce-quantity" data-item="${item.name}">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn add-quantity" data-item="${item.name}">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    cartItemsContainer.appendChild(cartItem);
+                });
+                
+                // Update total
+                cartTotal.textContent = total.toLocaleString();
+                
+                // Pass cart data to hidden input
+                document.getElementById('cartData').value = JSON.stringify(cart);
+                
+                // Handle quantity buttons
+                document.querySelectorAll('.reduce-quantity').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const itemName = this.getAttribute('data-item');
+                        const item = cart.find(item => item.name === itemName);
+                        
+                        if (item.quantity > 1) {
+                            item.quantity--;
+                        } else {
+                            const index = cart.findIndex(item => item.name === itemName);
+                            cart.splice(index, 1);
+                        }
+                        
+                        updateCart();
+                    });
+                });
+                
+                document.querySelectorAll('.add-quantity').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const itemName = this.getAttribute('data-item');
+                        const item = cart.find(item => item.name === itemName);
+                        item.quantity++;
+                        updateCart();
+                    });
+                });
+            }
+        }
+        
+        // Filter and Search functionality
+        document.getElementById('filterCategory').addEventListener('change', updateFilter);
+        document.getElementById('searchText').addEventListener('input', updateFilter);
+        
+        function updateFilter() {
+            const selectedCategory = document.getElementById('filterCategory').value;
+            const searchText = document.getElementById('searchText').value.toLowerCase();
+            
+            document.querySelectorAll('.merchandise-item').forEach(item => {
+                const itemCategory = item.dataset.category;
+                const itemName = item.dataset.name.toLowerCase();
+                const itemDescription = item.querySelector('.product-description').textContent.toLowerCase();
+                
+                if ((selectedCategory === 'all' || itemCategory === selectedCategory) &&
+                    (itemName.includes(searchText) || itemDescription.includes(searchText))) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Sorting functionality
+        document.getElementById('sortOption').addEventListener('change', function() {
+            const sortOption = this.value;
+            const items = Array.from(document.querySelectorAll('.merchandise-item'));
+            const container = document.getElementById('merchandiseContainer');
+            
+            let sortedItems = [];
+            
+            switch (sortOption) {
+                case 'priceAsc':
+                    sortedItems = items.sort((a, b) => parseInt(a.dataset.price) - parseInt(b.dataset.price));
+                    break;
+                case 'priceDesc':
+                    sortedItems = items.sort((a, b) => parseInt(b.dataset.price) - parseInt(a.dataset.price));
+                    break;
+                case 'nameAsc':
+                    sortedItems = items.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+                    break;
+                case 'nameDesc':
+                    sortedItems = items.sort((a, b) => b.dataset.name.localeCompare(a.dataset.name));
+                    break;
+                case 'featured':
+                default:
+                    sortedItems = items.sort((a, b) => {
+                        return items.indexOf(a) - items.indexOf(b);
+                    });
+                    break;
+            }
+            
+            // Clear and re-append sorted items
+            container.innerHTML = '';
+            sortedItems.forEach(item => container.appendChild(item));
+            
+            // Reapply filter after sorting
+            updateFilter();
+        });
+
+        // Notification function
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
 
     <style>
         :root {
@@ -22,7 +392,7 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #121212, #242424);
+            background: linear-gradient(135deg, var(--dark), #242424);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -107,7 +477,12 @@
         }
         
         .filters-section .form-select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'%3e%3cpath d='M0 0 L6 6 L12 0 Z' fill='none' stroke='%23ffffff' stroke-width='1' stroke-linecap='round' stroke-linejoin='miter'/%3e%3cpath d='M0 0 L12 0' fill='none' stroke='%23ffffff' stroke-width='1' stroke-dasharray='2 2'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
         
         .filters-section label {
@@ -538,376 +913,5 @@
             100% { transform: scale(1); }
         }
     </style>
-</head>
-<body>
-    <?php include 'includes/header.php'; ?>
-
-    <!-- Merchandise Data -->
-    <?php
-    $merchandise = [
-        [
-            'name' => 'maJIStic 2k25 T-Shirt',
-            'category' => 'Apparel',
-            'description' => 'Official maJIStic 2k25 T-Shirt with vibrant design. Made of 100% cotton for ultimate comfort.',
-            'price' => 599,
-            'image' => 'https://via.placeholder.com/300x250.png?text=T-Shirt'
-        ],
-        [
-            'name' => 'maJIStic Hoodie',
-            'category' => 'Apparel',
-            'description' => 'Stay warm with this stylish maJIStic 2k25 hoodie. Perfect for the fest season!',
-            'price' => 1299,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Hoodie'
-        ],
-        [
-            'name' => 'Event Cap',
-            'category' => 'Accessories',
-            'description' => 'Limited edition cap with maJIStic 2k25 logo. Adjustable fit for all sizes.',
-            'price' => 399,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Cap'
-        ],
-        [
-            'name' => 'maJIStic Tote Bag',
-            'category' => 'Accessories',
-            'description' => 'Eco-friendly tote bag with maJIStic 2k25 branding. Perfect for carrying your essentials.',
-            'price' => 299,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Tote+Bag'
-        ],
-        [
-            'name' => 'Festival Wristband',
-            'category' => 'Accessories',
-            'description' => 'Exclusive wristband for maJIStic 2k25 attendees. Show your fest spirit!',
-            'price' => 199,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Wristband'
-        ],
-        [
-            'name' => 'Graphic Tee',
-            'category' => 'Apparel',
-            'description' => 'A trendy graphic tee with unique maJIStic 2k25 artwork. Limited stock!',
-            'price' => 699,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Graphic+Tee'
-        ]
-    ];
-    ?>
-
-    <!-- Page Header -->
-    <header class="container page-header">
-        <h1><i class="fas fa-tshirt me-2"></i>EXCLUSIVE MERCHANDISE</h1>
-        <p>Grab your limited-edition maJIStic 2k25 swag and make a statement!</p>
-    </header>
-
-    <!-- Main Content -->
-    <div class="container py-5">
-        <!-- Filters Section -->
-        <div class="filters-section mb-4">
-            <div class="row">
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <label for="searchText" class="form-label">Search</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent border-0"><i class="fas fa-search text-white-50"></i></span>
-                        <input type="text" class="form-control" id="searchText" placeholder="Search merchandise...">
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <label for="filterCategory" class="form-label">Category</label>
-                    <select class="form-select" id="filterCategory">
-                        <option value="all" selected>All Categories</option>
-                        <option value="Apparel">Apparel</option>
-                        <option value="Accessories">Accessories</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="sortOption" class="form-label">Sort By</label>
-                    <select class="form-select" id="sortOption">
-                        <option value="featured" selected>Featured</option>
-                        <option value="priceAsc">Price: Low to High</option>
-                        <option value="priceDesc">Price: High to Low</option>
-                        <option value="nameAsc">Name: A to Z</option>
-                        <option value="nameDesc">Name: Z to A</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            <!-- Products List -->
-            <div class="col-lg-8">
-                <div class="row g-4" id="merchandiseContainer">
-                    <?php foreach ($merchandise as $index => $item): ?>
-                    <div class="col-md-6 mb-4 merchandise-item" data-category="<?= $item['category'] ?>" data-name="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">
-                        <div class="product-card">
-                            <?php if ($index === 0): ?>
-                            <span class="badge">New Arrival</span>
-                            <?php endif; ?>
-                            <div class="product-image-container">
-                                <img src="<?= $item['image'] ?>" class="product-image" alt="<?= $item['name'] ?>">
-                            </div>
-                            <div class="product-info">
-                                <div>
-                                    <div class="product-category"><?= $item['category'] ?></div>
-                                    <h3 class="product-title"><?= $item['name'] ?></h3>
-                                    <p class="product-description"><?= $item['description'] ?></p>
-                                </div>
-                                <div>
-                                    <div class="product-price"><span class="price-currency">₹</span><?= $item['price'] ?></div>
-                                    <button class="add-to-cart-btn w-100 add-to-cart" data-item="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>">
-                                        <i class="fas fa-shopping-cart me-2"></i>Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
-            <!-- Cart -->
-            <div class="col-lg-4">
-                <div class="cart-container">
-                    <h3 class="cart-title"><i class="fas fa-shopping-bag me-2"></i>Your Cart</h3>
-                    <div class="cart-items" id="cartItems">
-                        <div class="cart-empty" id="emptyCart">
-                            <i class="fas fa-shopping-cart mb-3" style="font-size: 2.5rem; opacity: 0.3;"></i>
-                            <p>Your cart is empty</p>
-                        </div>
-                    </div>
-                    <div class="cart-summary">
-                        <div class="cart-total">
-                            <span class="cart-total-label">Total</span>
-                            <span class="cart-total-amount">₹<span id="cartTotal">0</span></span>
-                        </div>
-                        <button class="checkout-btn w-100" id="checkoutBtn" data-bs-toggle="modal" data-bs-target="#checkoutModal" disabled>
-                            <i class="fas fa-lock me-2"></i>Checkout
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Checkout Modal -->
-    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="checkoutModalLabel"><i class="fas fa-shopping-bag me-2"></i>Complete Your Purchase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="checkoutForm" method="POST">
-                        <div class="mb-3">
-                            <label for="buyerName" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="jis_id" class="form-label">JIS ID</label>
-                            <input type="text" class="form-control" id="jis_id" name="jis_id" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="buyerEmail" class="form-label">Your Email</label>
-                            <input type="email" class="form-control" id="buyerEmail" name="buyer_email" required>
-                        </div>
-                        
-                        <input type="hidden" name="cart_data" id="cartData">
-                        <button type="submit" class="pay-btn w-100">
-                            <i class="fas fa-credit-card me-2"></i>Proceed to Payment
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <?php include 'includes/footer.php'; ?>
-    <?php include 'includes/scripts.php'; ?>
-    
-    <script>
-        // Cart management
-        const cart = [];
-        const emptyCartElement = document.getElementById('emptyCart');
-        
-        // Add to cart functionality
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                // Add animation effect
-                this.classList.add('animate-click');
-                setTimeout(() => this.classList.remove('animate-click'), 300);
-                
-                const itemName = this.getAttribute('data-item');
-                const itemPrice = parseInt(this.getAttribute('data-price'));
-                
-                // Check if item already exists in the cart
-                const existingItem = cart.find(item => item.name === itemName);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ name: itemName, price: itemPrice, quantity: 1 });
-                }
-                
-                updateCart();
-                
-                // Show notification
-                showNotification(`${itemName} added to cart!`);
-            });
-        });
-        
-        // Update cart UI
-        function updateCart() {
-            const cartItemsContainer = document.getElementById('cartItems');
-            const cartTotal = document.getElementById('cartTotal');
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            
-            // Clear cart items
-            while (cartItemsContainer.firstChild) {
-                cartItemsContainer.removeChild(cartItemsContainer.firstChild);
-            }
-            
-            // Show/hide empty cart message
-            if (cart.length === 0) {
-                cartItemsContainer.appendChild(emptyCartElement);
-                checkoutBtn.disabled = true;
-            } else {
-                emptyCartElement.remove();
-                checkoutBtn.disabled = false;
-                
-                let total = 0;
-                
-                // Add cart items
-                cart.forEach(item => {
-                    total += item.price * item.quantity;
-                    
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    
-                    cartItem.innerHTML = `
-                        <div class="cart-item-info">
-                            <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-price">₹${item.price.toLocaleString()}</div>
-                        </div>
-                        <div class="cart-item-quantity">
-                            <button class="quantity-btn reduce-quantity" data-item="${item.name}">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <span>${item.quantity}</span>
-                            <button class="quantity-btn add-quantity" data-item="${item.name}">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    `;
-                    
-                    cartItemsContainer.appendChild(cartItem);
-                });
-                
-                // Update total
-                cartTotal.textContent = total.toLocaleString();
-                
-                // Pass cart data to hidden input
-                document.getElementById('cartData').value = JSON.stringify(cart);
-                
-                // Handle quantity buttons
-                document.querySelectorAll('.reduce-quantity').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const itemName = this.getAttribute('data-item');
-                        const item = cart.find(item => item.name === itemName);
-                        
-                        if (item.quantity > 1) {
-                            item.quantity--;
-                        } else {
-                            const index = cart.findIndex(item => item.name === itemName);
-                            cart.splice(index, 1);
-                        }
-                        
-                        updateCart();
-                    });
-                });
-                
-                document.querySelectorAll('.add-quantity').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const itemName = this.getAttribute('data-item');
-                        const item = cart.find(item => item.name === itemName);
-                        item.quantity++;
-                        updateCart();
-                    });
-                });
-            }
-        }
-        
-        // Filter and Search functionality
-        document.getElementById('filterCategory').addEventListener('change', updateFilter);
-        document.getElementById('searchText').addEventListener('input', updateFilter);
-        
-        function updateFilter() {
-            const selectedCategory = document.getElementById('filterCategory').value;
-            const searchText = document.getElementById('searchText').value.toLowerCase();
-            
-            document.querySelectorAll('.merchandise-item').forEach(item => {
-                const itemCategory = item.dataset.category;
-                const itemName = item.dataset.name.toLowerCase();
-                const itemDescription = item.querySelector('.product-description').textContent.toLowerCase();
-                
-                if ((selectedCategory === 'all' || itemCategory === selectedCategory) &&
-                    (itemName.includes(searchText) || itemDescription.includes(searchText))) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-        
-        // Sorting functionality
-        document.getElementById('sortOption').addEventListener('change', function() {
-            const sortOption = this.value;
-            const items = Array.from(document.querySelectorAll('.merchandise-item'));
-            const container = document.getElementById('merchandiseContainer');
-            
-            let sortedItems = [];
-            
-            switch (sortOption) {
-                case 'priceAsc':
-                    sortedItems = items.sort((a, b) => parseInt(a.dataset.price) - parseInt(b.dataset.price));
-                    break;
-                case 'priceDesc':
-                    sortedItems = items.sort((a, b) => parseInt(b.dataset.price) - parseInt(a.dataset.price));
-                    break;
-                case 'nameAsc':
-                    sortedItems = items.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
-                    break;
-                case 'nameDesc':
-                    sortedItems = items.sort((a, b) => b.dataset.name.localeCompare(a.dataset.name));
-                    break;
-                case 'featured':
-                default:
-                    sortedItems = items.sort((a, b) => {
-                        // Assuming the original order in the PHP array is the "featured" order
-                        return items.indexOf(a) - items.indexOf(b);
-                    });
-                    break;
-            }
-            
-            // Clear and re-append sorted items
-            container.innerHTML = '';
-            sortedItems.forEach(item => container.appendChild(item));
-            
-            // Reapply filter after sorting
-            updateFilter();
-        });
-
-        // Notification function
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100);
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-    </script>
 </body>
 </html>
