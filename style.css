@@ -377,7 +377,7 @@ body {
     }
 }
 /*------------------------------------------------------------
-# hero
+# Hero Section
 -----------------------------------------------------------*/
 .hero-content {
     padding: 15vh 0;
@@ -450,6 +450,9 @@ body {
     transform: scale(1.05);
 }
 
+/*------------------------------------------------------------
+# Event Dates
+------------------------------------------------------------*/
 .event-dates {
     display: flex;
     justify-content: center;
@@ -487,7 +490,7 @@ body {
 }
 
 /*------------------------------------------------------------
-## countdown
+# Countdown
 ------------------------------------------------------------*/
 .countdown {
     display: flex;
@@ -511,7 +514,7 @@ body {
 .countdown-holder .dmin,
 .countdown-holder .dsec {
     display: block;
-    font-size: 5vh;
+    font-size: 5rem; /* Base size changed to rem for responsiveness */
     font-weight: 600;
     line-height: 1;
     color: hsl(0, 0%, 100%);
@@ -519,13 +522,13 @@ body {
 
 .countdown-holder label {
     display: block;
-    font-size: 1.5vh;
+    font-size: 1.5rem; /* Base size changed to rem for responsiveness */
     font-weight: 500;
     color: hsl(0, 0%, 100%);
 }
 
 /*------------------------------------------------------------
-## hero-content entry-footer
+# Footer
 ------------------------------------------------------------*/
 .hero-content .entry-footer {
     margin-top: 3vh;
@@ -535,22 +538,64 @@ body {
 }
 
 /*------------------------------------------------------------
-## Consolidated Media Queries
+# Responsive Design - Adjusted Sizes and Gaps
 ------------------------------------------------------------*/
-/* Large screens (max-height: 800px) */
-@media (max-height: 800px) {
+/* Desktop (default styles above) */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
     .hero-content {
-        padding: 10vh 0;
+        padding: 12vh 0;
     }
     .entry-header img {
         max-height: 25vh;
+        width: 80%;
     }
     #registerBtn {
-        padding: 2vh 4vh;
+        padding: 2.5vh 5vh;
         font-size: 2.5vh;
     }
     .event-dates {
         margin-top: 8vh;
+    }
+    .event-dates h2 {
+        font-size: 3.5vh;
+    }
+    .countdown-holder {
+        margin: 0 4vh;
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 4.5rem;
+    }
+    .countdown-holder label {
+        font-size: 1.3rem;
+    }
+}
+
+/* Smaller Tablets / Large Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .hero-content {
+        padding: 10vh 0;
+    }
+    .hero-content .entry-header {
+        top: 4vh;
+    }
+    .entry-header img {
+        max-height: 20vh;
+        width: 85%;
+    }
+    #registerBtn {
+        padding: 2vh 4vh;
+        font-size: 2vh;
+    }
+    .event-dates {
+        margin-top: 6vh;
+    }
+    .event-dates h2 {
+        font-size: 3vh;
     }
     .countdown-holder {
         margin: 0 3vh;
@@ -559,39 +604,10 @@ body {
     .countdown-holder .dhour,
     .countdown-holder .dmin,
     .countdown-holder .dsec {
-        font-size: 4vh;
-    }
-}
-
-/* Medium screens (max-height: 600px) */
-@media (max-height: 600px) {
-    .hero-content {
-        padding: 8vh 0;
-    }
-    .hero-content .entry-header {
-        top: 4vh;
-    }
-    .event-dates {
-        margin-top: 6vh;
-    }
-    .event-dates h2 {
-        font-size: 3.5vh;
-    }
-    #registerBtn {
-        padding: 1.5vh 3vh;
-        font-size: 2vh;
-    }
-    .countdown-holder {
-        margin: 0 2vh;
-    }
-    .countdown-holder .dday,
-    .countdown-holder .dhour,
-    .countdown-holder .dmin,
-    .countdown-holder .dsec {
-        font-size: 3.5vh;
+        font-size: 4rem;
     }
     .countdown-holder label {
-        font-size: 1.2vh;
+        font-size: 1.2rem;
     }
     .hero-content .entry-footer {
         margin-top: 2vh;
@@ -599,107 +615,51 @@ body {
     }
 }
 
-/* Tablets (max-width: 768px) */
-@media (max-width: 768px) {
-    .entry-header img {
-        width: 85%;
-        max-height: 20vh;
-    }
-    .hero-content .entry-header {
-        margin-top: 1vh;
-    }
-    .event-dates {
-        margin-top: 6vh;
-    }
-    .event-dates h2 {
-        font-size: 3.5vh;
-    }
-}
-
-/* Small screens (max-width: 576px) */
-@media (max-width: 576px) {
+/* Mobile (max-width: 480px) */
+@media (max-width: 480px) {
     .hero-content {
-        padding: 6vh 0;
+        padding: 8vh 0;
         min-height: 90vh;
     }
     .hero-content .entry-header {
+        margin-top: 3vh;
+    }
+    .entry-header img {
+        max-height: 15vh;
+        width: 90%;
+    }
+    #registerBtn {
+        padding: 1.5vh 3vh;
+        font-size: 1.8vh;
+    }
+    .event-dates {
         margin-top: 5vh;
     }
     .event-dates h2 {
-        margin-top: 6vh;
-        font-size: 2.8vh;
-    }
-    #registerBtn {
-        padding: 1vh 2vh;
-        font-size: 1.8vh;
-    }
-    .countdown-holder {
-        margin: 0 1vh;
-    }
-    .countdown-holder .dday,
-    .countdown-holder .dhour,
-    .countdown-holder .dmin,
-    .countdown-holder .dsec {
         font-size: 2.5vh;
     }
-    .countdown-holder label {
-        font-size: 1vh;
-    }
-}
-
-/* Portrait orientation (max-width: 576px) */
-@media (max-width: 576px) and (orientation: portrait) {
-    .event-dates h2 {
-        font-size: 5vw;
-    }
     .event-dates h2 sup {
-        font-size: 1.5vw;
+        font-size: 1vh;
     }
     .countdown {
         flex-wrap: wrap;
-    }
-    .countdown-holder .dday,
-    .countdown-holder .dhour,
-    .countdown-holder .dmin,
-    .countdown-holder .dsec {
-        font-size: 2.5vh;
-    }
-    .countdown-holder label {
-        font-size: 1vh;
-    }
-}
-
-/* Landscape orientation (max-height: 450px) */
-@media (max-height: 450px) and (orientation: landscape) {
-    .hero-content {
-        padding: 4vh 0;
-    }
-    .entry-header img{
-        margin-top: 4vh;
-    }
-    .event-dates h2 {
-        margin-top: 3vh;
-        font-size: 4vw;
-    }
-    .countdown {
         margin-top: 1vh;
     }
+    .countdown-holder {
+        margin: 0 2vh 1vh;
+    }
     .countdown-holder .dday,
     .countdown-holder .dhour,
     .countdown-holder .dmin,
     .countdown-holder .dsec {
-        font-size: 2.2vh;
+        font-size: 3rem; /* Responsive size using rem */
     }
     .countdown-holder label {
-        font-size: 0.9vh;
-    }
-    #registerBtn {
-        padding: 0.8vh 1.5vh;
-        font-size: 1.5vh;
+        font-size: 1rem; /* Responsive size using rem */
     }
     .hero-content .entry-footer {
-        margin-top: 1vh;
-        margin-bottom: 4vh;
+        margin-top: 1.5vh;
+        margin-bottom: 6vh;
     }
 }
 
