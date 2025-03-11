@@ -22,42 +22,42 @@
             'description' => 'Official maJIStic 2k25 T-Shirt with vibrant design. Made of 100% cotton for ultimate comfort.',
             'price' => 599,
             'image' => 'https://via.placeholder.com/300x250.png?text=T-Shirt'
-        ],
-        [
-            'name' => 'maJIStic Hoodie',
-            'category' => 'Apparel',
-            'description' => 'Stay warm with this stylish maJIStic 2k25 hoodie. Perfect for the fest season!',
-            'price' => 1299,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Hoodie'
-        ],
-        [
-            'name' => 'Event Cap',
-            'category' => 'Accessories',
-            'description' => 'Limited edition cap with maJIStic 2k25 logo. Adjustable fit for all sizes.',
-            'price' => 399,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Cap'
-        ],
-        [
-            'name' => 'maJIStic Tote Bag',
-            'category' => 'Accessories',
-            'description' => 'Eco-friendly tote bag with maJIStic 2k25 branding. Perfect for carrying your essentials.',
-            'price' => 299,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Tote+Bag'
-        ],
-        [
-            'name' => 'Festival Wristband',
-            'category' => 'Accessories',
-            'description' => 'Exclusive wristband for maJIStic 2k25 attendees. Show your fest spirit!',
-            'price' => 199,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Wristband'
-        ],
-        [
-            'name' => 'Graphic Tee',
-            'category' => 'Apparel',
-            'description' => 'A trendy graphic tee with unique maJIStic 2k25 artwork. Limited stock!',
-            'price' => 699,
-            'image' => 'https://via.placeholder.com/300x250.png?text=Graphic+Tee'
         ]
+        // [
+        //     'name' => 'maJIStic Hoodie',
+        //     'category' => 'Apparel',
+        //     'description' => 'Stay warm with this stylish maJIStic 2k25 hoodie. Perfect for the fest season!',
+        //     'price' => 1299,
+        //     'image' => 'https://via.placeholder.com/300x250.png?text=Hoodie'
+        // ],
+        // [
+        //     'name' => 'Event Cap',
+        //     'category' => 'Accessories',
+        //     'description' => 'Limited edition cap with maJIStic 2k25 logo. Adjustable fit for all sizes.',
+        //     'price' => 399,
+        //     'image' => 'https://via.placeholder.com/300x250.png?text=Cap'
+        // ],
+        // [
+        //     'name' => 'maJIStic Tote Bag',
+        //     'category' => 'Accessories',
+        //     'description' => 'Eco-friendly tote bag with maJIStic 2k25 branding. Perfect for carrying your essentials.',
+        //     'price' => 299,
+        //     'image' => 'https://via.placeholder.com/300x250.png?text=Tote+Bag'
+        // ],
+        // [
+        //     'name' => 'Festival Wristband',
+        //     'category' => 'Accessories',
+        //     'description' => 'Exclusive wristband for maJIStic 2k25 attendees. Show your fest spirit!',
+        //     'price' => 199,
+        //     'image' => 'https://via.placeholder.com/300x250.png?text=Wristband'
+        // ],
+        // [
+        //     'name' => 'Graphic Tee',
+        //     'category' => 'Apparel',
+        //     'description' => 'A trendy graphic tee with unique maJIStic 2k25 artwork. Limited stock!',
+        //     'price' => 699,
+        //     'image' => 'https://via.placeholder.com/300x250.png?text=Graphic+Tee'
+        // ]
     ];
     ?>
 
@@ -70,7 +70,7 @@
     <!-- Main Content -->
     <div class="container py-5">
         <!-- Filters Section -->
-        <div class="filters-section mb-4">
+        <!-- <div class="filters-section mb-4">
             <div class="row">
                 <div class="col-md-4 mb-3 mb-md-0">
                     <label for="searchText" class="form-label">Search</label>
@@ -98,7 +98,7 @@
                     </select>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="row g-4">
             <!-- Products List -->
@@ -158,36 +158,35 @@
 
     <!-- Checkout Modal -->
     <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="checkoutModalLabel"><i class="fas fa-shopping-bag me-2"></i>Complete Your Purchase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="checkoutForm" method="POST">
-                        <div class="mb-3">
-                            <label for="buyerName" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="jis_id" class="form-label">JIS ID</label>
-                            <input type="text" class="form-control" id="jis_id" name="jis_id" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="buyerEmail" class="form-label">Your Email</label>
-                            <input type="email" class="form-control" id="buyerEmail" name="buyer_email" required>
-                        </div>
-                        
-                        <input type="hidden" name="cart_data" id="cartData">
-                        <button type="submit" class="pay-btn w-100">
-                            <i class="fas fa-credit-card me-2"></i>Proceed to Payment
-                        </button>
-                    </form>
-                </div>
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkoutModalLabel"><i class="fas fa-shopping-bag me-2"></i>Complete Your Purchase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="checkoutForm" method="POST">
+                    <div class="mb-3">
+                        <label for="buyerName" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="jis_id" class="form-label">JIS ID</label>
+                        <input type="text" class="form-control" id="jis_id" name="jis_id" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="buyerEmail" class="form-label">Your Email</label>
+                        <input type="email" class="form-control" id="buyerEmail" name="buyer_email" required>
+                    </div>
+                    <input type="hidden" name="cart_data" id="cartData">
+                    <button type="submit" class="pay-btn w-100">
+                        <i class="fas fa-credit-card me-2"></i>Proceed to Payment
+                    </button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
     <?php include 'includes/footer.php'; ?>
     <?php include 'includes/scripts.php'; ?>
@@ -415,7 +414,7 @@
         .page-header {
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             padding: 3rem 0;
-            margin-top: 50px;
+            margin-top: 80px;
             text-align: center;
             border-radius: 0.5rem;
             position: relative;
@@ -452,44 +451,58 @@
             opacity: 0.9;
         }
         
-        .filters-section {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
         
-        .filters-section .form-control,
+        
+
+        /* Style the select element itself */
         .filters-section .form-select {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1); /* Keep the semi-transparent background */
             border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--light);
+            color: var(--light); /* White text */
             font-weight: 400;
             padding: 0.7rem 1rem;
             border-radius: 0.5rem;
-        }
-        
-        .filters-section .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .filters-section .form-select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'%3e%3cpath d='M0 0 L6 6 L12 0 Z' fill='none' stroke='%23ffffff' stroke-width='1' stroke-linecap='round' stroke-linejoin='miter'/%3e%3cpath d='M0 0 L12 0' fill='none' stroke='%23ffffff' stroke-width='1' stroke-dasharray='2 2'/%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'%3e%3cpath d='M0 0 L6 6 L12 0 Z' fill='none' stroke='%23ffffff' stroke-width='1' stroke-linecap='round' stroke-linejoin='miter'/%3e%3c/svg%3e"); /* Simplified arrow */
             background-repeat: no-repeat;
             background-position: right 1rem center;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
         }
-        
-        .filters-section label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+
+        /* Hover and focus states for select */
+        .filters-section .form-select:hover,
+        .filters-section .form-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--secondary); /* #15a88a */
+            box-shadow: 0 0 0 0.25rem rgba(21, 168, 138, 0.25);
         }
-        
+
+        /* Style the dropdown menu (options list) */
+        .filters-section .form-select option {
+            background: #1e1e1e; /* Dark background for options */
+            color: var(--light); /* White text */
+            padding: 0.5rem; /* Optional: improve spacing */
+        }
+
+        /* Ensure the dropdown menu itself is styled */
+        .filters-section .form-select:focus + .dropdown-menu,
+        .filters-section .form-select ~ .dropdown-menu {
+            background: #1e1e1e; /* Match modal background */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--light);
+        }
+
+        /* Fix for browser-specific dropdowns */
+        @-moz-document url-prefix() { /* Firefox */
+            .filters-section .form-select {
+                color: var(--light);
+            }
+            .filters-section .form-select option {
+                background: #1e1e1e;
+                color: var(--light);
+            }
+        }
         .product-card {
             background: rgba(255, 255, 255, 0.07);
             border-radius: 1rem;
@@ -769,6 +782,24 @@
             box-shadow: none;
         }
         
+
+        .modal-dialog {
+            max-width: 500px; /* Adjust width as needed */
+            margin: 0 auto; /* Center horizontally */
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .modal.fade .modal-dialog {
+            transform: translate(0, -50%) !important; /* Adjust vertical position */
+            top: 50%;
+        }
+
+        .modal.show .modal-dialog {
+            transform: translate(0, -50%) !important; /* Maintain position when shown */
+        }
+
         .modal-content {
             background: #1e1e1e;
             color: var(--light);
