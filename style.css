@@ -210,11 +210,11 @@ body {
         width: 100%; /* Full width for mobile screens */
         margin: 10px 0; /* Adjust margin for spacing */
     }
-    .event-dates {
-        order: 1; /* Ensure event dates are displayed first */
-        width: 100%; /* Full width */
-        text-align: center; /* Center align */
-    }
+    /* .event-dates {
+        order: 1;
+        width: 100%;
+        text-align: center;
+    } */
     .countdown {
         order: 2; /* Ensure countdown is displayed second */
         width: 100%; /* Full width */
@@ -453,36 +453,45 @@ body {
 /*------------------------------------------------------------
 # Event Dates
 ------------------------------------------------------------*/
-.event-dates {
+/* .event-dates {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    
+} */
+
+.event-dates{
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     margin: 3vh 0;
     margin-top: 10vh;
+    
 }
 
-.event-dates h2 {
+.event-dates p {
     text-transform: uppercase;
     background-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,78,200,1) 100%);
     background-size: 100% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-family: 'Poppins', sans-serif;
-    font-size: 4vh;
+    font-size: 7vh;
     font-weight: 700;
     opacity: .8;
     animation: gradientAnim 3.5s ease alternate infinite;
 }
 
-.event-dates h2 sup {
+.event-dates p sup {
     text-transform: uppercase;
     background-image: linear-gradient(to right top, #3437ff, #1265ff, #2facff, #4dfff6, #12ebbc);
     background-size: 50% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-family: 'Poppins', sans-serif;
-    font-size: 1.2vh;
+    font-size: 3.2vh;
     font-weight: 700;
     opacity: .8;
     animation: gradientAnim 3.5s ease alternate infinite;
