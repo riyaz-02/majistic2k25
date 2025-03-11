@@ -20,9 +20,10 @@
             margin: 0 auto;
             color: white;
             backdrop-filter: blur(10px);
-            background-color: rgba(0, 0, 0, 0.5);
+            /* background-color: rgba(0, 0, 0, 0.5); */
             padding: 20px;
             border-radius: 10px;
+            margin-top: 70px;
         }
         .highlight {
             color: #e53e3e;
