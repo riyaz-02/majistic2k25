@@ -88,10 +88,10 @@ body {
 # site-header
 ------------------------------------------------------------*/
 body {
-    background: url(images/pageback.png) no-repeat center center;
-    background-size: cover;
-    object-fit: cover;
-    background-blend-mode: color-burn;
+    background: url(images/pageback.png) no-repeat center top;
+    background-size: 100% auto; /* Changed from 'cover' to show full width */
+    min-height: 100vh; /* Ensure minimum height covers viewport */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .site-header {
