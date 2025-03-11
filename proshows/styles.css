@@ -3,8 +3,6 @@
 
 html, body {
   overflow-x: hidden; /* Prevent horizontal scrollbar */
-  margin: 0;
-  padding: 0;
 }
 
 #proshows-carousel {
@@ -12,92 +10,51 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: "Nunito", sans-serif;
-  width: 100%;
-  position: relative;
-  /* Remove fixed height to allow auto sizing */
+}
+
+#proshows-carousel .swiper-slide img {
+  /*width: 100%;*/
 }
 
 #proshows-carousel .swiper1 {
   width: 100%;
-  position: relative;
-  /* Remove fixed height to allow auto sizing */
+  background: transparent;
 }
 
-/* Swiper slide styling */
-#proshows-carousel .swiper-slide {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  /* Remove fixed height to allow auto sizing */
-  aspect-ratio: 16/9; /* Optional: Set aspect ratio for slides */
-}
-
-#proshows-carousel .swiper-slide img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  position: relative; /* Change from absolute to relative */
-  display: block; /* Ensure image displays properly */
-  z-index: 1;
-}
-
-#proshows-carousel .slide-content {
-  position: absolute;
-  bottom: 20%;
-  left: 5%;
-  z-index: 10;
-  color: #fff;
-  max-width: 80%;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  border-radius: 10px;
-}
-
-#proshows-carousel .slide-content h1 {
-  font-family: "Kalam", cursive;
-  font-size: 3rem;
-  margin: 0 0 10px 0;
-}
-
-#proshows-carousel .slide-content p {
-  font-size: 1.2rem;
-  margin: 0;
-}
-
-/* Navigation arrows styling */
-#proshows-carousel .swiper-button-next,
-#proshows-carousel .swiper-button-prev {
-  color: #ffffff;
-  background: rgba(0, 0, 0, 0.5);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+#proshows-carousel {
   display: flex;
   justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 70vh;
 }
 
-#proshows-carousel .swiper-button-next:after,
-#proshows-carousel .swiper-button-prev:after {
-  font-size: 20px;
-  font-weight: bold;
+@media (max-width: 1200px) {
+  #proshows-carousel {
+    height: 70vh;
+  }
 }
 
-/* Pagination styling */
-#proshows-carousel .swiper-pagination {
-  bottom: 20px;
+@media (max-width: 880px) {
+  #proshows-carousel {
+    height: 70vh;
+  }
 }
 
-#proshows-carousel .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  background: rgba(255, 255, 255, 0.7);
-  opacity: 0.5;
+@media (max-width: 580px) {
+  #proshows-carousel {
+    height: 80vh;
+  }
 }
 
-#proshows-carousel .swiper-pagination-bullet-active {
-  background: #ffffff;
-  opacity: 1;
+@media (max-width: 500px) {
+  #proshows-carousel {
+    height: 90vh;
+  }
+}
+
+#proshows-carousel .swiper1 {
+  width: 100%;
+  height: 100%;
 }
 
 #proshows-carousel .swiper1 .swiper-wrapper .swiper-slide {
@@ -108,8 +65,6 @@ html, body {
   justify-content: center;
   align-items: center;
   animation: fade-in 0.5s ease-in-out;
-  width: 100%;
-  /* Remove height 100% to allow auto sizing */
 }
 
 #proshows-carousel .swiper-slide-prev,
@@ -119,11 +74,9 @@ html, body {
 
 #proshows-carousel .hero {
   position: absolute;
-  bottom: auto;
-  right: 5%;
+  bottom:auto;
   z-index: 10;
   width: 40rem;
-  max-width: 50%;
   filter: contrast(100%);
   pointer-events: none;
 }
@@ -136,14 +89,13 @@ html, body {
   font-size: 5rem;
   color: #fff;
   transition-delay: 0.3s;
-  z-index: 20;
 }
 
 #proshows-carousel .description-box {
   position: absolute;
-  top: 35%;
+  top: 30%;
   left: 5%;
-  width: 40%;
+  width: 50%;
   padding: 10px 20px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -151,7 +103,7 @@ html, body {
   color: #fff;
   font-size: 1.2rem;
   text-align: center;
-  z-index: 20;
+  z-index: 6;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
@@ -163,13 +115,13 @@ html, body {
   right: 0;
   position: absolute;
   bottom: 0;
-  z-index: 1; /* Ensure it is behind the hero image */
-  width: 100%;
-  height: 100%;
+  z-index: -4; /* Ensure it is behind the hero image */
+  width: 600px;
+  height: 600px;
   filter: blur(50px);
   background-image: linear-gradient(#4ddc9e, #5b37eb, #f1307e);
   animation: rotate 10s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
-  border-radius: 0;
+  border-radius: 30% 70% 70% 30%/30% 30% 70% 70%;
   overflow: hidden; /* Prevent horizontal scrollbar */
 }
 
@@ -179,6 +131,15 @@ html, body {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes line-animation {
+  from {
+    background-position: 100%;
+  }
+  to {
+    background-position: -100%;
   }
 }
 
@@ -224,7 +185,12 @@ html, body {
   }
 }
 
-/* Responsive styles */
+
+
+@media (max-width: 2050px) {
+  #proshows-carousel{
+    padding: 0 60px;
+  }
   #proshows-carousel .title {
     top: 5%;
   }
@@ -234,7 +200,7 @@ html, body {
     transform: none;
     width: 600px;
   }
-
+}
 
 @media (max-width: 1200px) {
   #proshows-carousel{
@@ -249,9 +215,6 @@ html, body {
     transform: none;
     width: 600px;
   }
-  #proshows-carousel .slide-content h1 {
-    font-size: 2.5rem;
-  }
 }
 
 @media (max-width: 880px) {
@@ -265,24 +228,6 @@ html, body {
   #proshows-carousel .description-box {
     top: 5%;
     width: 80%;
-  }
-}
-
-@media (max-width: 768px) {
-  #proshows-carousel .slide-content {
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    width: 80%;
-  }
-  
-  #proshows-carousel .slide-content h1 {
-    font-size: 2rem;
-  }
-  
-  #proshows-carousel .slide-content p {
-    font-size: 1rem;
   }
 }
 
@@ -309,7 +254,7 @@ html, body {
 
 @media (max-width: 500px) {
   #proshows-carousel {
-    /* Remove fixed height */
+    height: 550px;
   }
   #proshows-carousel .gradient {
     right: auto;
@@ -324,19 +269,5 @@ html, body {
   #proshows-carousel .title {
     top: 7%;
     font-size: 4rem;
-  }
-  #proshows-carousel .slide-content h1 {
-    font-size: 1.5rem;
-  }
-  
-  #proshows-carousel .swiper-button-next,
-  #proshows-carousel .swiper-button-prev {
-    width: 40px;
-    height: 40px;
-  }
-  
-  #proshows-carousel .swiper-button-next:after,
-  #proshows-carousel .swiper-button-prev:after {
-    font-size: 16px;
   }
 }
