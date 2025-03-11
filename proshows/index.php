@@ -11,8 +11,6 @@
           </div>
           <div class="info-content">
             <div class="info-details">
-              <div class="info-item"><i class="icon"><ion-icon name="calendar-outline"></ion-icon></i> March 15, 2025</div>
-              <div class="info-item"><i class="icon"><ion-icon name="time-outline"></ion-icon></i> 7:00 PM Onwards</div>
               <div class="info-item"><i class="icon"><ion-icon name="musical-notes-outline"></ion-icon></i> Modern Fusion</div>
               <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> Main Stage</div>
             </div>
@@ -34,8 +32,6 @@
           </div>
           <div class="info-content">
             <div class="info-details">
-              <div class="info-item"><i class="icon"><ion-icon name="calendar-outline"></ion-icon></i> March 16, 2025</div>
-              <div class="info-item"><i class="icon"><ion-icon name="time-outline"></ion-icon></i> 8:00 PM Onwards</div>
               <div class="info-item"><i class="icon"><ion-icon name="musical-notes-outline"></ion-icon></i> Folk Fusion</div>
               <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> Main Stage</div>
             </div>
@@ -57,8 +53,6 @@
           </div>
           <div class="info-content">
             <div class="info-details">
-              <div class="info-item"><i class="icon"><ion-icon name="calendar-outline"></ion-icon></i> March 17, 2025</div>
-              <div class="info-item"><i class="icon"><ion-icon name="time-outline"></ion-icon></i> 9:00 PM Onwards</div>
               <div class="info-item"><i class="icon"><ion-icon name="musical-notes-outline"></ion-icon></i> Electro Pop</div>
               <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> Main Stage</div>
             </div>
@@ -129,12 +123,13 @@
     opacity: 1;
   }
   .artist-info-box {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     color: #fff;
     padding: 15px;
     border-radius: 10px;
     margin-top: 15px;
-    max-width: 90%;
+    max-width: 100%;
+    backdrop-filter: blur(10px);
   }
   .artist-info-box .info-header {
     display: flex;
@@ -150,8 +145,9 @@
     font-size: 0.9em;
   }
   .artist-info-box .info-header .info-title {
-    font-size: 1.2em;
+    font-size: 1.5em;
     font-weight: bold;
+    color: #ff4081;
   }
   .artist-info-box .info-content {
     display: flex;
