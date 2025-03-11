@@ -2058,7 +2058,7 @@ body {
 /*---------FOOTER---------*/
 footer {
     margin-top: 50px;
-    background: url('images/footer-cover.jpg') no-repeat center center;
+    background: url('images/footer-cover.png') no-repeat center center;
     background-size: cover;
     background-attachment: fixed; /* Add parallax effect */
     color: white;

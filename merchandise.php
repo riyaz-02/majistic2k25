@@ -233,7 +233,7 @@ $merchandise = [
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--dark), #242424);
+            background: linear-gradient(135deg, var(--dark),rgb(87, 7, 81)); /** #242424 */
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
