@@ -146,6 +146,121 @@ body {
         height: 3rem; /* Adjust height for smaller screens */
         margin-right: 10px; /* Adjust margin for smaller screens */
     }
+    .site-navigation ul li a {
+        font-size: 20px;
+    }
+    .hero-content {
+        padding: 80px 0;
+    }
+    .hero-content .entry-header {
+        padding-top: 100px;
+    }
+    .hero-content .entry-header span {
+        font-size: 80px;
+        white-space: nowrap; /* Ensure text stays in one line */
+    }
+    .hero-content .entry-header .entry-meta-date {
+        top: 40px;
+        font-size: 18px;
+    }
+    .countdown {
+        width: 90%; /* Resize to 90% width */
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 3rem;
+    }
+    .countdown-holder label {
+        font-size: 1rem;
+    }
+    .entry-footer .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+    .home-gallery {
+        overflow: hidden; /* Hide overflow to prevent scrollbars */
+        width: 100%; /* Full viewport width */
+        height: 500px;
+    }
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive columns */
+        grid-auto-rows: 100px; /* Set row height to reduce vertical spacing */
+        grid-gap: 5px; /* Reduce gap for smaller screens */
+    }
+    .gallery__item--hor {
+        grid-column: span 1;
+    }
+    .gallery__item--vert {
+        grid-row: span 1;
+    }
+    .gallery__item--lg {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    .sponsor-marquee {
+        height: 10vh;
+    }
+    .marquee-content li img {
+        height: 80px;
+    }
+    .card-events {
+        width: 100%; /* Full width for mobile screens */
+        margin: 10px 0; /* Adjust margin for spacing */
+    }
+    .event-dates {
+        order: 1; /* Ensure event dates are displayed first */
+        width: 100%; /* Full width */
+        text-align: center; /* Center align */
+    }
+    .countdown {
+        order: 2; /* Ensure countdown is displayed second */
+        width: 100%; /* Full width */
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        margin-top: 20px; /* Add margin to ensure it is below event dates */
+    }
+    .event-dates {
+        margin: 20px 0; /* Reduce margin */
+    }
+    .countdown-holder {
+        margin: 0 12px; /* Reduce space between each countdown holder */
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 3rem; /* Reduce font size for smaller screens */
+    }
+    .countdown-holder label {
+        font-size: 1rem; /* Reduce font size for labels */
+    }
+    .about-card {
+        margin-top: -100px;
+        padding: 15px;
+    }
+    .about-card p {
+        font-size: 14px;
+    }
+    .slide-container {
+        height: 60vh;
+    }
+    .card-events .imgContainer {
+        width: 100%;
+    }
+    .card-events .imgContainer img {
+        width: 100%;
+    }
+    .card-events .content {
+        padding: 5px 10px;
+    }
+    .card-events .content h2 {
+        font-size: 18px;
+    }
 }
 
 .hamburger-menu {
@@ -261,96 +376,46 @@ body {
         font-size: 18px;
     }
 }
-
 /*------------------------------------------------------------
 # hero
 -----------------------------------------------------------*/
 .hero-content {
-    padding: 150px 0;
-    /* background: url(images/heroback.png) no-repeat center center; */
+    padding: 15vh 0;
     background-size: cover;
-    background-attachment: fixed; /* Add parallax effect */
+    background-attachment: fixed;
     position: relative;
-    min-height: 100vh; /* Adjust minimum height for more space */
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Prevent scrolling */
-    z-index: 1; /* Ensure it is below other sections */
-    top: 3rem;
+    overflow: hidden;
+    z-index: 1;
+    top: 3vh;
 }
 
 .hero-content .container {
-    position: absolute; /* Change to absolute positioning */
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 2; /* Ensure it is above the background but below other sections */
-}
-
-@media (max-width: 1200px) {
-    .hero-content {
-        min-height: 90vh; /* Adjust minimum height for medium screens */
-    }
-}
-
-@media (max-width: 992px) {
-    .hero-content {
-        min-height: 80vh; /* Adjust minimum height for smaller screens */
-    }
-}
-
-@media (max-width: 768px) {
-    .hero-content {
-        min-height: 70vh; /* Adjust minimum height for smaller screens */
-    }
-}
-
-@media (max-width: 576px) {
-    .hero-content {
-        min-height: 60vh; /* Adjust minimum height for smallest screens */
-    }
+    z-index: 2;
+    width: 90%;
+    max-width: 90vw;
 }
 
 .hero-content .entry-header {
     position: relative;
     text-align: center;
+    top: 6vh;
 }
-
-.hero-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0; /* Cover the entire hero-content */
-    /*  background: rgba(0, 0, 0, 0.651); /* Semi-transparent black overlay */
-    pointer-events: none; /* Allow clicks to pass through */
-}
-
-.hero-content::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 200px; /* Adjust height as needed */
-    /*background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.664) 100%); /* Transparent to black */
-    pointer-events: none; /* Allow clicks to pass through */
-}
-
-.hero-content .entry-header{
-    top: 6rem;
-}
-
 
 .hero-content .entry-header .entry-meta-date {
     position: absolute;
     width: 100%;
-    top: 20px;
+    top: 2vh;
     font-family: 'Poppins', sans-serif;
-    font-size: 24px;
+    font-size: 2.5vh;
     font-weight: 500;
     color: hsl(0, 0%, 90%);
     text-align: center;
@@ -359,335 +424,308 @@ body {
 .entry-header img {
     width: 70%;
     height: auto;
-    bottom: 20rem;
-}
-
-@media (max-width: 768px) {
-    .entry-header img {
-        width: 95%;
-    }
-    .hero-content .entry-header{
-        margin-top: 4rem;
-    }
-    .hero-content .event-dates{
-        font-size: 50px;
-        margin-top: 7rem;
-    }
-}
-
-@media screen and (min-width: 992px) {
-    .hero-content .entry-header span {
-        font-size: 150px;
-    }
-
-    .hero-content .entry-header .entry-meta-date {
-        top: 60px;
-    }
+    max-height: 30vh;
+    max-width: 70vw;
 }
 
 #registerBtn {
     margin: 0;
     position: relative;
-    padding: 30px 60px; /* Adjust padding as needed */
-    color: white; /* Text color */
-    text-transform: uppercase; /* Uppercase text */
-    letter-spacing: 5px; /* Letter spacing */
-    font-size: 30px; /* Font size */
-    background: rgba(59, 59, 59, 0.1); /* Semi-transparent background */
-    backdrop-filter: blur(10px); /* Blur effect */
-    border: none; /* No border */
-    cursor: pointer; /* Pointer cursor */
-    overflow: hidden; /* Hide overflow */
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Shadow effect */
-    transition: background 0.3s, transform 0.3s; /* Transition for background and transform */
+    padding: 3vh 6vh;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5vh;
+    font-size: 3vh;
+    background: rgba(59, 59, 59, 0.1);
+    backdrop-filter: blur(10px);
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 2vh 5vh rgba(0, 0, 0, 0.5);
+    transition: background 0.3s, transform 0.3s;
 }
 
 #registerBtn:hover {
-    background: rgba(0, 0, 0, 0.473); /* Slightly more opaque on hover */
-    transform: scale(1.05); /* Slightly enlarge the button on hover */
+    background: rgba(0, 0, 0, 0.473);
+    transform: scale(1.05);
 }
 
-#registerBtn::before {
-    content: "";
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    bottom: 2px;
-    width: 50%;
-    background: rgba(59, 59, 59, 0.274); /* Subtle overlay */
-    z-index: 1; /* Behind the text */
-}
-
-#registerBtn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0; /* Behind the text */
-}
-
-#registerBtn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    /* background: linear-gradient(to right, #0c002b, #1779ff);
-    animation: animate1 2s linear infinite;
-    animation-delay: 1s; */
-}
-
-@keyframes animate1 {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
-}
-
-#registerBtn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 2px;
-    height: 100%;
-    /* background: linear-gradient(to bottom, #0c002b, #1779ff);
-    animation: animate2 2s linear infinite;
-    animation-delay: 2s; */
-}
-
-@keyframes animate2 {
-    0% {
-        transform: translateY(-100%);
-    }
-    100% {
-        transform: translateY(100%);
-    }
-}
-
-#registerBtn::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(to left, #0c002b, #1779ff);
-    animation: animate3 2s linear infinite;
-    animation-delay: 1s;
-}
-
-@keyframes animate3 {
-    0% {
-        transform: translateX(100%);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
-}
-
-#registerBtn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(to top, #0c002b, #1779ff);
-    animation: animate4 2s linear infinite;
-    animation-delay: 2s;
-}
-
-@keyframes animate4 {
-    0% {
-        transform: translateY(100%);
-    }
-    100% {
-        transform: translateY(-100%);
-    }
-}
-
-@media (max-width: 1200px) {
-    #registerBtn {
-        padding: 25px 50px;
-        font-size: 25px;
-    }
-}
-
-@media (max-width: 992px) {
-    #registerBtn {
-        padding: 20px 40px;
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 768px) {
-    #registerBtn {
-        padding: 15px 30px;
-        font-size: 18px;
-    }
-}
-
-@media (max-width: 576px) {
-    #registerBtn {
-        padding: 10px 20px;
-        font-size: 16px;
-    }
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
 .event-dates {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: 30px 0;
-  margin-top: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 3vh 0;
+    margin-top: 10vh;
 }
 
 .event-dates h2 {
-  text-transform: uppercase;
-  background-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,78,200,1) 100%);;
+    text-transform: uppercase;
+    background-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,78,200,1) 100%);
     background-size: 100% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-family: 'Poppins', sans-serif;
-  font-size: 3vw;
-  font-weight: 700;
-  opacity: .8;
-  animation: gradientAnim 3.5s ease  alternate infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Poppins', sans-serif;
+    font-size: 4vh;
+    font-weight: 700;
+    opacity: .8;
+    animation: gradientAnim 3.5s ease alternate infinite;
 }
-
 
 .event-dates h2 sup {
     text-transform: uppercase;
     background-image: linear-gradient(to right top, #3437ff, #1265ff, #2facff, #4dfff6, #12ebbc);
     background-size: 50% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-family: 'Poppins', sans-serif;
-  font-size: .9vw;
-  font-weight: 700;
-  opacity: .8;
-  animation: gradientAnim 3.5s ease  alternate infinite;
-  vertical-align: super;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2vh;
+    font-weight: 700;
+    opacity: .8;
+    animation: gradientAnim 3.5s ease alternate infinite;
+    vertical-align: super;
 }
 
-
-@keyframes gradientAnim {
-  to {
-    background-position: 100% top;
-  }
-}
-
-.event-dates p {
-    font-size: 1.2rem; /* Slightly smaller for the day names */
-    color: #555; /* Softer color for contrast */
-    margin: 5px 0 0;
-}
 /*------------------------------------------------------------
 ## countdown
 ------------------------------------------------------------*/
 .countdown {
-    display: flex; /* Ensure countdown is in a single row */
-    justify-content: center; /* Center the countdown */
-    align-items: center; /* Center vertically */
-    flex-wrap: nowrap; /* Prevent wrapping to the next line */
-    width: 100%; /* Full width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
     position: relative;
-    margin-top: 20px; /* Add margin to ensure it is below event dates */
-    top: auto;
-    left: auto;
-    transform: none;
+    margin-top: 2vh;
 }
 
 .countdown-holder {
-    min-width: auto; /* Adjust min-width to prevent issues */
-    margin-bottom: 20px; /* Space below each countdown holder */
-    display: inline-block; /* Display the countdown holders inline */
-    margin: 0 50px; /* Space between each countdown holder */
+    min-width: auto;
+    margin-bottom: 2vh;
+    display: inline-block;
+    margin: 0 5vh;
 }
 
 .countdown-holder .dday,
 .countdown-holder .dhour,
 .countdown-holder .dmin,
 .countdown-holder .dsec {
-    display: block; /* Each time unit is displayed as a block */
-    font-size: 5rem; /* Font size for the time units */
-    font-weight: 600; /* Bold font weight */
-    line-height: 1; /* Line height for better vertical alignment */
-    color: hsl(0, 0%, 100%); /* White color for the text */
+    display: block;
+    font-size: 5vh;
+    font-weight: 600;
+    line-height: 1;
+    color: hsl(0, 0%, 100%);
 }
 
 .countdown-holder label {
-    display: block; /* Each label is displayed as a block */
-    font-size: 1.5rem; /* Font size for the labels */
-    font-weight: 500; /* Bold font weight for labels */
-    color: hsl(0, 0%, 100%); /* White color for the labels */
-}
-
-@media (max-width: 768px) {
-    .countdown {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90%; /* Resize to 90% width */
-    }
-
-    .countdown-holder {
-        margin: 0 12px; /* Reduce space between each countdown holder */
-    }
-
-    .countdown-holder .dday,
-    .countdown-holder .dhour,
-    .countdown-holder .dmin,
-    .countdown-holder .dsec {
-        font-size: 3rem; /* Reduce font size for smaller screens */
-    }
-
-    .countdown-holder label {
-        font-size: 1rem; /* Reduce font size for labels */
-    }
+    display: block;
+    font-size: 1.5vh;
+    font-weight: 500;
+    color: hsl(0, 0%, 100%);
 }
 
 /*------------------------------------------------------------
 ## hero-content entry-footer
 ------------------------------------------------------------*/
 .hero-content .entry-footer {
-    margin-top: 3rem; /* Space above the entry footer */
-    text-align: center; /* Center align the footer content */
-    margin-bottom: 10rem;
+    margin-top: 3vh;
+    text-align: center;
+    margin-bottom: 10vh;
+    width: 100%;
 }
 
+/*------------------------------------------------------------
+## Consolidated Media Queries
+------------------------------------------------------------*/
+/* Large screens (max-height: 800px) */
+@media (max-height: 800px) {
+    .hero-content {
+        padding: 10vh 0;
+    }
+    .entry-header img {
+        max-height: 25vh;
+    }
+    #registerBtn {
+        padding: 2vh 4vh;
+        font-size: 2.5vh;
+    }
+    .event-dates {
+        margin-top: 8vh;
+    }
+    .countdown-holder {
+        margin: 0 3vh;
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 4vh;
+    }
+}
+
+/* Medium screens (max-height: 600px) */
+@media (max-height: 600px) {
+    .hero-content {
+        padding: 8vh 0;
+    }
+    .hero-content .entry-header {
+        top: 4vh;
+    }
+    .event-dates {
+        margin-top: 6vh;
+    }
+    .event-dates h2 {
+        font-size: 3.5vh;
+    }
+    #registerBtn {
+        padding: 1.5vh 3vh;
+        font-size: 2vh;
+    }
+    .countdown-holder {
+        margin: 0 2vh;
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 3.5vh;
+    }
+    .countdown-holder label {
+        font-size: 1.2vh;
+    }
+    .hero-content .entry-footer {
+        margin-top: 2vh;
+        margin-bottom: 8vh;
+    }
+}
+
+/* Tablets (max-width: 768px) */
+@media (max-width: 768px) {
+    .entry-header img {
+        width: 85%;
+        max-height: 20vh;
+    }
+    .hero-content .entry-header {
+        margin-top: 1vh;
+    }
+    .event-dates {
+        margin-top: 6vh;
+    }
+    .event-dates h2 {
+        font-size: 3.5vh;
+    }
+}
+
+/* Small screens (max-width: 576px) */
+@media (max-width: 576px) {
+    .hero-content {
+        padding: 6vh 0;
+        min-height: 90vh;
+    }
+    .hero-content .entry-header {
+        margin-top: 5vh;
+    }
+    .event-dates h2 {
+        margin-top: 6vh;
+        font-size: 2.8vh;
+    }
+    #registerBtn {
+        padding: 1vh 2vh;
+        font-size: 1.8vh;
+    }
+    .countdown-holder {
+        margin: 0 1vh;
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 2.5vh;
+    }
+    .countdown-holder label {
+        font-size: 1vh;
+    }
+}
+
+/* Portrait orientation (max-width: 576px) */
+@media (max-width: 576px) and (orientation: portrait) {
+    .event-dates h2 {
+        font-size: 5vw;
+    }
+    .event-dates h2 sup {
+        font-size: 1.5vw;
+    }
+    .countdown {
+        flex-wrap: wrap;
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 2.5vh;
+    }
+    .countdown-holder label {
+        font-size: 1vh;
+    }
+}
+
+/* Landscape orientation (max-height: 450px) */
+@media (max-height: 450px) and (orientation: landscape) {
+    .hero-content {
+        padding: 4vh 0;
+    }
+    .entry-header img{
+        margin-top: 4vh;
+    }
+    .event-dates h2 {
+        margin-top: 3vh;
+        font-size: 4vw;
+    }
+    .countdown {
+        margin-top: 1vh;
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 2.2vh;
+    }
+    .countdown-holder label {
+        font-size: 0.9vh;
+    }
+    #registerBtn {
+        padding: 0.8vh 1.5vh;
+        font-size: 1.5vh;
+    }
+    .hero-content .entry-footer {
+        margin-top: 1vh;
+        margin-bottom: 4vh;
+    }
+}
+
+/* Remaining styles unchanged */
 .hero-content .entry-footer .btn {
-    background: hsl(0, 0%, 100%); /* White background for buttons */
-    padding: 16px 40px; /* Padding inside the buttons */
-    border-radius: 0; /* No border radius for square corners */
-    margin-right: 20px; /* Space to the right of the button */
-    color: hsl(0, 0%, 17%); /* Dark text color for buttons */
-    font-weight: 600; /* Bold font weight for buttons */
+    background: hsl(0, 0%, 100%);
+    padding: 16px 40px;
+    border-radius: 0;
+    margin-right: 20px;
+    color: hsl(0, 0%, 17%);
+    font-weight: 600;
 }
 
 .hero-content .entry-footer a:hover, 
 .hero-content .entry-footer .current {
-    background: -webkit-linear-gradient(#00d0ff, #25ffbf); /* Gradient background on hover */
-    color: hsl(0, 0%, 0%); /* Change text color to black on hover */
+    background: -webkit-linear-gradient(#00d0ff, #25ffbf);
+    color: hsl(0, 0%, 0%);
 }
-
 
 /* Modal Styling */
 .modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Blur effect */
+    background: rgba(0, 0, 0, 0.7);
     z-index: 9999;
     color: #fff;
 }
@@ -697,8 +735,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.116); /* Semi-transparent background */
-    backdrop-filter: blur(10px); /* Blur effect */
+    background: rgba(255, 255, 255, 0.116);
+    backdrop-filter: blur(10px);
     padding: 20px 30px;
     border-radius: 10px;
     text-align: center;
@@ -706,7 +744,7 @@ body {
     max-width: 600px;
 }
 
-.majisticheadlogo{
+.majisticheadlogo {
     text-align: center;
     margin: 0 auto;
     padding: 20px 30px;
@@ -724,15 +762,16 @@ body {
     color: #fff;
     border: none;
     padding: 10px 20px;
-    margin: 10px auto; /* Center the button */
+    margin: 10px auto;
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
-    width: 60%; /* Decrease width by 30% (100% - 30%) */
+    width: 60%;
 }
+
 .modal-option:hover {
-    background: -webkit-linear-gradient(#00d0ff, #25ffbf); /* Gradient background on hover */
-    color:#000
+    background: -webkit-linear-gradient(#00d0ff, #25ffbf);
+    color: #000;
 }
 
 .close-btn {
@@ -743,7 +782,7 @@ body {
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
-    margin: 30px auto; /* Center the button */
+    margin: 30px auto;
     margin-bottom: 10px;
     width: 40%;
 }
@@ -777,36 +816,26 @@ body {
 }
 
 /*--------------- About Majestic Card -------------------*/
-#about-majistic{
+#about-majistic {
     max-width: 100%;
 }
 
-
 .about-card {
-    background: rgba(255, 255, 255, 0.178); /* Semi-transparent background */
-    backdrop-filter: blur(10px); /* Blur effect */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    padding: 20px; /* Padding inside the card */
-    max-width: 100%; /* Responsive width */
-    width: 100%; /* Full width on small screens */
-    position: relative; /* Positioning context for pseudo elements */
-    z-index: 10; /* Raise the card above the background */
-    margin-top: -170px; /* Lift the card above the background */
+    background: rgba(255, 255, 255, 0.178);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+    margin-top: -170px;
 }
-#about-majistic p{
+
+#about-majistic p {
     color: #fff;
 }
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .about-card {
-        margin: 5px; /* Margin for smaller screens */
-        width: calc(100% - 10px); /* Adjust width for margin */
-    }
-}
-
-
 
 /*--------------- proshows CAROUSEL -------------------*/
 
@@ -1139,8 +1168,58 @@ body {
         grid-auto-rows: 100px; /* Set row height to reduce vertical spacing */
         grid-gap: 5px; /* Reduce gap for smaller screens */
     }
+    .about-card {
+        margin-top: -100px;
+        padding: 15px;
+    }
+    .about-card p {
+        font-size: 14px;
+    }
+    .slide-container {
+        height: 60vh;
+    }
+    .card-events .imgContainer {
+        width: 100%;
+    }
+    .card-events .imgContainer img {
+        width: 100%;
+    }
+    .card-events .content {
+        padding: 5px 10px;
+    }
+    .card-events .content h2 {
+        font-size: 18px;
+    }
+    .event-dates {
+        order: 1; /* Ensure event dates are displayed first */
+        width: 100%; /* Full width */
+        text-align: center; /* Center align */
+    }
+    .countdown {
+        order: 2; /* Ensure countdown is displayed second */
+        width: 100%; /* Full width */
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        margin-top: 20px; /* Add margin to ensure it is below event dates */
+    }
+    .event-dates {
+        margin: 20px 0; /* Reduce margin */
+    }
+    .countdown-holder {
+        margin: 0 12px; /* Reduce space between each countdown holder */
+    }
+    .countdown-holder .dday,
+    .countdown-holder .dhour,
+    .countdown-holder .dmin,
+    .countdown-holder .dsec {
+        font-size: 3rem; /* Reduce font size for smaller screens */
+    }
+    .countdown-holder label {
+        font-size: 1rem; /* Reduce font size for labels */
+    }
 }
-
 
 /*----------SPONORS SECTION------------*/
 
@@ -1234,6 +1313,12 @@ body {
     --marquee-elements-displayed: 3;
   }
 .sponsor-marquee:before, .sponsor-marquee:after { width: 5rem; }
+.sponsor-marquee {
+    height: 10vh;
+}
+.marquee-content li img {
+    height: 80px;
+}
 }
 
 /*Sub pages*/
@@ -1924,6 +2009,25 @@ body {
 
     .marquee-content li img {
         height: 80px;
+    }
+    .form-container img {
+        max-width: 20rem;
+    }
+    .form-container form {
+    }
+    .form-container label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .form-container input, .form-container select {
+        width: 100%;
+    }
+    .form-container .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .form-container button {
+        font-size: 14px;
     }
 }
 
