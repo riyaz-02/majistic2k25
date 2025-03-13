@@ -254,7 +254,9 @@ $merchandise = [
         }
         
         .page-header {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            /* background: linear-gradient(90deg, var(--primary), var(--secondary)); */
+            background: rgb(195,194,123);
+background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 37%, rgba(205,109,213,0.5410539215686274) 95%);
             padding: 3rem 0;
             margin-top: 20px;
             text-align: center;
@@ -262,6 +264,7 @@ $merchandise = [
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            color: black;
         }
         
         .page-header::before {

@@ -88,10 +88,10 @@ body {
 # site-header
 ------------------------------------------------------------*/
 body {
-    background: url(images/pageback.png) no-repeat center top;
-    background-size: 100% auto; /* Changed from 'cover' to show full width */
-    min-height: 100vh; /* Ensure minimum height covers viewport */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+    background: url(images/pageback.png) no-repeat center center;
+    background-size: cover;
+    object-fit: cover;
+    background-blend-mode: color-burn;
 }
 
 .site-header {
@@ -320,7 +320,9 @@ body {
 }
 
 .site-navigation ul li a:hover {
-    color: #1e3f7b;
+    /* color: #1e3f7b; */
+    color: rgb(217,215,102);
+    /* background: linear-gradient(90deg, rgba(217,215,102,1) 0%, rgba(179,194,69,0.5410539215686274) 100%); */
 }
 
 @media (max-width: 992px) {
@@ -334,7 +336,9 @@ body {
         right: 0;
         width: 100%;
         height: calc(100% - 6rem); /* Adjust height to account for navbar */
-        background: rgba(0, 0, 0, 0.9);
+        /* background: rgba(0, 0, 0, 0.9); */
+        background: rgb(217,215,102);
+background: linear-gradient(90deg, rgba(217,215,102,1) 0%, rgba(179,194,69,0.5410539215686274) 100%);
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -350,7 +354,9 @@ body {
     .site-navigation ul {
         flex-direction: column;
         text-align: center;
-        background: rgba(0, 0, 0, 0.8); /* Blackish semi-transparent background */
+        /* background: rgba(0, 0, 0, 0.8); Blackish semi-transparent background */
+        background: rgb(217,215,102);
+background: linear-gradient(90deg, rgba(217,215,102,1) 0%, rgba(179,194,69,0.5410539215686274) 100%);
         padding: 20px;
         border-radius: 10px;
         width: 100%; /* Ensure it covers 100% width of the screen */
@@ -473,7 +479,8 @@ body {
 
 .event-dates p {
     text-transform: uppercase;
-    background-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,78,200,1) 100%);
+background: rgb(200,192,93);
+background: linear-gradient(90deg, rgba(200,192,93,1) 39%, rgba(231,199,95,1) 75%, rgba(227,224,68,0.5410539215686274) 100%);
     background-size: 100% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -486,8 +493,11 @@ body {
 
 .event-dates p sup {
     text-transform: uppercase;
-    background-image: linear-gradient(to right top, #3437ff, #1265ff, #2facff, #4dfff6, #12ebbc);
+    /* background-image: linear-gradient(to right top, #3437ff, #1265ff, #2facff, #4dfff6, #12ebbc); */
     background-size: 50% auto;
+    background: rgb(200,192,93);
+background: linear-gradient(90deg, rgba(200,192,93,1) 39%, rgba(231,199,95,1) 75%, rgba(227,224,68,0.5410539215686274) 100%);
+
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-family: 'Poppins', sans-serif;
@@ -740,6 +750,8 @@ body {
 
 .modal-option:hover {
     background: -webkit-linear-gradient(#00d0ff, #25ffbf);
+    background-color: rgb(217,215,102);
+    background: linear-gradient(90deg, rgba(217,215,102,1) 0%, rgba(179,194,69,0.5410539215686274) 100%); 
     color: #000;
 }
 
