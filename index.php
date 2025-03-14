@@ -85,7 +85,7 @@
                 <div class="col-12 ">
                     <div class="entry-footer">
                          <!-- Register Button -->
-                         <button class="btn" id="registerBtn">Register</button>
+                         <button class="btn mb-5" id="registerBtn">Register</button>
                         <!-- <a href="#" class="btn current">Explore</a> -->
                     </div>
                 </div>
