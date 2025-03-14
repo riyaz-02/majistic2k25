@@ -3,308 +3,679 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events Carousel</title>
+    <title>Featured Artists - Majistic 2K25</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 10000; /* Ensure it is above other content */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
-            padding-top: 60px;
-            animation: fadeIn 0.5s ease; /* Fade-in animation */
-        }
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(24, 23, 23, 0.73); /* Semi-transparent background */
-            backdrop-filter: blur(10px); /* Blur effect */
-            margin: 1% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            text-align: center;
-            color: white;
-            border-radius: 10px;
-            animation: slideIn 0.5s ease; /* Slide-in animation */
-        }
-        .close {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .register-btn-container {
-            display: flex;
-            flex-direction: column; /* Stack buttons vertically */
-            align-items: center; /* Center align buttons */
-        }
-        .register-btn, .read-more-btn {
-            width: 50%; /* Make buttons take equal space */
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .register-btn {
-            background-color: #4CAF50; /* Green background */
-            color: white;
-        }
-        .register-btn:hover {
-            background-color: #45a049; /* Darker green on hover */
-        }
-        .read-more-btn {
-            background-color:rgba(37, 37, 37, 0.57); /* Blue background */
-            color: white;
-        }
-        .read-more-btn:hover {
-            background-color: #007bb5; /* Darker blue on hover */
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translate(-50%, -60%); }
-            to { transform: translate(-50%, -50%); }
-        }
-    </style>
 </head>
 <body>
-  <div class="heading-container flip-in" id="events">
-              <h1 class="text-center display-4 font-weight-bold section-title">Majestic Showdowns 2k25</h1>
-          </div>
-<section id="events-carousel" class="zoom-in">
-  <div class="swiper">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide swiper-slide--one">
-        <span>TAAL SE TAAL MILA</span>
-        <div>
-          <h2>Groove to Win, Dance to Shine!</h2>
-          <div class="register-btn-container">
-            <button id="registerBtn" class="register-btn" onclick="openModal('modal1')">Explore</button>
-          </div>
-        </div>
-      </div>
-      <div class="swiper-slide swiper-slide--two">
-        <span>ACTOMANIA</span>
-        <div>
-          <h2>Lights, Camera, Action—Steal the Show!</h2>
-          <div class="register-btn-container">
-            <button id="registerBtn" class="register-btn" onclick="openModal('modal2')">Explore</button>
-          </div>
-        </div>
-      </div>
+    <div class="artist-page-background"></div>
 
-      <div class="swiper-slide swiper-slide--three">
-        <span>THE POETRY SLAM</span>
-        <div>
-          <h2>Words That Echo, Verses That Inspire!</h2>
-          <div class="register-btn-container">
-            <button id="registerBtn" class="register-btn" onclick="openModal('modal3')">Explore</button>
-         
-          </div>
-        </div>
-      </div>
-
-      <div class="swiper-slide swiper-slide--four">
-        <span>JAM ROOM</span>
-        <div>
-          <h2>Feel the Beat, Rock the Street!</h2>
-          <div class="register-btn-container">
-            <button id="registerBtn" class="register-btn" onclick="openModal('modal4')">Explore</button>
+    <!-- Artist Section Start -->
+    <section id="artists-carousel" class="artist-fade-in">
+        <div class="artist-swiper-container">
+            <div class="swiper-wrapper">
+                <!-- Artist 1 -->
+                <div class="swiper-slide">
+                    <div class="artist-container">
+                        <div class="artist-banner">
+                            <div class="artist-image" style="background-image: url('https://i.postimg.cc/440j5WCt/360-F-565324708-RYdt-KOxe-VUJKBu-JDeq-Bq-J5hxxg8x-XUv-Y.jpg')">
+                                <div class="artist-overlay">
+                                    <h2 class="artist-name">DJ Night</h2>
+                                    <p class="artist-type">Get Ready for a Night of Electrifying Beats!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artist-event-details">
+                            <h3 class="artist-event-name">Revealing Soon</h3>
+                            <div class="artist-event-info">
+                                <div class="artist-info-item artist-date-info">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>11th April, 2025</span>
+                                </div>
+                                <div class="artist-info-item artist-time-info">
+                                    <i class="fas fa-clock"></i>
+                                    <span>6:00 PM - 10:00 PM</span>
+                                </div>
+                                <div class="artist-info-item artist-location-info">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>JISCE Main Ground</span>
+                                </div>
+                            </div>
+                            <p class="artist-event-description">
+                                "The bass is about to drop, and the crowd is about to go wild! A renowned DJ is taking over Majistic 2K25, bringing high-energy electronic beats, pulsating rhythms, and a night of non-stop dancing. Brace yourself for an unforgettable audio-visual spectacle, where music and madness collide!"
+                            </p>
+                            <button class="artist-register-btn" onclick="registerForEvent('Neon Beats Night')">Register Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Artist 2 -->
+                <div class="swiper-slide">
+                    <div class="artist-container">
+                        <div class="artist-banner">
+                            <div class="artist-image" style="background-image: url('https://i.postimg.cc/8kxnWsWm/pngtree-music-party-jpg-banner-picture-image-1776672.png')">
+                                <div class="artist-overlay">
+                                    <h2 class="artist-name">Band Night</h2>
+                                    <p class="artist-type">A High-Octane Band is Coming to Shake Majistic 2K25!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artist-event-details">
+                            <h3 class="artist-event-name">Revealing Soon</h3>
+                            <div class="artist-event-info">
+                                <div class="artist-info-item artist-date-info">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>12 April, 2025</span>
+                                </div>
+                                <div class="artist-info-item artist-time-info">
+                                    <i class="fas fa-clock"></i>
+                                    <span>7:30 PM - 10:30 PM</span>
+                                </div>
+                                <div class="artist-info-item artist-location-info">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>JISCE Main Ground</span>
+                                </div>
+                            </div>
+                            <p class="artist-event-description">
+                                "Loud guitars, thunderous drums, and an unstoppable wave of energy—a legendary band is set to take the Majistic 2K25 stage by storm! Whether you’re a fan of rock, fusion, or headbanging anthems, this night will be pure musical madness. Prepare for powerful performances, soul-stirring solos, and a crowd that roars along!"
+                            </p>
+                            <button class="artist-register-btn" onclick="registerForEvent('Rock Revolution')">Register Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Artist 3 -->
+                <div class="swiper-slide">
+                    <div class="artist-container">
+                        <div class="artist-banner">
+                            <div class="artist-image" style="background-image: url('https://i.postimg.cc/CxbydkQ8/silhouette-musicians-stage-festival-dancing-crowd-fans-hall-music-concert-poster-banner-cool-1867254.webp')">
+                                <div class="artist-overlay">
+                                    <h2 class="artist-name">Solo Singer Concert</h2>
+                                    <p class="artist-type">One Voice, One Stage, Infinite Emotions!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artist-event-details">
+                            <h3 class="artist-event-name">Revealing Soon</h3>
+                            <div class="artist-event-info">
+                                <div class="artist-info-item artist-date-info">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>12 April, 2025</span>
+                                </div>
+                                <div class="artist-info-item artist-time-info">
+                                    <i class="fas fa-clock"></i>
+                                    <span>6:00 PM - 9:00 PM</span>
+                                </div>
+                                <div class="artist-info-item artist-location-info">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>JISCE Main Ground</span>
+                                </div>
+                            </div>
+                            <p class="artist-event-description">
+                                "A voice that melts hearts, gives chills, and lights up the night—a mystery artist is set to take the Majistic 2K25 stage for an unforgettable solo concert! Whether it's soulful melodies, foot-tapping hits, or powerful ballads, this artist will leave you spellbound. Get ready to sing along, sway to the rhythm, and witness magic unfold under the stars!"
+                            </p>
+                            <button class="artist-register-btn" onclick="registerForEvent('Melodies Under Moonlight')">Register Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-          </div>
-        </div>
-      </div>
-
-      <div class="swiper-slide swiper-slide--five">
-        <span>FASHION FIESTA</span>
-        <div>
-          <h2>Walk the Ramp, Own the Glam!</h2>
-          <div class="register-btn-container">
-            <button id="registerBtn" class="register-btn" onclick="openModal('modal5')">Explore</button>
+            <!-- Add Navigation -->
+            <div class="artist-swiper-button-next"></div>
+            <div class="artist-swiper-button-prev"></div>
             
-          </div>
+            <!-- Add Pagination -->
+            <div class="artist-swiper-pagination"></div>
         </div>
-      </div>
-    </div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
-  </div>
-</section>
+    </section>
+    <!-- Artist Section End -->
 
-<!-- Modals for event details -->
-<div id="modal1" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal1')">×</span>
-    <h2 style="color: #ff4500; text-shadow: 2px 2px 4px #000;">Taal Se Taal Mila</h2>
-    <p style="color: #fff; font-size: 16px; line-height: 1.5;">
-      <strong style="color: #ff4500;">Taal-Darpana:</strong> Prepare for an *electrifying explosion* of rhythm and soul in this inter-college dance showdown! The stage blazes with *jaw-dropping choreography*, spellbinding moves, and a tidal wave of unleashed creativity. Dancers from every corner unite, fusing their fiery passion and vibrant cultural vibes into a *spectacle of motion and music* that’ll light up our annual college fest with unforgettable energy!<br><br>
-      <strong style="color: #ff4500;">EVENT CO-ORDINATORS:</strong><br>Upasana Paul (+91 6291324934)
-    </p>
-    <button 
-      style="background-color: #ff4500; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;"
-      onclick="registerForEvent('Taal Se Taal Mila')">Register Now!</button>
-  </div>
-</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Artist Swiper with unique configuration
+            var artistSwiper = new Swiper(".artist-swiper-container", {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                speed: 800,
+                autoHeight: true, /* Added to automatically adjust height */
+                keyboard: {
+                    enabled: true
+                },
+                pagination: {
+                    el: ".artist-swiper-pagination",
+                    clickable: true,
+                    dynamicBullets: true
+                },
+                navigation: {
+                    nextEl: ".artist-swiper-button-next",
+                    prevEl: ".artist-swiper-button-prev"
+                },
+                effect: "fade",
+                fadeEffect: {
+                    crossFade: true
+                },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false
+                },
+                on: {
+                    init: function() {
+                        // Update swiper height after initialization
+                        setTimeout(() => {
+                            this.updateAutoHeight(10);
+                        }, 100);
+                    },
+                    slideChangeTransitionEnd: function() {
+                        // Update height after slide changes
+                        this.updateAutoHeight(10);
+                    }
+                }
+            });
 
-<div id="modal2" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal2')">×</span>
-    <h2 style="color: #8a2be2; text-shadow: 2px 2px 4px #000;">Actomania</h2>
-    <p style="color: #fff; font-size: 16px; line-height: 1.5;">
-      Dive into the *heart-pounding drama* of this inter-college theater clash, where the spotlight crowns the boldest storytellers and dream-weavers! With *gut-wrenching tales* and powerhouse performances, this stage ignites with raw emotion, wild creativity, and the sheer *magic of live artistry*—a highlight of our annual college fest that’ll leave you spellbound!<br><br>
-      <strong style="color: #8a2be2;">EVENT CO-ORDINATORS:</strong><br>Dipanwita Lahiri (+91-8653384930)
-    </p>
-    <button 
-      style="background-color: #8a2be2; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;"
-      onclick="registerForEvent('Actomania')">Register Now!</button>
-  </div>
-</div>
+            // Fade-in animation on scroll
+            const artistSection = document.querySelector('#artists-carousel');
+            if (artistSection) {
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            artistSection.classList.add('artist-visible');
+                        } else {
+                            artistSection.classList.remove('artist-visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
 
-<div id="modal3" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal3')">×</span>
-    <h2 style="color: #32cd32; text-shadow: 2px 2px 4px #000;">The Poetry Slam</h2>
-    <p style="color: #fff; font-size: 16px; line-height: 1.5;">
-      <strong style="color: #32cd32;">Words That Echo, Verses That Inspire!</strong> Step into the *fiery arena* of our poetry slam, where raw emotions collide and powerful lines soar! Unleash your *soul-stirring verses* to a crowd buzzing with energy—every word a spark, every stanza a blaze, ready to set our annual college fest ablaze with poetic passion!
-    </p>
-    <button 
-      style="background-color: #32cd32; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;"
-      onclick="registerForEvent('The Poetry Slam')">Register Now!</button>
-  </div>
-</div>
+                observer.observe(artistSection);
+            }
+        });
 
-<div id="modal4" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal4')">×</span>
-    <h2 style="color: #1e90ff; text-shadow: 2px 2px 4px #000;">Jam Room</h2>
-    <p style="color: #fff; font-size: 16px; line-height: 1.5;">
-      Get ready for a *sonic storm* in this inter-college band showdown! Musical titans collide with *earth-shaking beats* and melodies that pierce the soul, delivering a torrent of passion and ingenuity. From pulse-racing rhythms to *haunting harmonies*, this is where college bands unleash their wildest vibes in a *symphonic celebration* that’ll rock our annual college fest!<br><br>
-      <strong style="color: #1e90ff;">EVENT CO-ORDINATORS:</strong><br>Ayush Agarwal (+91-6297076034)
-    </p>
-    <button 
-      style="background-color: #1e90ff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;"
-      onclick="registerForEvent('Jam Room')">Register Now!</button>
-  </div>
-</div>
+        function registerForEvent(eventName) {
+            window.open('registration_inhouse.php', '_blank');
+            console.log(`Registration initiated for ${eventName}`);
+        }
+    </script>
 
-<div id="modal5" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal5')">×</span>
-    <h2 style="color: #ff69b4; text-shadow: 2px 2px 4px #000;">Fashion Fiesta</h2>
-    <p style="color: #fff; font-size: 16px; line-height: 1.5;">
-      <strong style="color: #ff69b4;">GlaM It Up:</strong> Strut into the *dazzling whirlwind* of this inter-college fashion face-off, where the runway transforms into a *sparkling canvas* for fearless style! Visionaries and trendsetters collide, unveiling *mind-bending designs* that dance between bold innovation and timeless grace. It’s a *glorious riot of couture*—a tribute to the wild, wondrous world of fashion artistry, set to light up our annual college fest with glamour and glory!<br><br>
-      <strong style="color: #ff69b4;">EVENT CO-ORDINATORS:</strong>
-    </p>
-    <button 
-      style="background-color: #ff69b4; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;"
-      onclick="registerForEvent('Fashion Fiesta')">Register Now!</button>
-  </div>
-</div>
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js"></script>
-<script>
-  function registerForEvent(eventName) {
-    window.open('registration_inhouse.php', '_blank');
-    console.log(`Registration initiated for ${eventName}`);
-}
-  var swiper = new Swiper(".swiper", {
-  effect: "coverflow",
-  grabCursor: true,
-  centeredSlides: true,
-  slidesPerView: "auto",
-  coverflowEffect: {
-    rotate: 0,
-    stretch: 0,
-    depth: 100,
-    modifier: 2,
-    slideShadows: true
-  },
-  keyboard: {
-    enabled: true
-  },
-  mousewheel: {
-    forceToAxis: true,
-    releaseOnEdges: true
-  },
-  spaceBetween: 60,
-  loop: true,
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true
-  },
-  autoplay: {
-    delay: 8000,
-    disableOnInteraction: false
-  }
-});
-
-// Enable page scrolling when scrolling up or down
-document.querySelector('.swiper').addEventListener('wheel', function(event) {
-  if (event.deltaY !== 0) {
-    window.scrollBy(0, event.deltaY);
-  }
-});
-
-// Zoom-in and zoom-out animation on scroll
-document.addEventListener('DOMContentLoaded', function() {
-  const eventsSection = document.querySelector('#events-carousel');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        eventsSection.classList.add('zoom-in');
-        eventsSection.classList.remove('zoom-out');
-      } else {
-        eventsSection.classList.add('zoom-out');
-        eventsSection.classList.remove('zoom-in');
-      }
-    });
-  }, { threshold: 0.1 });
-
-  observer.observe(eventsSection);
-});
-
-// Open modal
-function openModal(modalId) {
-  document.getElementById(modalId).style.display = "block";
-}
-
-// Close modal
-function closeModal(modalId) {
-  document.getElementById(modalId).style.display = "none";
-}
-
-// Close modal when clicking outside of it
-window.onclick = function(event) {
-  const modals = document.querySelectorAll('.modal');
-  modals.forEach(modal => {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  });
-}
-</script>
+    <style>
+        /* Artist section specific styles with unique prefixes to avoid conflicts */
+        #artists-carousel {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            padding: 20px 0;
+            margin-bottom: 40px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #artists-carousel.artist-visible {
+            opacity: 1;
+        }
+        
+        .artist-heading-container {
+            text-align: center;
+            padding: 40px 20px 10px;
+            margin-bottom: 10px;
+        }
+        
+        .artist-section-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .artist-section-subtitle {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        
+        .artist-swiper-container {
+            width: 90%;
+            height: auto; /* Changed from fixed height to auto */
+            overflow: visible; /* Changed from hidden to visible */
+            position: relative;
+            z-index: 1;
+            margin: 0 auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .artist-container {
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            min-height: 500px; /* Changed from fixed height to min-height */
+            height: auto; /* Added to allow container to grow based on content */
+            border-radius: 20px;
+        }
+        
+        .artist-banner {
+            flex: 2;
+            position: relative;
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            overflow: hidden;
+            min-height: 500px; /* Added minimum height */
+        }
+        
+        .artist-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.5s ease;
+            background-color: #000;
+        }
+        
+        .artist-image:hover {
+            transform: scale(1.03);
+        }
+        
+        .artist-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px;
+            background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
+        }
+        
+        .artist-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+        }
+        
+        .artist-type {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .artist-event-details {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            background: rgba(18, 18, 20, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: visible; /* Changed from auto to visible to prevent scrollbars */
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        
+        .artist-event-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .artist-event-info {
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .artist-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            color: #ffffff;
+        }
+        
+        .artist-info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .artist-info-item:hover {
+            transform: translateX(10px);
+        }
+        
+        .artist-info-item i {
+            color: #ffffff;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .artist-date-info i {
+            background: rgba(74, 0, 224, 0.15);
+            box-shadow: 0 0 10px rgba(74, 0, 224, 0.3);
+        }
+        
+        .artist-time-info i {
+            background: rgba(142, 45, 226, 0.15);
+            box-shadow: 0 0 10px rgba(142, 45, 226, 0.3);
+        }
+        
+        .artist-location-info i {
+            background: rgba(86, 67, 250, 0.15);
+            box-shadow: 0 0 10px rgba(86, 67, 250, 0.3);
+        }
+        
+        .artist-event-description {
+            margin-bottom: 30px;
+            line-height: 1.8;
+            color: #ffffff;
+            flex-grow: 1;
+            font-size: 1.1rem;
+            padding: 0 10px;
+            border-left: 3px solid #8e2de2;
+            font-style: italic;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .artist-register-btn {
+            padding: 18px 35px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            align-self: center;
+            box-shadow: 0 10px 20px rgba(74, 0, 224, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 80%;
+        }
+        
+        .artist-register-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(74, 0, 224, 0.4);
+        }
+        
+        .artist-register-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+        
+        /* Swiper navigation and pagination with unique selectors */
+        #artists-carousel .swiper-slide {
+            height: auto; /* Allow slide to adjust based on content height */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        #artists-carousel .swiper-slide-active {
+            opacity: 1;
+        }
+        
+        .artist-swiper-pagination {
+            position: absolute;
+            bottom: 20px !important;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+        }
+        
+        .artist-swiper-pagination .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0.5;
+            margin: 0 5px;
+        }
+        
+        .artist-swiper-pagination .swiper-pagination-bullet-active {
+            background: #4a00e0;
+            opacity: 1;
+        }
+        
+        .artist-swiper-button-next,
+        .artist-swiper-button-prev {
+            position: absolute;
+            top: 50%;
+            width: 50px;
+            height: 50px;
+            margin-top: -25px;
+            z-index: 10;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            background-color: rgba(74, 0, 224, 0.2);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .artist-swiper-button-next {
+            right: 20px;
+        }
+        
+        .artist-swiper-button-prev {
+            left: 20px;
+        }
+        
+        .artist-swiper-button-next:after,
+        .artist-swiper-button-prev:after {
+            font-family: 'swiper-icons';
+            font-size: 20px;
+            color: #ffffff;
+        }
+        
+        .artist-swiper-button-next:after {
+            content: 'next';
+        }
+        
+        .artist-swiper-button-prev:after {
+            content: 'prev';
+        }
+        
+        .artist-swiper-button-next:hover,
+        .artist-swiper-button-prev:hover {
+            background-color: rgba(74, 0, 224, 0.4);
+            transform: scale(1.1);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .artist-banner {
+                flex: 3;
+            }
+            
+            .artist-event-details {
+                flex: 2;
+            }
+            
+            .artist-container {
+                min-height: 450px; /* Changed from fixed height to min-height */
+            }
+            
+            .artist-swiper-container {
+                height: auto; /* Allow container to adjust based on content */
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .artist-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .artist-banner {
+                min-height: 350px;
+                position: relative;
+                border-radius: 20px 20px 0 0;
+            }
+            
+            .artist-image {
+                position: absolute;
+            }
+            
+            .artist-event-name {
+                font-size: 1.8rem;
+            }
+            
+            .artist-name {
+                font-size: 2rem;
+            }
+            
+            .artist-event-info {
+                padding: 20px;
+            }
+            
+            .artist-swiper-container {
+                height: auto;
+            }
+            
+            .artist-event-details {
+                border-radius: 0 0 20px 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .artist-section-title {
+                font-size: 2.2rem;
+            }
+            
+            .artist-banner {
+                min-height: 300px;
+            }
+            
+            .artist-event-details {
+                padding: 25px;
+            }
+            
+            .artist-event-name {
+                font-size: 1.6rem;
+                margin-bottom: 20px;
+            }
+            
+            .artist-info-item {
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+            
+            .artist-info-item i {
+                font-size: 1.3rem;
+                width: 35px;
+                height: 35px;
+            }
+            
+            .artist-event-description {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            
+            .artist-register-btn {
+                padding: 15px 30px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            #artists-carousel {
+                padding: 15px 0;
+            }
+            
+            .artist-swiper-container {
+                width: 95%;
+            }
+            
+            .artist-section-title {
+                font-size: 1.8rem;
+            }
+            
+            .artist-banner {
+                min-height: 250px;
+            }
+            
+            .artist-name {
+                font-size: 1.5rem;
+            }
+            
+            .artist-type {
+                font-size: 0.9rem;
+            }
+            
+            .artist-event-details {
+                padding: 20px 15px;
+            }
+            
+            .artist-event-name {
+                font-size: 1.4rem;
+                margin-bottom: 15px;
+            }
+            
+            .artist-event-info {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .artist-info-item {
+                margin-bottom: 12px;
+            }
+            
+            .artist-info-item i {
+                font-size: 1.2rem;
+                width: 30px;
+                height: 30px;
+                margin-right: 10px;
+            }
+            
+            .artist-event-description {
+                padding: 0 5px;
+                border-left: 2px solid #8e2de2;
+                margin-bottom: 20px;
+            }
+            
+            .artist-register-btn {
+                width: 100%;
+                text-align: center;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .artist-swiper-button-next,
+            .artist-swiper-button-prev {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
 </body>
 </html>

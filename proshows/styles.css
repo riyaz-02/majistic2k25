@@ -122,8 +122,8 @@ html, body {
 }
 
 #proshows-carousel .info-header {
-  background: linear-gradient(135deg, rgba(77, 220, 158, 0.9), rgba(91, 55, 235, 0.9));
-  padding: 12px 18px;
+  background: linear-gradient(135deg, #3a1c71, #4776E6, #8E54E9);
+  padding: 15px 20px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
@@ -150,7 +150,7 @@ html, body {
 
 #proshows-carousel .info-title {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -166,7 +166,7 @@ html, body {
   top: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.5);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   padding: 5px 15px;
   border-bottom-left-radius: 10px;
   font-weight: 600;
@@ -194,9 +194,9 @@ html, body {
 #proshows-carousel .info-item {
   display: flex;
   align-items: center;
-  padding: 3px; /* Reduced padding */
+  padding: 4px;
   transition: all 0.3s ease;
-  font-size: 0.9rem; /* Slightly reduced */
+  font-size: 1.05rem;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -207,15 +207,15 @@ html, body {
 }
 
 #proshows-carousel .info-item .icon {
-  margin-right: 6px; /* Reduced margin */
-  font-size: 1.1rem; /* Slightly reduced */
+  margin-right: 8px;
+  font-size: 1.25rem;
   color: #4ddc9e;
   display: flex;
   align-items: center;
 }
 
 #proshows-carousel .info-description {
-  font-size: 0.9rem; /* Slightly reduced */
+  font-size: 1.05rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.85);
   text-align: left;
@@ -457,11 +457,11 @@ html, body {
   }
   
   #proshows-carousel .info-title {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
   
   #proshows-carousel .info-description {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
   }
   
   #proshows-carousel .artist-info-box:hover {

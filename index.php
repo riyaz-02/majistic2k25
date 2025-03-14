@@ -106,8 +106,9 @@
 </div>
 
 <div class="heading-container flip-in" id="artist">
-            <h1 class="text-center display-4 font-weight-bold section-title">An Evening with [Artist’s Name]</h1>
+            <h1 class="text-center display-4 font-weight-bold section-title">Majistic 2K25: The Big Reveal</h1>
 </div>
+<?php include 'artist/index.php'; ?>
 
 <!-- Events Section -->
 <section id="events">

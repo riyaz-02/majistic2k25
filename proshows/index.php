@@ -125,55 +125,7 @@
   .fade-in.visible {
     opacity: 1;
   }
-  .artist-info-box {
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 15px;
-    max-width: 100%;
-    backdrop-filter: blur(10px);
-  }
-  .artist-info-box .info-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  .artist-info-box .info-header .artist-tag {
-    background: #ff4081;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.9em;
-  }
-  .artist-info-box .info-header .info-title {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #ff4081;
-  }
-  .artist-info-box .info-content {
-    display: flex;
-    flex-direction: column;
-  }
-  .artist-info-box .info-details {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-  }
-  .artist-info-box .info-details .info-item {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-    margin-bottom: 5px;
-  }
-  .artist-info-box .info-details .info-item .icon {
-    margin-right: 5px;
-  }
-  .artist-info-box .info-description {
-    font-size: 0.9em;
-    line-height: 1.5;
-  }
+  /* Remove the conflicting artist-info-box styles that would override our changes */
   @media (max-width: 768px) {
     .artist-info-box {
       max-width: 100%;
