@@ -319,9 +319,9 @@ html, body {
   }
 
   #proshows-carousel .hero {
-    right: 3%;
+    right: 5%;
     transform: none;
-    width: 600px;
+    width: 420px;
   }
 }
 
@@ -334,9 +334,9 @@ html, body {
     width: 420px;
   }
   #proshows-carousel .hero {
-    right: 3%;
+    right: 5%;
     transform: none;
-    width: 600px;
+    width: 420px;
   }
   #proshows-carousel .artist-info-box {
     width: 50%; /* Adjusted width */

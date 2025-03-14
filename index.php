@@ -105,18 +105,22 @@
     </div>
 </div>
 
-<!-- Proshows Section -->
-    <?php include 'proshows/index.php'; ?>
+<div class="heading-container flip-in" id="artist">
+            <h1 class="text-center display-4 font-weight-bold section-title">An Evening with [Artist’s Name]</h1>
+</div>
 
 <!-- Events Section -->
 <section id="events">
     <?php include 'events/index.php'; ?>
 </section>
 
+<!-- Proshows Section -->
+<?php include 'proshows/index.php'; ?>
+
 <!--- After Movies -->
 <section class="aftermovies" id="aftermovie-section">
     <div class="heading-container" id="aftermovies">
-        <h1 class="text-center display-4 font-weight-bold section-title">AFTERMOVIES</h1>
+        <h1 class="text-center display-4 font-weight-bold section-title">THE GRAND RECAP</h1>
     </div>
     <div class="container-fluid p-0">
         <div id="video-container" class="text-center">
@@ -131,7 +135,7 @@
 
     <section id="stats">
     <div class="heading-container flip-in" id="highlights">
-            <h1 class="text-center display-4 font-weight-bold section-title">STATS</h1>
+            <h1 class="text-center display-4 font-weight-bold section-title">IMPACT AT A GLANCE</h1>
         </div>
         <div class="content">
   <div class="box" data-start="0" data-end="9000" data-duration="3000">
@@ -158,7 +162,7 @@
 
     <section id="gallery" class="home-gallery">
         <div class="heading-container flip-in" id="highlights">
-            <h1 class="text-center display-4 font-weight-bold section-title">HIGHLIGHTS</h1>
+            <h1 class="text-center display-4 font-weight-bold section-title">BEST OF maJIStic</h1>
         </div>
         <div class="container">
             <div class="gallery">
@@ -316,7 +320,7 @@
     <!-- Sponsors Section -->
     <section class="base-template">
     <div class="heading-container flip-in" id="sponsors">
-            <h1 class="text-center display-4 font-weight-bold section-title">SPONSORS</h1>
+            <h1 class="text-center display-4 font-weight-bold section-title">Partners in Celebration</h1>
         </div>
 	<div class="wrapper base-template__wrapper">
 		<div class="base-template__content">

@@ -145,36 +145,47 @@ body {
     margin-left: 0;
     object-fit: cover;
 }
+
+/* Improved hamburger menu styling */
 .hamburger-menu {
     display: none;
     flex-direction: column;
     justify-content: space-around;
-    width: 30px; /* Increase width */
-    height: 30px; /* Increase height */
+    width: 35px; /* Increased width */
+    height: 30px; /* Increased height */
     cursor: pointer;
     z-index: 1001;
     position: relative;
-    top: 0; /* Align properly */
+    transition: all 0.3s ease;
+    margin-right: 15px;
 }
 
 .hamburger-menu span {
     width: 100%;
-    height: 3px; /* Increase height */
+    height: 3px; /* Thicker lines */
     background: #fff;
     border-radius: 10px;
     transition: all 0.3s ease-in-out;
+    transform-origin: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
+/* Refined hamburger animation */
 .hamburger-menu.open span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: rotate(45deg) translate(8px, 6px);
 }
 
 .hamburger-menu.open span:nth-child(2) {
     opacity: 0;
+    transform: translateX(-20px);
 }
 
 .hamburger-menu.open span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
+    transform: rotate(-45deg) translate(8px, -6px);
+}
+
+.hamburger-menu:hover span {
+    background: rgb(217,215,102);
 }
 
 .site-navigation {
@@ -199,6 +210,24 @@ body {
     font-size: 16px;
     font-weight: 500;
     transition: color 0.3s;
+    padding: 5px 10px;
+    position: relative;
+}
+
+.site-navigation ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: rgb(217,215,102);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.site-navigation ul li a:hover::after {
+    width: 100%;
 }
 
 .site-navigation ul li a:hover {
@@ -400,36 +429,91 @@ body {
     }
     .site-navigation {
         position: fixed;
-        top: 20rem; /* Adjust to place it below the navbar */
+        top: 6rem; /* Position right below navbar */
         right: 0;
         width: 100%;
-        height: calc(100% - 6rem); /* Adjust height to account for navbar */
-        background: rgb(217,215,102);
-        background: linear-gradient(90deg, rgba(217,215,102,1) 0%, rgba(179,194,69,0.5410539215686274) 100%);
+        height: 0; /* Start with zero height */
+        background: rgba(0, 0, 0, 0.8); /* Dark semi-transparent background */
+        backdrop-filter: blur(10px);
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start; /* Align to top */
         align-items: center;
         transform: translateX(100%);
-        transition: transform 0.35s ease-in-out;
-        z-index: 1000;
+        transition: transform 0.35s ease-in-out, height 0.35s ease-in-out;
+        z-index: 98; /* Just below the header */
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
+    
     .site-navigation.show {
         transform: translateX(0);
+        height: calc(100vh - 6rem); /* Full height minus header */
     }
+    
     .site-navigation ul {
         flex-direction: column;
         text-align: center;
-        background: rgb(217,215,102);
-        background: linear-gradient(90deg, rgba(217,215,102,1) 0%, rgba(179,194,69,0.5410539215686274) 100%);
-        padding: 20px;
-        border-radius: 10px;
+        padding: 40px 0;
         width: 100%; /* Ensure it covers 100% width of the screen */
+        opacity: 0; /* Start with invisible menu items */
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
+    
+    .site-navigation.show ul {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
     .site-navigation ul li {
-        margin: 10px 0;
+        margin: 15px 0;
+        width: 100%;
     }
+    
     .site-navigation ul li a {
         font-size: 24px;
+        display: inline-block;
+        padding: 10px 20px;
+        width: 80%;
+        text-align: center;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+    
+    .site-navigation ul li a:hover {
+        background: rgba(217, 215, 102, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(217, 215, 102, 0.3);
+    }
+    
+    /* Remove the underline effect on mobile */
+    .site-navigation ul li a::after {
+        display: none;
+    }
+}
+
+/* Smaller Tablets / Large Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .site-header .site-branding img {
+        height: 3rem; /* Adjust height for smaller screens */
+        margin-left: 10px; /* Reduce left margin */
+        margin-right: 5px; /* Reduce right margin */
+    }
+    
+    .site-header .site-branding .majisticheadlogo img {
+        height: 2.5rem; /* Slightly smaller logo */
+        margin-right: 10px;
+    }
+    
+    .site-navigation ul li a {
+        font-size: 20px;
+        padding: 8px 16px;
+    }
+    
+    .hamburger-menu {
+        width: 30px; /* Smaller hamburger for mobile */
+        height: 25px;
+        margin-right: 10px;
     }
 }
 

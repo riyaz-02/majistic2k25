@@ -10,11 +10,11 @@
 
         <nav class="site-navigation">
             <ul>
-                <li><a href="index.php#hero">HOME</a></li>
-                <li><a href="event.php">EVENTS</a></li>
-                <li><a href="merchandise.php">MERCHANDIES</a></li>
+                <li><a href="index.php#hero" class="nav-link">HOME</a></li>
+                <li><a href="event.php" class="nav-link">EVENTS</a></li>
+                <li><a href="merchandise.php" class="nav-link">MERCHANDIES</a></li>
                 <!--<li><a href="index.php#sponsors">SPONSORS</a></li>-->
-                <li><a href="about.php">ABOUT</a></li>
+                <li><a href="about.php" class="nav-link">ABOUT</a></li>
                 <!-- <li><a href="contact.php">TEAM</a></li> -->
             </ul><!-- flex -->
         </nav><!-- .site-navigation -->
@@ -32,10 +32,19 @@
         const hamburger = document.querySelector('.hamburger-menu');
         const nav = document.querySelector('.site-navigation');
         const header = document.querySelector('.header-bar');
+        const navLinks = document.querySelectorAll('.nav-link');
 
         hamburger.addEventListener('click', function() {
             hamburger.classList.toggle('open');
             nav.classList.toggle('show');
+        });
+        
+        // Add click event listener to each navigation link
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('open');
+                nav.classList.remove('show');
+            });
         });
         
         // Add scroll event listener to change header background

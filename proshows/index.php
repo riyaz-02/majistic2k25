@@ -1,3 +1,6 @@
+<div class="heading-container" id="archives">
+        <h1 class="text-center display-4 font-weight-bold section-title mb-1 mt-4">REWINDING THE MAGIC</h1>
+    </div>
 <section id="proshows-carousel" class="fade-in">
   <div class="swiper1">
     <div class="swiper-wrapper">
@@ -7,12 +10,12 @@
         <div class="artist-info-box">
           <div class="info-header">
             <span class="artist-tag">Featured Artist</span>
-            <h3 class="info-title">About the Performance</h3>
+            <h3 class="info-title">A Glimpse into Our Glorious Past</h3>
           </div>
           <div class="info-content">
             <div class="info-details">
               <div class="info-item"><i class="icon"><ion-icon name="musical-notes-outline"></ion-icon></i> Modern Fusion</div>
-              <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> Main Stage</div>
+              <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> maJIStic 2k24</div>
             </div>
             <div class="info-description">
               <p>Experience the sonic alchemy of Snigdhajit and Liveline, where traditional melodies meet contemporary beats. Their groundbreaking fusion style has captivated audiences across the country with heart-pounding rhythms and soaring vocals.</p>
@@ -28,12 +31,12 @@
         <div class="artist-info-box">
           <div class="info-header">
             <span class="artist-tag">Headliner</span>
-            <h3 class="info-title">About the Performance</h3>
+            <h3 class="info-title">Echoes of Excellence: Unforgettable Performances</h3>
           </div>
           <div class="info-content">
             <div class="info-details">
               <div class="info-item"><i class="icon"><ion-icon name="musical-notes-outline"></ion-icon></i> Folk Fusion</div>
-              <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> Main Stage</div>
+              <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> maJIStic 2k23</div>
             </div>
             <div class="info-description">
               <p>Somlata and Aces have redefined the Bengali music scene with their innovative approach to traditional folk sounds. Their performances blend cultural heritage with contemporary arrangements that speak to both the heart and soul.</p>
@@ -49,12 +52,12 @@
         <div class="artist-info-box">
           <div class="info-header">
             <span class="artist-tag">Special Guest</span>
-            <h3 class="info-title">About the Performance</h3>
+            <h3 class="info-title">Legends on Stage: A Look Back</h3>
           </div>
           <div class="info-content">
             <div class="info-details">
               <div class="info-item"><i class="icon"><ion-icon name="musical-notes-outline"></ion-icon></i> Electro Pop</div>
-              <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> Main Stage</div>
+              <div class="info-item"><i class="icon"><ion-icon name="location-outline"></ion-icon></i> maJIStic 2k24</div>
             </div>
             <div class="info-description">
               <p>TRAP pushes boundaries with their genre-defying sound that merges electronic production with raw acoustic elements. Their high-energy performances have made them festival favorites and streaming sensations.</p>
