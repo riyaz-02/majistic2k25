@@ -15,22 +15,24 @@
 
     <!-- Merchandise Data -->
     <?php
-$merchandise = [
-    [
-        'name' => 'maJIStic 2k25 T-Shirt',
-        'category' => 'Apparel',
-        'description' => 'Official maJIStic 2k25 T-Shirt with vibrant design. Made of 100% cotton for ultimate comfort.',
-        'price' => 299,
-        'image' => 'images/tshirt1.png',
-        'image2' => 'images/tshirt2.png'
-    ]
-];
-?>
+    $merchandise = [
+        [
+            'name' => 'maJIStic 2k25 Merchandise',
+            'category' => 'Apparel',
+            'description' => 'Official maJIStic 2k25 Merchandise with vibrant design. Made of 100% cotton for ultimate comfort.',
+            'price' => 219,
+            'image' => 'images/tshirt1.png',
+            'image2' => 'images/tshirt2.png',
+            'image3' => 'images/tshirt3.png',   
+
+        ]
+    ];
+    ?>
 
     <!-- Page Header -->
     <header class="container page-header">
         <h1><i class="fas fa-tshirt me-2"></i>EXCLUSIVE MERCHANDISE</h1>
-        <p>Grab your limited-edition maJIStic 2k25 swag and make a statement!</p>
+        <p>Grab your limited-edition maJIStic 2k25 Merchandise!</p>
     </header>
 
     <!-- Main Content -->
@@ -68,45 +70,12 @@ $merchandise = [
                     <h2 class="product-title"><?= $item['name'] ?></h2>
                     <p class="product-description"><?= $item['description'] ?></p>
                     <div class="product-price"><span class="price-currency">₹</span><?= $item['price'] ?></div>
-                    <button class="buy-now-btn" data-item="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+                    <a href="https://pages.razorpay.com/maJIStic_merch?name=<?= urlencode($item['name']) ?>&price=<?= $item['price'] ?>" class="buy-now-btn">
                         <i class="fas fa-shopping-bag me-2"></i>Buy Now
-                    </button>
+                    </a>
                 </div>
             </div>
             <?php endforeach; ?>
-        </div>
-    </div>
-
-    <!-- Checkout Modal -->
-    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="checkoutModalLabel"><i class="fas fa-shopping-bag me-2"></i>Complete Your Purchase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="checkoutForm" method="POST">
-                        <div class="mb-3">
-                            <label for="buyerName" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="buyerName" name="buyer_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="jis_id" class="form-label">JIS ID</label>
-                            <input type="text" class="form-control" id="jis_id" name="jis_id" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="buyerEmail" class="form-label">Your Email</label>
-                            <input type="email" class="form-control" id="buyerEmail" name="buyer_email" required>
-                        </div>
-                        <input type="hidden" name="purchase_item" id="purchaseItem">
-                        <input type="hidden" name="purchase_price" id="purchasePrice">
-                        <button type="submit" class="pay-btn w-100">
-                            <i class="fas fa-credit-card me-2"></i>Proceed to Payment
-                        </button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -116,19 +85,11 @@ $merchandise = [
     <script>
         // Buy Now functionality
         document.querySelector('.buy-now-btn').addEventListener('click', function() {
-            // Add animation effect
             this.classList.add('animate-click');
             setTimeout(() => this.classList.remove('animate-click'), 300);
             
             const itemName = this.getAttribute('data-item');
-            const itemPrice = this.getAttribute('data-price');
-            
-            // Set the item and price in the hidden inputs for checkout
-            document.getElementById('purchaseItem').value = itemName;
-            document.getElementById('purchasePrice').value = itemPrice;
-            
-            // Show notification
-            showNotification(`${itemName} added to checkout!`);
+            showNotification(`${itemName} - Redirecting to payment...`);
         });
         
         // Notification function
@@ -138,10 +99,7 @@ $merchandise = [
             notification.textContent = message;
             document.body.appendChild(notification);
             
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100);
-            
+            setTimeout(() => notification.classList.add('show'), 100);
             setTimeout(() => {
                 notification.classList.remove('show');
                 setTimeout(() => notification.remove(), 300);
@@ -157,41 +115,26 @@ $merchandise = [
             let scrollPosition = 0;
             let autoScrollInterval;
             
-            // Function to scroll to the next image
             function scrollToNext() {
                 scrollPosition += imageWidth;
-                
-                // Reset position when reaching the end (for infinite loop effect)
-                if (scrollPosition >= imageWidth * 4) {
-                    scrollPosition = 0;
-                }
-                
+                if (scrollPosition >= imageWidth * 4) scrollPosition = 0;
                 scrollWrapper.style.transform = `translateX(-${scrollPosition}px)`;
             }
             
-            // Function to scroll to the previous image
             function scrollToPrev() {
                 scrollPosition -= imageWidth;
-                
-                // Reset position when reaching the beginning (for infinite loop effect)
-                if (scrollPosition < 0) {
-                    scrollPosition = imageWidth * 3;
-                }
-                
+                if (scrollPosition < 0) scrollPosition = imageWidth * 3;
                 scrollWrapper.style.transform = `translateX(-${scrollPosition}px)`;
             }
             
-            // Setup automatic scrolling
             function startAutoScroll() {
-                autoScrollInterval = setInterval(scrollToNext, 3000); // Scroll every 3 seconds
+                autoScrollInterval = setInterval(scrollToNext, 3000);
             }
             
-            // Stop automatic scrolling
             function stopAutoScroll() {
                 clearInterval(autoScrollInterval);
             }
             
-            // Event listeners for manual controls
             nextBtn.addEventListener('click', function() {
                 stopAutoScroll();
                 scrollToNext();
@@ -204,11 +147,9 @@ $merchandise = [
                 startAutoScroll();
             });
             
-            // Pause scrolling when hovering over image container
             document.querySelector('.product-image-container').addEventListener('mouseenter', stopAutoScroll);
             document.querySelector('.product-image-container').addEventListener('mouseleave', startAutoScroll);
             
-            // Adjust scroll position when window is resized
             window.addEventListener('resize', function() {
                 const newImageWidth = document.querySelector('.product-image').offsetWidth;
                 const currentIndex = Math.round(scrollPosition / imageWidth);
@@ -216,7 +157,6 @@ $merchandise = [
                 scrollWrapper.style.transform = `translateX(-${scrollPosition}px)`;
             });
             
-            // Start auto-scrolling
             startAutoScroll();
         });
     </script>
@@ -233,7 +173,7 @@ $merchandise = [
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--dark),rgb(87, 7, 81)); /** #242424 */
+            background: linear-gradient(135deg, var(--dark),rgb(87, 7, 81));
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -254,9 +194,7 @@ $merchandise = [
         }
         
         .page-header {
-            /* background: linear-gradient(90deg, var(--primary), var(--secondary)); */
-            background: rgb(195,194,123);
-background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 37%, rgba(205,109,213,0.5410539215686274) 95%);
+            background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 37%, rgba(205,109,213,0.5410539215686274) 95%);
             padding: 3rem 0;
             margin-top: 20px;
             text-align: center;
@@ -296,7 +234,6 @@ background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 
             opacity: 0.9;
         }
         
-        /* Product Image Card */
         .product-image-card {
             background: rgba(255, 255, 255, 0.07);
             border-radius: 1rem;
@@ -332,7 +269,6 @@ background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 
             cursor: zoom-in;
         }
         
-        /* Row-wise Image Scroll */
         .image-scroll-container {
             width: 100%;
             height: 100%;
@@ -354,12 +290,10 @@ background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 
             transition: transform 0.5s ease;
         }
         
-        /* Zoom effect on hover */
         .image-scroll-container:hover .product-image {
             transform: scale(1.2);
         }
         
-        /* Scroll controls */
         .image-scroll-controls {
             position: absolute;
             bottom: 0;
@@ -418,7 +352,6 @@ background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 
             opacity: 0.8;
         }
         
-        /* Product Details Card */
         .product-details-card {
             background: rgba(255, 255, 255, 0.07);
             border-radius: 1rem;
@@ -490,11 +423,16 @@ background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
+            text-decoration: none;
+            display: block;
+            text-align: center;
         }
         
         .buy-now-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+            color: var(--dark);
+            text-decoration: none;
         }
         
         .buy-now-btn::before {
@@ -512,94 +450,6 @@ background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 
             left: 100%;
         }
         
-        /* Modal Styles */
-        .modal-dialog {
-            max-width: 500px;
-            margin: 0 auto;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .modal.fade .modal-dialog {
-            transform: translate(0, -50%) !important;
-            top: 50%;
-        }
-
-        .modal.show .modal-dialog {
-            transform: translate(0, -50%) !important;
-        }
-
-        .modal-content {
-            background: #1e1e1e;
-            color: var(--light);
-            border-radius: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .modal-header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-        }
-        
-        .modal-header .btn-close {
-            background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
-            opacity: 1;
-        }
-        
-        .modal-title {
-            font-weight: 700;
-            color: var(--light);
-        }
-        
-        .modal-body {
-            padding: 2rem;
-        }
-        
-        .form-label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--light);
-            padding: 0.8rem 1rem;
-            border-radius: 0.5rem;
-        }
-        
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--secondary);
-            color: var(--light);
-            box-shadow: 0 0 0 0.25rem rgba(21, 168, 138, 0.25);
-        }
-        
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .pay-btn {
-            background: linear-gradient(90deg, var(--accent), #d48e1e);
-            border: none;
-            color: var(--dark);
-            font-weight: 700;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 1rem;
-        }
-        
-        .pay-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Notification Style */
         .notification {
             position: fixed;
             top: 20px;
@@ -620,7 +470,6 @@ background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 
             transform: translateY(0);
         }
 
-        /* Animation for Button */
         .animate-click {
             animation: clickEffect 0.3s ease;
         }
@@ -631,60 +480,25 @@ background: linear-gradient(90deg, rgba(195,194,123,1) 11%, rgba(236,237,168,1) 
             100% { transform: scale(1); }
         }
         
-        /* Responsive Styles */
         @media (max-width: 991.98px) {
-            .product-image-container {
-                height: 400px;
-            }
+            .product-image-container { height: 400px; }
         }
         
         @media (max-width: 767.98px) {
-            .page-header {
-                padding: 2rem 0;
-            }
-            
-            .page-header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .page-header p {
-                font-size: 1rem;
-            }
-            
-            .product-image-container {
-                height: 350px;
-            }
-            
-            .product-title {
-                font-size: 1.8rem;
-            }
-            
-            .product-price {
-                font-size: 2rem;
-            }
-            
-            .product-details-card {
-                padding: 1.5rem;
-            }
+            .page-header { padding: 2rem 0; }
+            .page-header h1 { font-size: 1.8rem; }
+            .page-header p { font-size: 1rem; }
+            .product-image-container { height: 350px; }
+            .product-title { font-size: 1.8rem; }
+            .product-price { font-size: 2rem; }
+            .product-details-card { padding: 1.5rem; }
         }
         
         @media (max-width: 575.98px) {
-            .product-image-container {
-                height: 300px;
-            }
-            
-            .product-title {
-                font-size: 1.5rem;
-            }
-            
-            .product-description {
-                font-size: 1rem;
-            }
-            
-            .buy-now-btn {
-                padding: 1rem;
-                font-size: 1rem;
-            }
+            .product-image-container { height: 300px; }
+            .product-title { font-size: 1.5rem; }
+            .product-description { font-size: 1rem; }
+            .buy-now-btn { padding: 1rem; font-size: 1rem; }
         }
     </style>
 </body>
