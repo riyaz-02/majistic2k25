@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Agbalumo&family=Kalam:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
 
 html, body {
   overflow-x: hidden; /* Prevent horizontal scrollbar */
@@ -11,14 +12,6 @@ html, body {
   margin: 0;
   padding: 40px 0 0; /* Add top padding */
   font-family: "Nunito", sans-serif;
-  width: 100vw;
-  max-width: 100%;
-  overflow: hidden; /* Hide all scrollbars */
-  position: relative;
-  z-index: 1;
-  height: auto; /* Let content determine height */
-  min-height: 70vh; /* Minimum height */
-  max-height: 100vh; /* Maximum height to prevent scrolling */
 }
 
 #proshows-carousel .swiper-slide img {
@@ -100,11 +93,6 @@ html, body {
   transition-delay: 0.3s;
 }
 
-/* Remove the description-box styles as we don't need it anymore */
-#proshows-carousel .description-box {
-  display: none;
-}
-
 /* Artist Info Box Styles - Enhanced and adjusted width */
 #proshows-carousel .artist-info-box {
   position: absolute;
@@ -124,6 +112,7 @@ html, body {
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   max-height: none; /* Remove fixed height */
   overflow-y: visible; /* No scrollbars */
+  font-family: 'Roboto', sans-serif;
 }
 
 #proshows-carousel .artist-info-box:hover {
@@ -138,6 +127,7 @@ html, body {
   position: relative;
   overflow: hidden;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  font-family: 'Roboto', sans-serif;
 }
 
 #proshows-carousel .info-header::before {
@@ -168,6 +158,7 @@ html, body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-family: 'Roboto', sans-serif;
 }
 
 #proshows-carousel .artist-tag {
@@ -183,10 +174,12 @@ html, body {
   letter-spacing: 1px;
   color: #4ddc9e;
   box-shadow: -3px 3px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'Roboto', sans-serif;
 }
 
 #proshows-carousel .info-content {
   padding: 12px 15px; /* Reduced padding */
+  font-family: 'Roboto', sans-serif;
 }
 
 #proshows-carousel .info-details {
@@ -204,6 +197,7 @@ html, body {
   padding: 3px; /* Reduced padding */
   transition: all 0.3s ease;
   font-size: 0.9rem; /* Slightly reduced */
+  font-family: 'Roboto', sans-serif;
 }
 
 #proshows-carousel .info-item:hover {
@@ -225,6 +219,7 @@ html, body {
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.85);
   text-align: left;
+  font-family: 'Roboto', sans-serif;
 }
 
 #proshows-carousel .info-description p {
@@ -245,13 +240,14 @@ html, body {
   top: 10%; /* Position from top to avoid getting cut by hero section */
   z-index: -4; /* Keep it visible on regular screens */
   width: 600px;
-  height: 80%; /* Reduce height to avoid overflow */
+  height: 90%; /* Reduce height to avoid overflow */
   filter: blur(50px);
   background-image: linear-gradient(#4ddc9e, #5b37eb, #f1307e);
   animation: rotate 10s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
   border-radius: 30% 70% 70% 30%/30% 30% 70% 70%;
   pointer-events: none; /* Ensure it doesn't interfere with interaction */
   margin: auto; /* Center vertically */
+  overflow: hidden;
 }
 
 @keyframes rotate {
@@ -417,13 +413,13 @@ html, body {
   #proshows-carousel .gradient {
     position: absolute; /* Change from fixed to absolute */
     width: 100%;
-    height: 70%;
+    height: 75%;
     top: 15%; /* Position in the middle of the section */
     left: 0;
     right: 0;
     bottom: 15%;
-    opacity: 0.7;
-    z-index: 5; /* Position behind hero image but above other elements */
+    opacity: 0.8;
+    z-index: -4; /* Position behind hero image but above other elements */
   }
   
   #proshows-carousel .artist-info-box:hover {
@@ -513,7 +509,7 @@ html, body {
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 580px) {
   #proshows-carousel {
     height: auto;
     min-height: auto;
@@ -521,13 +517,15 @@ html, body {
     padding: 15px 0;
   }
   
-  #proshows-carousel .gradient {
-    position: absolute; /* Not fixed */
+  /* #proshows-carousel .gradient {
+    position: absolute; 
     width: 100%;
-    height: 100%;
-    top: 0;
+    height: 90%;
+    margin-top: 20px;
     opacity: 0.8;
-  }
+    z-index: -4;
+
+  } */
   
   #proshows-carousel .swiper1 .swiper-wrapper .swiper-slide {
     padding: 40px 0;
