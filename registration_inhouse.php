@@ -135,7 +135,7 @@ include 'src/main/registration_handler.php';
                 <img id="bannerImage" src="https://i.ibb.co/VWLkTX5j/banner1.png" alt="Event Banner">
             </div>
             <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
-                <img class="majisticheadlogo" src="https://i.postimg.cc/xjFhxVsL/majistic2k25-white.png" alt="maJIStic Logo">
+                <img class="majisticheadlogo" src="https://i.ibb.co/F4NytbBy/majistic2k25-white.png" alt="maJIStic Logo">
                 <?php if (!$registration_success): ?>
                     <form id="registrationForm" method="POST" action="registration_inhouse.php" onsubmit="return validateForm()">
                         <div class="form-group">
