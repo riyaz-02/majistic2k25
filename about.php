@@ -171,7 +171,8 @@
                     ['name' => 'Mr. Debashis Sanki', 'role' => 'Dy. Registrar, JIS College of Engineering', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
                 ],
                 'Convener' => [
-                    ['name' => 'Dr. Madhura Chakraborty', 'role' => 'Co-convener', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
+                    ['name' => 'Dr. Madhura Chakraborty', 'role' => 'Convener', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
+                    ['name' => 'Dr. Proloy Ghosh', 'role' => 'Convener', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
                 ],
                 'Sound, Light and Stage Management Committee' => [
                     ['name' => 'Arnab Das', 'role' => 'Student Team Lead, IT, 4th YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
