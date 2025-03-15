@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About & Committee - maJIStic 2k25</title>
+    <title>Contact Us - maJIStic 2k25</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -13,75 +13,113 @@
             background-position: center;
             background-attachment: fixed;
             color: white;
+            margin: 0;
         }
         .content-container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             color: white;
-            backdrop-filter: blur(10px);
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .highlight {
-            color: #e53e3e;
-            font-weight: bold;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
         .container-header {
-            padding: 50px 0;
-            background-size: cover;
-            position: relative;
-            min-height: 10vh;
-        }
-        .member-card {
-            background-color: #1a1a1a;
-            border-radius: 15px;
+            padding: 40px 0;
             text-align: center;
-            padding: 15px;
-            margin: 15px;
-            width: 200px;
-            display: inline-block;
-            vertical-align: top;
-            border-bottom: 5px solid #e53e3e;
+            display: none; /* Removed header text to match the image (optional, adjust if needed) */
         }
-        .member-card img {
-            width: 120px;
+        .contact-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 0;
+        }
+        .contact-form {
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .contact-form input, .contact-form textarea, .contact-form select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 14px;
+        }
+        .contact-form textarea {
             height: 120px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-            object-fit: cover;
+            resize: vertical;
         }
-        .member-card h3 {
-            font-size: 1.1em;
-            color: #fff;
-            margin-bottom: 5px;
+        .contact-form button {
+            background-color: #e53e3e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            align-self: flex-end;
+            margin-top: 10px;
         }
-        .member-card p {
+        .contact-form button:hover {
+            background-color: #c53030;
+        }
+        .map-section {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .map-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .map-section p {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .map-section iframe {
+            width: 100%;
+            height: 300px;
+            border: 0;
+            border-radius: 10px;
+        }
+        .policy-section {
+            width: 100%;
+            max-width: 500px;
+            margin: 0;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .policy-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .policy-section h3 {
+            font-size: 1.2em;
+            margin: 15px 0 10px;
+        }
+        .policy-section p, .policy-section ul {
             font-size: 0.9em;
             color: #ccc;
-            margin-bottom: 10px;
+            line-height: 1.6;
+            text-align: justify;
         }
-        .social-icons a {
-            margin: 0 5px;
-            color: #ccc;
-            text-decoration: none;
-            font-size: 1.2em;
-        }
-        .social-icons a:hover {
-            color: #e53e3e;
-        }
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .member-card { width: 180px; }
-            .member-card img { width: 100px; height: 100px; }
-        }
-        @media (max-width: 600px) {
-            .member-card { width: 150px; }
-            .member-card img { width: 90px; height: 90px; }
-        }
-        @media (max-width: 480px) {
-            .member-card { width: 130px; margin: 10px 0; }
-            .member-card img { width: 80px; height: 80px; }
+        .policy-section ul {
+            list-style-type: disc;
+            padding-left: 20px;
         }
     </style>
 </head>
@@ -89,168 +127,201 @@
     <?php include 'includes/header.php'; ?>
     <?php include 'includes/links.php'; ?>
 
-    <!-- About Section -->
-    <div class="container mx-auto p-8 content-container">
-        <div class="p-6 rounded-lg shadow-lg mb-8">
-            <h2 class="container-header text-3xl font-bold mb-4 text-center">About the Cultural Fest</h2>
-            <p class="mb-4 text-justify">
-                <span class="highlight">maJIStic 2k25</span> is the annual cultural extravaganza of JIS College of Engineering, Kalyani, a prestigious institution under the renowned JIS Group. Known for its vibrant celebration of talent, creativity, and diversity, <span class="highlight">maJIStic 2k25</span> promises to be a spectacular convergence of art, culture, and innovation, showcasing the dynamic spirit of the students.
-            </p>
-            <p class="mb-4 text-justify">
-                Set against the backdrop of JIS College of Engineering's state-of-the-art campus in Kalyani, West Bengal, this event is more than just a festival—it's a testament to the institution's legacy of academic brilliance and holistic development.
-            </p>
-            <p class="mb-4 text-justify">
-                <span class="highlight">maJIStic 2k25</span> will feature an array of events, including:
-            </p>
-            <ul class="list-disc list-inside mb-4 text-justify">
-                <li><span class="highlight">Cultural Performances:</span> From electrifying dance battles to soulful musical renditions, students will have the stage to showcase their artistic flair.</li>
-                <li><span class="highlight">Competitions:</span> An exciting lineup of contests across music, dance, drama, fine arts, photography, and more.</li>
-                <li><span class="highlight">Workshops:</span> Interactive sessions with industry experts to inspire and educate participants.</li>
-                <li><span class="highlight">Celebrity Performances:</span> Special appearances and performances by renowned artists and entertainers to captivate the audience.</li>
-                <li><span class="highlight">Food and Fun:</span> A vibrant carnival atmosphere with food stalls, games, and a bustling flea market.</li>
-            </ul>
-            <p class="mb-4 text-justify">
-                This grand event embodies the ethos of the JIS Group, which is dedicated to nurturing talent and fostering innovation. With a 20+ year legacy in education, JIS Group brings its values of excellence, creativity, and inclusivity to the forefront of <span class="highlight">maJIStic 2k25</span>.
-            </p>
-            <p class="mb-4 text-justify">
-                Whether you are a student, alumnus, or visitor, <span class="highlight">maJIStic 2k25</span> offers a platform to connect, celebrate, and create memories that will last a lifetime. Join us as we embrace the magic of culture, the rhythm of celebration, and the joy of togetherness.
-            </p>
-            <p class="mb-4 text-justify">
-                Be part of the fest, be part of the magic—<span class="highlight">maJIStic 2k25</span> awaits you!
-            </p>
+    <div class="content-container">
+        <div class="container-header">
+            <h1 class="text-4xl font-bold">Contact Us</h1>
+            <p class="mt-4 text-lg">Have any queries? Reach out to us!</p>
         </div>
 
-        <div class="p-6 rounded-lg shadow-lg mb-8">
-            <h2 class="text-3xl font-bold mb-4 text-center">About Our College</h2>
-            <p class="mb-4 text-justify">
-                Our college, JIS College of Engineering, is a premier institution known for its academic excellence and vibrant campus life. Established in 2000, the college has been providing quality education and fostering a culture of innovation and creativity. With state-of-the-art infrastructure and a dedicated faculty, we strive to create an environment that nurtures the holistic development of our students.
-            </p>
-            <p class="mb-4 text-justify">
-                The college offers a wide range of undergraduate and postgraduate programs in engineering, management, and other disciplines. Our students have consistently excelled in academics, sports, and extracurricular activities, making us proud with their achievements.
-            </p>
-            <p class="mb-4 text-justify">
-                JIS College of Engineering is a college located in Kalyani, West Bengal, India. The college was established in 2000. The Institution is declared Autonomous by the University Grants Commission (UGC) in 2011. In 2022, the college was accredited by NAAC with Grade-A. It is affiliated to Maulana Abul Kalam Azad University of Technology, West Bengal (MAKAUT, WB). The institute is ranked by NIRF in the range of 201–250 in 2021. In Atal Ranking of Institutions on Innovation Achievements (ARIIA) 2020, the institute has secured a place in Band B (Rank Between 26th – 50th) among Private or Self-Financed College/Institutes in India. On 1 September 2020, the institute celebrated its 20th Birthday.
-            </p>
-        </div>
+        <!-- Contact Section with Form and Map (Single Column) -->
+        <div class="contact-section">
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <?php
+                // Include PHPMailer
+                use PHPMailer\PHPMailer\PHPMailer;
+                use PHPMailer\PHPMailer\Exception;
 
-        <div class="p-6 rounded-lg shadow-lg mb-8">
-            <h2 class="text-3xl font-bold mb-4 text-center">About JIS Group</h2>
-            <p class="mb-4 text-justify">
-                Sardar Jodh Singh’s unbeatable zeal and extraordinary entrepreneurship skills enabled him to be associated with many ventures into diverse sectors like dairy, transport, infrastructure, iron & steel, cargo, logistics, information technology, agro, overseas, movies, and much more. However, his path-breaking initiatives in the field of education are noteworthy and have earned him global recognition. The largest education service provider in Eastern India, the first college (JV) under the umbrella of JIS Group was Asansol Engineering College. And two years later, JIS followed with the establishment of JIS College of Engineering. There has been no stopping since. Presently, with 30 Institutes, 140 Programs, and over 37000+ Students enrolled in the diverse academic courses, the best educational institutes in West Bengal are under the aegis of JIS Group.
-            </p>
-            <p class="mb-4 text-justify">
-                The hub of academic brilliance and professional excellence, JIS Group continues to be a popular choice among students, teachers, and parents. Offering a wide range of new-age academic courses at the undergraduate, postgraduate and doctoral level, the best private colleges in Kolkata are under JIS Group. Accredited by various government bodies like AICTE, NAAC, NBA, PCI, BCI, DCI, MCI, NCHMCT, Academic Impact United Nations and affiliated to MAKAUT and WBSCTVESD, JIS Group aims to serve the society by being the torchbearer of knowledge, education, and employment.
-            </p>
-            <p class="mb-4 text-justify">
-                The largest educational Group in Eastern India, JIS has received several rankings, awards, and accolades from various prestigious organizations, industry, and media houses like Zee 24 Ghanta, The Week, NIRF, India Today, Outlook-I-Care, Careers 360, ARIIA, FICCI, Digital Learning, and many more. With conscious and consistent progressive efforts, JIS Group has emerged as one of the largest educational groups of India and aims to spread a 20+-year-old legacy by its collaboration with 550+ Industries, 11 Chambers, 73 universities, and 21 countries.
-            </p>
-        </div>
+                require 'vendor/autoload.php'; // Adjust path if needed
 
-        <!-- Committee Members Section -->
-        <div class="p-6 rounded-lg shadow-lg">
-            <h1 class="text-4xl font-bold mb-8 text-center">Committee Members</h1>
-            <?php
-            $sections = [
-                'Chief Patron' => [
-                    ['name' => 'Mr. Taranjit Singh', 'role' => 'MD, JIS Group', 'image' => 'https://i.postimg.cc/wxb9j3yC/Taranjit-Singh.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Patrons' => [
-                    ['name' => 'Mr. Simarpreet Singh', 'role' => 'Director, JIS Group', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Amonjot Singh', 'role' => 'Director, JIS Group', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Horjot Singh', 'role' => 'Director, JIS Group', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Ms. Akanksha Kaur', 'role' => 'JIS Group', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Dr. Partha Sarkar', 'role' => 'Principal, JIS College of Engineering', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Dr. Sila Singh Ghosh', 'role' => 'VP-JIS Group', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Advisors' => [
-                    ['name' => 'Prof. A. Guha', 'role' => 'Advisor, JIS Group', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. U. S. Mukherjee', 'role' => 'Dy. Director, JIS Group', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Debashis Sanki', 'role' => 'Dy. Registrar, JIS College of Engineering', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Convener' => [
-                    ['name' => 'Dr. Madhura Chakraborty', 'role' => 'Co-convener', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Sound, Light and Stage Management Committee' => [
-                    ['name' => 'Arnab Das', 'role' => 'Student Team Lead, IT, 4th YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Anamitra Mondal', 'role' => 'Student Team Lead, IT, 4th YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Ayush Gupta', 'role' => 'Student Team Lead, ECE, 3rd YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Sponsorship & Marketing Committee' => [
-                    ['name' => 'Snehal Bhowmick', 'role' => 'Student Team Lead, ECE, 4th YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Priyanshu Nayan', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.postimg.cc/jdL3RSPk/Priyanshu-Nayan.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => 'https://www.linkedin.com/in/priyanshu-nayan/']],
-                    ['name' => 'Sk Riyaz', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.ibb.co/6zbn482/riyaz.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/sk.riyaz.562329', 'instagram' => '#', 'linkedin' => 'https://www.linkedin.com/in/skriyaz1/']],
-                    ['name' => 'Ronit Pal', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Gaurav Kumar Mehta', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Cultural Committee' => [
-                    ['name' => 'Tamal Patatunda', 'role' => 'Singing, 4th YR, CSE', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Arnabh Sarkar', 'role' => 'Singing, 2nd YR, BME', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Dipanwita Lahiri', 'role' => 'Drama, 3rd YR, BCA', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Krishnasish Bose', 'role' => 'Dance, 4th YR, IT', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Upasana Paul', 'role' => 'Dance, 4th YR, ECE', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Rittika Sarkar', 'role' => 'Anchoring and Recitation, 3rd YR, CST', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Jotisingdha Das', 'role' => 'Anchoring and Recitation, 3rd YR, AGE', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Ayush Agarwal', 'role' => 'Instrument and Band, 4th YR, CSE', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Debopriya Das', 'role' => 'Instrument and Band, 3rd YR, ECE', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Finance Management Committee' => [
-                    ['name' => 'Mr. Santanu Das', 'role' => 'AGE, (8240729310)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Dibbendu Mondal', 'role' => 'BME, (9903904215)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Avik Sanyal', 'role' => 'BBA & MBA, (9007971925)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mrs. Latifa Haque', 'role' => 'CE, (7548030083)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Sumanta Chatterjee', 'role' => 'CSE, (9088265390)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Sanjit Das', 'role' => 'ECE (BTech & MTech), (9378273447)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Partha Das', 'role' => 'EE (BTech, Diploma & MTech) & CST, (6289767794)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Anunay Ghosh', 'role' => 'IT, BCA & MCA, (7878193819)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Soumojit Dasgupta', 'role' => 'ME (BTech, Diploma & MTech), (7439495325)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Logistics Management Committee' => [
-                    ['name' => 'Soumili Ghosh', 'role' => 'Student Team Lead, CSE, 4th YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Sayanti Bramha', 'role' => 'Student Team Lead, ECE, 3rd YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Alok Thakur', 'role' => 'Student Team Lead, ECE, 3rd YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Invitation & Reception Committee' => [
-                    ['name' => 'Mr. Jit Chakraborty', 'role' => 'Asst Professor, Chem, (7890812613)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Uttiya Kar', 'role' => 'HoD, BA', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Dr. Moumita Pal', 'role' => 'HOD, ECE, (9903269420)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Soumojit Dasgupta', 'role' => '(7439495325)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Basudeb Dey', 'role' => 'Asst Professor, EE, (7003244250)', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mr. Dipak Ghosh', 'role' => '', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Security & Crowd Management Committee' => [
-                    ['name' => 'Gulsan Kumar', 'role' => 'Student Team Lead, ECE, 3rd YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Devashish Basak', 'role' => 'Student Team Lead, IT, 4th YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Food Management Committee' => [
-                    ['name' => 'Subhajit Saha', 'role' => 'CSE M.Tech, 1st YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Gourab Nandi', 'role' => 'ECE, 3rd YR', 'image' => '', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-            ];
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    $name = htmlspecialchars($_POST['name']);
+                    $email = htmlspecialchars($_POST['email']);
+                    $roll_no = htmlspecialchars($_POST['roll_no']);
+                    $jis_id = htmlspecialchars($_POST['jis_id']);
+                    $mobile = htmlspecialchars($_POST['mobile']);
+                    $problem_type = htmlspecialchars($_POST['problem_type']);
+                    $message = htmlspecialchars($_POST['message']);
 
-            foreach ($sections as $sectionTitle => $members) {
-                echo "<div class='mb-8'>";
-                echo "<h2 class='text-2xl font-bold mb-4 text-center underline'>{$sectionTitle}</h2>";
-                echo "<div class='flex flex-wrap justify-center'>";
-                foreach ($members as $member) {
-                    echo "<div class='member-card'>";
-                    echo "<img src='{$member['image']}' alt='Avatar' class='mx-auto' onerror=\"this.src='https://via.placeholder.com/120';\" style='object-fit: cover;'>";
-                    echo "<h3 class='text-lg font-semibold mt-2'>{$member['name']}</h3>";
-                    echo "<p class='text-sm'>{$member['role']}</p>";
-                    echo "<div class='social-icons mt-2'>";
-                    echo "<a href='{$member['social']['twitter']}' target='_blank'><i class='fab fa-twitter'></i></a>";
-                    echo "<a href='{$member['social']['facebook']}' target='_blank'><i class='fab fa-facebook'></i></a>";
-                    echo "<a href='{$member['social']['instagram']}' target='_blank'><i class='fab fa-instagram'></i></a>";
-                    echo "<a href='{$member['social']['linkedin']}' target='_blank'><i class='fab fa-linkedin'></i></a>";
-                    echo "</div>";
-                    echo "</div>";
+                    $mail = new PHPMailer(true);
+                    try {
+                        // Server settings
+                        $mail->isSMTP();
+                        $mail->Host = 'smtp.gmail.com';
+                        $mail->SMTPAuth = true;
+                        $mail->Username = 'majisticjisce@gmail.com'; // Replace with your SMTP username
+                        $mail->Password = 'shqlyefuuwkapqf'; // Replace with your SMTP password
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->Port = 587;
+
+                        // Recipients
+                        $mail->setFrom('majisticjisce@gmail.com', 'maJIStic 2k25');
+                        $mail->addAddress('');
+                        $mail->addCC($email);
+
+                        // Content
+                        $mail->Subject = "New Contact Form Submission from $name - $problem_type";
+                        $mail->Body = "Name: $name\nEmail: $email\nUniversity Roll No: $roll_no\nJIS ID: $jis_id\nMobile No: $mobile\nProblem Type: $problem_type\nMessage:\n$message";
+
+                        $mail->send();
+                        echo "<p class='text-green-500 text-center'>Message sent successfully! A copy has been sent to your email.</p>";
+                    } catch (Exception $e) {
+                        echo "<p class='text-red-500 text-center'>Failed to send message. Error: {$mail->ErrorInfo}</p>";
+                    }
                 }
-                echo "</div>";
-                echo "</div>";
-            }
-            ?>
+                ?>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <input type="text" name="roll_no" placeholder="University Roll No." required>
+                    <input type="text" name="jis_id" placeholder="JIS ID" required>
+                    <input type="text" name="mobile" placeholder="Mobile No." required>
+                    <select name="problem_type" required>
+                        <option value="" disabled selected>Select Problem Type</option>
+                        <option value="Payment Issue">Payment Issue</option>
+                        <option value="Registration">Registration</option>
+                        <option value="Cultural">Cultural</option>
+                        <option value="Sponsor">Sponsor</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <textarea name="message" placeholder="Your Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+
+            <!-- Map Section -->
+            <div class="map-section">
+                <h2>Our Location</h2>
+                <p>JIS College of Engineering<br>Kalyani Block A, Phase III<br>Kalyani, Nadia - 741235, West Bengal</p>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3673.746095513457!2d88.44517707531195!3d22.95957617921794!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a027730302f6e25%3A0xe50dfccae21e1fc!2sJIS%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1742024298934!5m2!1sen!2sin" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+            <!-- Terms of Service Section -->
+            <div class="policy-section">
+                <h2>Terms of Service</h2>
+                <p>By registering for maJIStic 2k25 or purchasing merchandise, you agree to these terms:</p>
+                
+                <h3>Registration and Entry Tickets</h3>
+                <ul>
+                    <li>The registration fee for maJIStic 2k25 is non-refundable under any circumstances.</li>
+                    <li>A QR-based entry ticket will be emailed two days before the event to your registered email ID.</li>
+                    <li>Tickets are non-transferable and cannot be used by anyone other than the registered student.</li>
+                    <li>QR codes are time-bound; failure to check in at the specified time on the event day (maJIStic 2k25) will result in automatic ticket cancellation.</li>
+                </ul>
+                
+                <h3>Merchandise Purchases</h3>
+                <ul>
+                    <li>Merchandise payments are non-refundable once booked, under any circumstances.</li>
+                    <li>Collect your merchandise one week before the fest from the Main Building; the exact location will be emailed to you.</li>
+                    <li>Size corrections can be requested within 2 days of booking by contacting the maJIStic Merchandise Team via the Contact Us section.</li>
+                </ul>
+                
+                <h3>Conduct Rules</h3>
+                <ul>
+                    <li>Any mischievous behavior during maJIStic 2k25 will result in suspension from JIS College of Engineering and a fine.</li>
+                    <li>Smoking and drinking are strictly prohibited on campus. Violators will face suspension and fines.</li>
+                </ul>
+                
+                <p>We reserve the right to cancel registrations, tickets, or orders at our discretion.</p>
+            </div>
+
+            <!-- Refund and Shipments Policy Section -->
+            <div class="policy-section">
+                <h2>Refund and Shipments Policy</h2>
+                <p>We aim to ensure a smooth experience for maJIStic 2k25 participants and merchandise buyers. Please review our policies below:</p>
+                
+                <h3>Event Registration Fees</h3>
+                <p>The fee you pay to register for maJIStic 2k25 cannot be refunded for any reason, including but not limited to non-attendance, late arrival resulting in ticket loss, or event cancellation due to unforeseen circumstances.</p>
+                
+                <h3>Merchandise Purchases</h3>
+                <p>Payments for maJIStic 2k25 merchandise are non-refundable once booked, regardless of circumstances. Size corrections are allowed within 2 days of booking via the Contact Us section; no refunds or exchanges are permitted thereafter. Merchandise will be available for pickup one week before the fest at the Main Building, with the exact location emailed to you upon confirmation.</p>
+                
+                <h3>Shipments</h3>
+                <p>maJIStic 2k25 does not offer shipping for merchandise. All purchases must be collected in person from the designated pickup location. Failure to collect within the specified period will result in forfeiture of the merchandise without refund.</p>
+            </div>
+
+            <!-- Privacy Policy Section (Elaborated) -->
+            <div class="policy-section">
+                <h2>Privacy Policy</h2>
+                <p>maJIStic 2k25, organized by JIS College of Engineering, Kalyani, is committed to protecting your privacy. This Privacy Policy outlines how we collect, use, disclose, and safeguard your personal information when you interact with our website, register for events, purchase merchandise, or use our services. By accessing or using our platform, you agree to the practices described in this policy.</p>
+
+                <h3>1. Information We Collect</h3>
+                <p>We collect the following types of information to provide and improve our services:</p>
+                <ul>
+                    <li><strong>Personal Information:</strong> Name, email address, University Roll No., JIS ID, mobile number, and other details you provide during registration, merchandise booking, contact form submissions, or other interactions with us.</li>
+                    <li><strong>Payment Information:</strong> Credit card details, billing address, and other payment-related data necessary to process fees and merchandise purchases. We use secure third-party payment processors and do not store this information after transactions are completed.</li>
+                    <li><strong>Usage Data:</strong> Information about your interactions with our website, including IP address, browser type, device information, pages visited, and timestamps, collected via cookies, web beacons, and analytics tools.</li>
+                    <li><strong>Event Participation Data:</strong> Details about your participation in maJIStic 2k25 events, such as QR-based ticket usage and attendance records.</li>
+                </ul>
+
+                <h3>2. How We Use Your Information</h3>
+                <p>We use your information for the following purposes:</p>
+                <ul>
+                    <li>To register you for maJIStic 2k25 events and issue QR-based entry tickets.</li>
+                    <li>To process and fulfill merchandise orders, including notifying you of pickup locations and times.</li>
+                    <li>To respond to your inquiries submitted via the Contact Us section.</li>
+                    <li>To personalize your experience and provide tailored content or recommendations.</li>
+                    <li>To analyze usage patterns and improve our website, services, and event planning.</li>
+                    <li>To ensure compliance with legal obligations, including fraud prevention and safety measures.</li>
+                    <li>To send you updates, newsletters, or promotional materials (with your consent, where required).</li>
+                </ul>
+
+                <h3>3. How We Share Your Information</h3>
+                <p>We do not sell or rent your personal information to third parties. However, we may share your information with:</p>
+                <ul>
+                    <li><strong>Service Providers:</strong> Third-party vendors (e.g., payment processors, email service providers) who assist us in operating our platform and delivering services, under strict confidentiality agreements.</li>
+                    <li><strong>Legal Authorities:</strong> When required by law or to protect the rights, property, or safety of maJIStic 2k25, its participants, or the public.</li>
+                    <li><strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale of assets, your information may be transferred as part of the transaction.</li>
+                </ul>
+
+                <h3>4. Data Security</h3>
+                <p>We implement reasonable physical, technical, and administrative safeguards to protect your personal information from unauthorized access, use, or disclosure. These measures include encryption, secure server hosting, and restricted access to data. However, no online system is 100% secure, and we cannot guarantee absolute security. You are responsible for maintaining the confidentiality of your account credentials.</p>
+
+                <h3>5. Your Rights and Choices</h3>
+                <p>You have the following rights regarding your personal information:</p>
+                <ul>
+                    <li><strong>Access:</strong> Request a copy of the personal data we hold about you.</li>
+                    <li><strong>Correction:</strong> Update or correct inaccurate or incomplete data.</li>
+                    <li><strong>Deletion:</strong> Request the deletion of your data, subject to legal obligations.</li>
+                    <li><strong>Opt-Out:</strong> Withdraw consent for marketing communications at any time by contacting us or using the unsubscribe link in emails.</li>
+                </ul>
+                <p>To exercise these rights, please email <a href="mailto:majisticjisce@gmail.com">majisticjisce@gmail.com</a>. We will respond within a reasonable timeframe, typically 30 days.</p>
+
+                <h3>6. Cookies and Tracking Technologies</h3>
+                <p>We use cookies and similar technologies to enhance your experience, analyze usage, and deliver personalized content. Cookies are small files stored on your device that help us remember your preferences and track site activity. You can manage cookie preferences through your browser settings, but disabling them may affect website functionality.</p>
+                <ul>
+                    <li><strong>Essential Cookies:</strong> Necessary for basic website operations.</li>
+                    <li><strong>Analytics Cookies:</strong> Used to collect anonymous usage data (e.g., Google Analytics).</li>
+                    <li><strong>Functional Cookies:</strong> Enable features like remembering your login details.</li>
+                </ul>
+
+                <h3>7. Data Retention</h3>
+                <p>We retain your personal information only as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required or permitted by law (e.g., for tax or legal compliance). After this period, data is securely deleted or anonymized.</p>
+
+                <h3>8. International Data Transfers</h3>
+                <p>Your information may be transferred to and processed in countries outside your region, including India, where our servers or service providers are located. We ensure that such transfers comply with applicable data protection laws, including the use of standard contractual clauses where required.</p>
+
+                <h3>9. Changes to This Privacy Policy</h3>
+                <p>We may update this Privacy Policy to reflect changes in our practices or legal requirements. Any updates will be posted on this page with a revised "Last Updated" date. We encourage you to review this policy periodically. If significant changes are made, we will notify you via email or a prominent notice on our website.</p>
+                <p><strong>Last Updated:</strong> March 14, 2025</p>
+
+                <h3>10. Contact Us</h3>
+                <p>If you have questions, concerns, or complaints about this Privacy Policy or our data practices, please contact us at <a href="mailto:majisticjisce@gmail.com">majisticjisce@gmail.com</a>. You may also file a complaint with a data protection authority if you believe your rights have been violated.</p>
+            </div>
         </div>
     </div>
 
     <?php include 'includes/footer.php'; ?>
 </body>
-</html>
+</html> 

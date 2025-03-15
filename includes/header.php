@@ -15,7 +15,7 @@
                 <li><a href="merchandise.php" class="nav-link">MERCHANDIES</a></li>
                 <!--<li><a href="index.php#sponsors">SPONSORS</a></li>-->
                 <li><a href="about.php" class="nav-link">ABOUT</a></li>
-                <!-- <li><a href="contact.php">TEAM</a></li> -->
+                <li><a href="contact.php">CONTACT</a></li> 
             </ul><!-- flex -->
         </nav><!-- .site-navigation -->
 
