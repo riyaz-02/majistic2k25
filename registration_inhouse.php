@@ -20,11 +20,69 @@ include 'src/main/registration_handler.php';
             font-weight: 700;
             letter-spacing: 1px;
         }
+        
+        /* Styles for the success preloader */
+        .success-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            text-align: center;
+        }
+        
+        .success-preloader img {
+            width: 150px;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .success-preloader h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .success-preloader p {
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+        
+        .success-preloader .progress-bar {
+            width: 250px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+        
+        .success-preloader .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 5px;
+            transition: width 2.5s ease;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
     </style>
 </head>
 <body class="<?php echo $registration_success ? 'registration-success' : ''; ?>">
     <?php include 'includes/header.php'; ?>
-    <?php if (!empty($message)): ?>
+    
+    <?php if (!empty($message) && !$registration_success): ?>
         <div class="message-box <?php echo $registration_success ? 'success' : 'error'; ?>" id="messageBox"><?php echo $message; ?></div>
         <script>
             document.getElementById('messageBox').style.display = 'block';
@@ -33,6 +91,33 @@ include 'src/main/registration_handler.php';
             }, 6000);
         </script>
     <?php endif; ?>
+    
+    <!-- Success preloader - shown only when registration is successful -->
+    <?php if ($registration_success): ?>
+    <div class="success-preloader" id="successPreloader">
+        <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo">
+        <h2>Registration Successful!</h2>
+        <p>Congratulations! Your registration has been completed.</p>
+        <p>Redirecting to payment page...</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+    <script>
+        // Start the progress bar animation immediately
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('progressFill').style.width = '100%';
+            }, 100);
+            
+            // Redirect after the animation completes
+            setTimeout(function() {
+                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>';
+            }, 3500); // Just after the progress bar completes
+        });
+    </script>
+    <?php endif; ?>
+    
     <section class="registration-container">
         <div class="registration-heading">
             <h1>In-house Students Registration</h1>
@@ -51,12 +136,7 @@ include 'src/main/registration_handler.php';
             </div>
             <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
                 <img class="majisticheadlogo" src="https://i.postimg.cc/xjFhxVsL/majistic2k25-white.png" alt="maJIStic Logo">
-                <?php if ($registration_success): ?>
-                    <script>
-                        // Immediately redirect to payment page upon successful registration
-                        window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>';
-                    </script>
-                <?php else: ?>
+                <?php if (!$registration_success): ?>
                     <form id="registrationForm" method="POST" action="registration_inhouse.php" onsubmit="return validateForm()">
                         <div class="form-group">
                             <label for="student_name">Student Name:</label>
@@ -228,7 +308,7 @@ include 'src/main/registration_handler.php';
     <!-- Loading Spinner -->
     <div class="loading-spinner display-flex" id="loadingSpinner">
         <div id="spinnerContent">
-            <img src="https://i.postimg.cc/tCKfbtGT/majisticlogo.png" alt="maJIStic Logo">
+            <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo">
             <p>Submitting...</p>
         </div>
     </div>

@@ -118,7 +118,7 @@ function generateEmailTemplate($data) {
     }
     
     // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = 'https://i.postimg.cc/tCKfbtGT/majisticlogo.png';
+    $logoUrl = 'https://i.ibb.co/RGQ7Lj6K/majisticlogo.png';
     
     // HTML Template
     $html = <<<HTML

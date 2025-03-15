@@ -103,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                 $mail->Body    = '
                 <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
                     <div style="text-align: center;">
-                        <img src="https://i.postimg.cc/tCKfbtGT/majisticlogo.png" alt="maJIStic Logo" style="max-width: 200px; margin-bottom: 20px;">
+                        <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo" style="max-width: 200px; margin-bottom: 20px;">
                     </div>
                     <h2 style="color: #4CAF50;">Event Registration Confirmation</h2>
                     <p>Dear ' . $leader_name . ',</p>

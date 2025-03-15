@@ -3,7 +3,7 @@
         <div class="site-branding">
             <a href="#"><img src="https://i.postimg.cc/TwP5Rrcj/jis.png" alt="Logo"></a>
             <div class="majisticheadlogo">
-                <a href="#"><img src="https://i.postimg.cc/tCKfbtGT/majisticlogo.png" alt="Logo"></a>
+                <a href="#"><img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="Logo"></a>
             </div>
             <!-- <a href="#"><img src="../images/jislogo.png" alt="Logo"></a> -->
         </div>
@@ -11,7 +11,7 @@
         <nav class="site-navigation">
             <ul>
                 <li><a href="index.php#hero" class="nav-link">HOME</a></li>
-                <li><a href="event.php" class="nav-link">EVENTS</a></li>
+                <li><a href="#events" class="nav-link">EVENTS</a></li>
                 <li><a href="merchandise.php" class="nav-link">MERCHANDIES</a></li>
                 <!--<li><a href="index.php#sponsors">SPONSORS</a></li>-->
                 <li><a href="about.php" class="nav-link">ABOUT</a></li>

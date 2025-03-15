@@ -19,7 +19,7 @@ export default function Preloader() {
   return (
     <div className={styles.preloader}>
       <div className={styles.logoContainer}>
-        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/majisticlogo-Gcp7uLSlL72ZGNUJTWNAeFXleCqaIr.png" alt="Majistic Logo" className={`${styles.logo} ${styles.responsiveLogo}`} />
+        <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="Majistic Logo" className={`${styles.logo} ${styles.responsiveLogo}`} />
         <div className={styles.glow}></div>
       </div>
       <div className={`${styles.loadingText} ${styles.responsiveText}`}>LOADING MAJISTIC</div>

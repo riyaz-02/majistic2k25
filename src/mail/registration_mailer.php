@@ -117,10 +117,10 @@ function generateRegistrationEmailTemplate($data) {
     }
     $jis_id=$data['jis_id'];
     // Generate payment link
-    $payment_link = "https://skriyaz.com/src/transaction/payment.php?jis_id=$jis_id" . urlencode($data['jis_id']);
+    $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']);
     
     // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = 'https://i.postimg.cc/tCKfbtGT/majisticlogo.png';
+    $logoUrl = 'https://i.ibb.co/RGQ7Lj6K/majisticlogo.png';
     
     // HTML Template
     $html = <<<HTML

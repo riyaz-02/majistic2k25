@@ -138,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                                 <h2>Registration Confirmation</h2>
                                 <p>Dear ' . $student_name . ',</p>
                                 <p>Thank you for registering for maJIStic 2k25. Please proceed to payment to confirm your participation.</p>
-                                <p><a href="https://majistic.jisuniversity.ac.in/src/transaction/payment.php?jis_id=' . $jis_id . '">Click here to complete payment</a></p>
+                                <p><a href="https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=' . $jis_id . '">Click here to complete payment</a></p>
                                 <p>Regards,<br>maJIStic Team</p>
                             </body>
                             </html>';
