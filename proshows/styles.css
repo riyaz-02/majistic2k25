@@ -78,7 +78,8 @@ html, body {
   position: absolute;
   bottom:auto;
   z-index: 10;
-  width: 40rem;
+  width: 30rem;
+  right: 5%;
   filter: contrast(100%);
   pointer-events: none;
 }
@@ -403,7 +404,7 @@ html, body {
   #proshows-carousel .hero {
     position: relative;
     bottom: auto;
-    right: auto;
+    right: 5%;
     width: 90%;
     max-width: 450px;
     margin: 0 auto;
@@ -435,7 +436,7 @@ html, body {
   }
   
   #proshows-carousel .hero {
-    right: auto;
+    right: 5%;
     bottom: 0;
   }
   

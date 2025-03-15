@@ -1,4 +1,6 @@
 <?php
+// Set timezone to IST at the beginning of the file
+date_default_timezone_set('Asia/Kolkata');
 include '../../includes/db_config.php';
 
 // Determine the type of registration and get the registration ID from the URL
@@ -14,7 +16,7 @@ if (!$registration_id) {
 if ($is_inhouse) {
     $query = $conn->prepare("SELECT * FROM registrations WHERE jis_id = ?");
     $query->bind_param("s", $registration_id);
-    $amount = 300; // Amount for inhouse registration
+    $amount = 400; // Updated amount for inhouse registration
 } else if ($is_outhouse) {
     $query = $conn->prepare("SELECT * FROM registrations_outhouse WHERE email = ?");
     $query->bind_param("s", $registration_id);
@@ -77,6 +79,17 @@ if ($registration['payment_status'] == 'Paid') {
         die("Failed to create Razorpay order.");
     }
 }
+
+// Check for any previous failed transactions
+$failed_transaction = false;
+if (!$payment_done) {
+    $check_failed = $conn->prepare("SELECT COUNT(*) as failed_count FROM payment_attempts WHERE registration_id = ? AND status = 'failed'");
+    $check_failed->bind_param("s", $registration_id);
+    $check_failed->execute();
+    $failed_result = $check_failed->get_result();
+    $failed_data = $failed_result->fetch_assoc();
+    $failed_transaction = $failed_data['failed_count'] > 0;
+}
 ?>
 
 <!DOCTYPE html>
@@ -84,159 +97,528 @@ if ($registration['payment_status'] == 'Paid') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment</title>
+    <title>Payment - maJIStic 2k25</title>
     <?php include '../../includes/links.php'; ?>
-    <link rel="stylesheet" href="../../style.css"> <!-- Link to your custom CSS -->
+    <link rel="stylesheet" href="../../style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/payment.css">
     <style>
-        .payment-box {
-            background-color:rgb(255, 255, 255);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 400px;
-            margin: 0 auto;
-        }
-        .payment-box img {
-            margin: 0 auto;
-            width: 100px;
-            margin-bottom: 20px;
-        }
-        .payment-box table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-        }
-        .payment-box th, .payment-box td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-        .payment-box th {
-            background-color: #f4f4f4;
-        }
-        .payment-box p {
-            margin: 10px 0;
-        }
-        .payment-box button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .payment-box button:hover {
-            background-color: #0056b3;
+        /* Ensure payment loader works properly */
+        #payment-loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
-<body class="bg-gray-100 flex justify-center items-center h-screen">
-    <div class="payment-box" id="payment-box">
+
+<body>
+    <div class="page-container">
+        <a href="../../index.php" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
         
-        <img src="https://i.ibb.co/jkxgTqcz/majisticlogob.png" alt="maJIStic Logo">
-        <p text-align="center">Loading...</p>
-        <p text-align="center">Please do not refresh the page.</p>
-        <?php if ($payment_done): ?>
-            <h2 class="text-2xl font-bold mb-6">Payment Successful!</h2>
-            <table>
-                <tr>
-                    <th>Registration ID</th>
-                    <td><?php echo htmlspecialchars($registration_id); ?></td>
-                </tr>
-                <tr>
-                    <th>Payment Status</th>
-                    <td>Paid</td>
-                </tr>
-                <tr>
-                    <th>Amount</th>
-                    <td><?php echo htmlspecialchars($amount_paid); ?> INR</td>
-                </tr>
-                <tr>
-                    <th>Payment ID</th>
-                    <td><?php echo htmlspecialchars($payment_id); ?></td>
-                </tr>
-                <tr>
-                    <th>Payment Date</th>
-                    <td><?php echo htmlspecialchars($payment_date); ?></td>
-                </tr>
-            </table>
-            <p>Thank you for the payment, see you at the event.</p>
-            <p>For any query, contact maJIStic support.</p>
-            <p>Please note the payment ID for future reference.</p>
-            <button onclick="window.location.href='../../index.php'">Back to Home</button>
-        <?php else: ?>
-            <script>
-                var paymentDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-                var options = {
-                    "key": "<?php echo htmlspecialchars($keyId); ?>", // Enter the Key ID generated from the Dashboard
-                    "amount": "<?php echo htmlspecialchars($order->amount); ?>", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 500 INR
-                    "currency": "INR",
-                    "name": "maJIStic 2k25",
-                    "description": "Payment for Event Registration",
-                    "image": "https://i.ibb.co/jkxgTqcz/majisticlogob.png", // Replace with your logo
-                    "order_id": "<?php echo htmlspecialchars($order->id); ?>", // Pass the order ID generated by Razorpay
-                    "handler": function (response){
-                        // Update payment status in the database
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("POST", "update_payment_status.php", true);
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        xhr.onreadystatechange = function () {
-                            if (xhr.readyState === 4) {
-                                if (xhr.status === 200) {
-                                    document.getElementById('payment-box').innerHTML = `
-                                        <img src="https://i.ibb.co/jkxgTqcz/majisticlogob.png" alt="maJIStic Logo">
-                                        <h2 class="text-2xl font-bold mb-6">Payment Successful!</h2>
-                                        <table>
-                                            <tr>
-                                                <th>Registration ID</th>
-                                                <td><?php echo htmlspecialchars($registration_id); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Payment Status</th>
-                                                <td>Paid</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Amount</th>
-                                                <td><?php echo htmlspecialchars($order->amount / 100); ?> INR</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Payment ID</th>
-                                                <td>${response.razorpay_payment_id}</td>
-                                            </tr>
-                                             <tr>
-                                                <th>Payment Date</th>
-                                                <td>${paymentDate}</td>
-                                            </tr>
-                                        </table>
-                                        <p>Thank you for the payment, see you at the event.</p>
-                                        <p>For any query, contact maJIStic support.</p>
-                                        <p>Please note the payment ID for future reference.</p>
-                                        <button onclick="window.location.href='../../index.php'">Back to Home</button>
-                                    `;
-                                } else {
-                                    alert("Failed to update payment status. Please contact support.");
-                                }
-                            }
-                        };
-                        xhr.send("registration_id=<?php echo htmlspecialchars($registration_id); ?>&payment_id=" + response.razorpay_payment_id + "&amount_paid=" + <?php echo htmlspecialchars($order->amount / 100); ?> + "&payment_date=" + paymentDate + "&is_inhouse=<?php echo $is_inhouse ? '1' : '0'; ?>");                    },
-                    "theme": {
-                        "color": "#F37254"
-                    }
-                };
+        <div class="content-wrapper">
+            <div class="payment-container">
+                <div class="payment-card">
+                    <div class="payment-header">
+                        <img src="https://i.postimg.cc/02CTRDb2/majisticlogoblack.png" alt="maJIStic Logo" class="payment-logo">
+                    </div>
+                    
+                    <div class="payment-body">
+                        <?php if ($payment_done): ?>
+                            <div class="payment-success">
+                                <i class="fas fa-check-circle"></i> Your payment was successfully processed. Thank you!
+                            </div>
+                        <?php elseif($failed_transaction): ?>
+                            <div class="payment-alert">
+                                <i class="fas fa-exclamation-circle"></i> We noticed your previous payment attempt failed. Please try again.
+                            </div>
+                        <?php endif; ?>
 
-                // Automatically open Razorpay payment form
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
+                        <div class="payment-details">
+                            <table class="payment-table">
+                                <tr>
+                                    <th>Event</th>
+                                    <td>maJIStic 2k25</td>
+                                </tr>
+                                <tr>
+                                    <th>Registration ID</th>
+                                    <td><?php echo htmlspecialchars($registration_id); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Participant</th>
+                                    <td><?php echo htmlspecialchars($registration['student_name']); ?></td>
+                                </tr>
+                                <?php if ($payment_done): ?>
+                                    <tr>
+                                        <th>Payment Status</th>
+                                        <td>
+                                            <span class="payment-status status-paid">
+                                                <i class="fas fa-check-circle"></i> Paid
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <td>₹<?php echo htmlspecialchars($amount_paid); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Payment ID</th>
+                                        <td><?php echo htmlspecialchars($payment_id); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Payment Date</th>
+                                        <td><?php echo htmlspecialchars($payment_date); ?></td>
+                                    </tr>
+                                <?php else: ?>
+                                    <tr>
+                                        <th>Payment Status</th>
+                                        <td>
+                                            <span class="payment-status status-pending">
+                                                <i class="fas fa-clock"></i> Pending
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <td>₹<?php echo htmlspecialchars($amount); ?></td>
+                                    </tr>
+                                <?php endif; ?>
+                            </table>
 
-                // Prevent page reload
-                window.addEventListener('beforeunload', function (e) {
-                    e.preventDefault();
-                    e.returnValue = '';
-                });
-            </script>
-        <?php endif; ?>
+                            <?php if (!$payment_done): ?>
+                                <div class="payment-amount">
+                                    ₹<?php echo htmlspecialchars($amount); ?>
+                                </div>
+                                
+                                <button type="button" id="rzp-button" class="payment-button">
+                                    Pay Now <i class="fas fa-arrow-right ml-2"></i>
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-footer">
+                        <?php if ($payment_done): ?>
+                            <p>Your registration is confirmed. An email with details has been sent to you.</p>
+                            <button onclick="window.location.href='../../index.php'" class="payment-button">
+                                Back to Home
+                            </button>
+                        <?php else: ?>
+                            <div class="secure-badge">
+                                <i class="fas fa-lock"></i> Secure payment powered by Razorpay
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="side-container">
+                <!-- New FAQ section with button-based toggling -->
+                <section class="faq-section">
+                    <h2 class="faq-title">Frequently Asked Questions</h2>
+                    <ul class="faq-list">
+                        <li class="faq-list-item">
+                            <button class="faq-toggle" aria-expanded="false" aria-controls="faq1">
+                                <span>What happens if my payment fails?</span>
+                                <i class="fas fa-chevron-down faq-toggle-icon"></i>
+                            </button>
+                            <div class="faq-content" id="faq1">
+                                <div class="faq-content-inner">
+                                    <p>If your payment fails, you can attempt to pay again. Your registration information is saved, and you can complete the payment later. If you continue to face issues, please contact our support team.</p>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li class="faq-list-item">
+                            <button class="faq-toggle" aria-expanded="false" aria-controls="faq2">
+                                <span>How do I get my receipt after payment?</span>
+                                <i class="fas fa-chevron-down faq-toggle-icon"></i>
+                            </button>
+                            <div class="faq-content" id="faq2">
+                                <div class="faq-content-inner">
+                                    <p>A receipt will be automatically sent to the email address you provided during registration. You can also check your payment status on the maJIStic website by entering your registration ID.</p>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li class="faq-list-item">
+                            <button class="faq-toggle" aria-expanded="false" aria-controls="faq3">
+                                <span>Can I get a refund if I can't attend?</span>
+                                <i class="fas fa-chevron-down faq-toggle-icon"></i>
+                            </button>
+                            <div class="faq-content" id="faq3">
+                                <div class="faq-content-inner">
+                                    <p>We understand that plans can change, but please note that all ticket sales for Majistic 2K25 are final and non-refundable. This helps us ensure a seamless event experience for everyone.</p>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li class="faq-list-item">
+                            <button class="faq-toggle" aria-expanded="false" aria-controls="faq4">
+                                <span>When will I receive my event pass?</span>
+                                <i class="fas fa-chevron-down faq-toggle-icon"></i>
+                            </button>
+                            <div class="faq-content" id="faq4">
+                                <div class="faq-content-inner">
+                                    <p>Event passes will be sent to your registered email 3 days before the event. Please make sure to check your email, including spam folders.</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Consolidated contact section with tabs -->
+                <section class="contact-section">
+                    <h2 class="contact-section-title">Need Help?</h2>
+                    
+                    <div class="contact-tabs">
+                        <button class="contact-tab active" data-target="tech-team">Tech Team</button>
+                        <button class="contact-tab" data-target="support-team">Support Team</button>
+                    </div>
+                    
+                    <div class="contact-panel active" id="tech-team">
+                        <p class="contact-description">
+                            In case of any technical issues, feel free to contact our Tech Team
+                        </p>
+                        <div class="contact-cards">
+                            <div class="contact-card">
+                                <div class="icon">
+                                    <i class="fas fa-user-cog"></i>
+                                </div>
+                                <div class="info">
+                                    <h4>Priyanshu Nayan</h4>
+                                    <a href="tel:+917004706722">+91 7004706722</a>
+                                </div>
+                            </div>
+                            <div class="contact-card">
+                                <div class="icon">
+                                    <i class="fas fa-user-cog"></i>
+                                </div>
+                                <div class="info">
+                                    <h4>Sk Riyaz</h4>
+                                    <a href="tel:+917029621489">+91 7029621489</a>
+                                </div>
+                            </div>
+                            <div class="contact-card">
+                                <div class="icon">
+                                    <i class="fas fa-user-cog"></i>
+                                </div>
+                                <div class="info">
+                                    <h4>Ronit Pal</h4>
+                                    <a href="tel:+917501005155">+91 7501005155</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-panel" id="support-team">
+                        <p class="contact-description">
+                            For payment and registration support, contact our Support Team
+                        </p>
+                        <div class="contact-cards">
+                            <div class="contact-card">
+                                <div class="icon">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                                <div class="info">
+                                    <h4>Rajesh Kumar</h4>
+                                    <a href="tel:+917325846735">+91 7325846735</a>
+                                </div>
+                            </div>
+                            <div class="contact-card">
+                                <div class="icon">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                                <div class="info">
+                                    <h4>Ananya Sharma</h4>
+                                    <a href="tel:+916204857639">+91 6204857639</a>
+                                </div>
+                            </div>
+                            <div class="contact-card">
+                                <div class="icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="info">
+                                    <h4>Email Support</h4>
+                                    <a href="mailto:majistic@jiscollege.ac.in">majistic@jiscollege.ac.in</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
+
+    <div id="payment-loader">
+        <div style="text-align: center; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+            <div class="loader"></div>
+            <p style="margin-top: 15px; font-weight: 500;">Processing payment...</p>
+            <p style="margin-top: 5px; font-size: 0.8rem; color: #666;">Please don't close this window</p>
+        </div>
+    </div>
+
+    <?php if (!$payment_done): ?>
+        <script>
+            // Format the date in IST
+            var paymentDate = new Date().toLocaleString('en-IN', { 
+                timeZone: 'Asia/Kolkata',
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: true
+            });
+            
+            var options = {
+                "key": "<?php echo htmlspecialchars($keyId); ?>",
+                "amount": "<?php echo htmlspecialchars($order->amount); ?>",
+                "currency": "INR",
+                "name": "maJIStic 2k25",
+                "description": "Event Registration Fee",
+                "image": "https://i.postimg.cc/02CTRDb2/majisticlogoblack.png",
+                "order_id": "<?php echo htmlspecialchars($order->id); ?>",
+                "handler": function (response) {
+                    document.getElementById('payment-loader').style.display = 'flex';
+                    console.log("Payment successful, processing...");
+                    console.log("Payment ID:", response.razorpay_payment_id);
+                    
+                    // Update payment status in the database
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "update_payment_status.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4) {
+                            console.log("Response status:", xhr.status);
+                            console.log("Response text:", xhr.responseText);
+                            
+                            if (xhr.status === 200) {
+                                try {
+                                    var jsonResponse = JSON.parse(xhr.responseText);
+                                    console.log("Payment update response:", jsonResponse);
+                                    
+                                    if (jsonResponse.success) {
+                                        window.location.reload();
+                                    } else {
+                                        alert("Error updating payment status: " + jsonResponse.message + "\n\nYour payment was successful, but we couldn't update our records. Please note your payment ID: " + response.razorpay_payment_id + " and contact our support team.");
+                                        document.getElementById('payment-loader').style.display = 'none';
+                                    }
+                                } catch (e) {
+                                    console.error("Failed to parse response:", e);
+                                    console.error("Raw response:", xhr.responseText);
+                                    alert("Payment recorded but there was an error updating your records. Please contact support with your payment ID: " + response.razorpay_payment_id);
+                                    document.getElementById('payment-loader').style.display = 'none';
+                                }
+                            } else {
+                                alert("Payment recorded but there was an error updating your records. Please contact support with your payment ID: " + response.razorpay_payment_id);
+                                document.getElementById('payment-loader').style.display = 'none';
+                            }
+                        }
+                    };
+                    
+                    // Send all necessary parameters for updating payment status
+                    var params = "jis_id=<?php echo htmlspecialchars($registration_id); ?>" + 
+                                "&payment_id=" + response.razorpay_payment_id + 
+                                "&payment_status=SUCCESS" + 
+                                "&amount=<?php echo htmlspecialchars($amount); ?>";
+                    console.log("Sending params:", params);
+                    xhr.send(params);
+                },
+                "prefill": {
+                    "name": "<?php echo htmlspecialchars($registration['student_name']); ?>",
+                    "email": "<?php echo htmlspecialchars($registration['email']); ?>",
+                    "contact": "<?php echo htmlspecialchars($registration['mobile']); ?>"
+                },
+                "theme": {
+                    "color": "#6366f1" // Updated to match our new indigo color
+                },
+                "modal": {
+                    "ondismiss": function() {
+                        // Record the abandoned payment attempt
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "record_payment_attempt.php", true);
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        xhr.send("registration_id=<?php echo htmlspecialchars($registration_id); ?>&status=abandoned");
+                    }
+                }
+            };
+
+            // Initialize Razorpay
+            var rzp1 = new Razorpay(options);
+            
+            document.getElementById('rzp-button').onclick = function() {
+                rzp1.open();
+                
+                // Record the payment attempt
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "record_payment_attempt.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.send("registration_id=<?php echo htmlspecialchars($registration_id); ?>&status=initiated");
+            };
+
+            // Fixed FAQ and contact tab functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                // Fix FAQ toggles
+                const faqToggles = document.querySelectorAll('.faq-toggle');
+                
+                faqToggles.forEach(toggle => {
+                    toggle.addEventListener('click', function() {
+                        const contentId = this.getAttribute('aria-controls');
+                        const content = document.getElementById(contentId);
+                        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                        
+                        // First close all FAQs
+                        faqToggles.forEach(otherToggle => {
+                            const otherId = otherToggle.getAttribute('aria-controls');
+                            const otherContent = document.getElementById(otherId);
+                            otherToggle.setAttribute('aria-expanded', 'false');
+                            if(otherContent) {
+                                otherContent.style.maxHeight = '0px';
+                                otherContent.style.opacity = '0';
+                                otherContent.style.padding = '0px';
+                            }
+                        });
+                        
+                        // Then open the clicked one if it was closed
+                        if (!isExpanded) {
+                            this.setAttribute('aria-expanded', 'true');
+                            if(content) {
+                                const innerContent = content.querySelector('.faq-content-inner');
+                                const contentHeight = innerContent ? innerContent.offsetHeight + 'px' : 'auto';
+                                content.style.maxHeight = contentHeight;
+                                content.style.opacity = '1';
+                                content.style.padding = '0'; // Remove padding around the content container
+                            }
+                        }
+                    });
+                });
+                
+                // Open first FAQ by default
+                if (faqToggles.length > 0) {
+                    setTimeout(() => {
+                        faqToggles[0].click();
+                    }, 100);
+                }
+                
+                // Fix contact tabs
+                const contactTabs = document.querySelectorAll('.contact-tab');
+                const contactPanels = document.querySelectorAll('.contact-panel');
+                
+                contactTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const target = this.getAttribute('data-target');
+                        
+                        // Remove active class from all tabs and panels
+                        contactTabs.forEach(t => t.classList.remove('active'));
+                        contactPanels.forEach(p => p.classList.remove('active'));
+                        
+                        // Add active class to clicked tab and its panel
+                        this.classList.add('active');
+                        const panel = document.getElementById(target);
+                        if(panel) {
+                            panel.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Ensure the script runs even if the page is already loaded
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                setTimeout(function() {
+                    const event = new Event('DOMContentLoaded');
+                    document.dispatchEvent(event);
+                }, 1);
+            }
+        </script>
+    <?php else: ?>
+        <script>
+            // Add script for FAQ and contact tabs even when payment is done
+            document.addEventListener('DOMContentLoaded', function() {
+                // Fix FAQ toggles
+                const faqToggles = document.querySelectorAll('.faq-toggle');
+                
+                faqToggles.forEach(toggle => {
+                    toggle.addEventListener('click', function() {
+                        const contentId = this.getAttribute('aria-controls');
+                        const content = document.getElementById(contentId);
+                        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                        
+                        // First close all FAQs
+                        faqToggles.forEach(otherToggle => {
+                            const otherId = otherToggle.getAttribute('aria-controls');
+                            const otherContent = document.getElementById(otherId);
+                            otherToggle.setAttribute('aria-expanded', 'false');
+                            if(otherContent) {
+                                otherContent.style.maxHeight = '0px';
+                                otherContent.style.opacity = '0';
+                                otherContent.style.padding = '0px';
+                            }
+                        });
+                        
+                        // Then open the clicked one if it was closed
+                        if (!isExpanded) {
+                            this.setAttribute('aria-expanded', 'true');
+                            if(content) {
+                                const innerContent = content.querySelector('.faq-content-inner');
+                                const contentHeight = innerContent ? innerContent.offsetHeight + 'px' : 'auto';
+                                content.style.maxHeight = contentHeight;
+                                content.style.opacity = '1';
+                                content.style.padding = '0'; // Remove padding around the content container
+                            }
+                        }
+                    });
+                });
+                
+                // Open first FAQ by default
+                if (faqToggles.length > 0) {
+                    setTimeout(() => {
+                        faqToggles[0].click();
+                    }, 100);
+                }
+                
+                // Fix contact tabs
+                const contactTabs = document.querySelectorAll('.contact-tab');
+                const contactPanels = document.querySelectorAll('.contact-panel');
+                
+                contactTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const target = this.getAttribute('data-target');
+                        
+                        // Remove active class from all tabs and panels
+                        contactTabs.forEach(t => t.classList.remove('active'));
+                        contactPanels.forEach(p => p.classList.remove('active'));
+                        
+                        // Add active class to clicked tab and its panel
+                        this.classList.add('active');
+                        const panel = document.getElementById(target);
+                        if(panel) {
+                            panel.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Ensure the script runs even if the page is already loaded
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                setTimeout(function() {
+                    const event = new Event('DOMContentLoaded');
+                    document.dispatchEvent(event);
+                }, 1);
+            }
+        </script>
+    <?php endif; ?>
 </body>
 </html>

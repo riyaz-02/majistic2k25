@@ -5,7 +5,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-include '../../../includes/db_config.php';
+include '../includes/db_config.php';
 
 // Fetch filtered data if filters are applied
 $gender_filter = isset($_GET['gender']) ? $_GET['gender'] : '';
@@ -414,24 +414,27 @@ if (isset($_GET['download']) && $_GET['download'] == 'csv') {
                 </tr>
                 <?php $sl_no = 1; ?>
                 <?php while ($row = $outhouse_result->fetch_assoc()): ?>
+                <?php
+                    $team_members = isset($row['team_members']) ? json_decode($row['team_members'], true) : [];
+                    $team_size = is_array($team_members) ? count($team_members) + 1 : 1;
+                ?>
                 <tr>
                     <td><?php echo $sl_no++; ?></td>
                     <td><?php echo isset($row['leader_name']) ? $row['leader_name'] : ''; ?></td>
                     <td><?php echo isset($row['gender']) ? $row['gender'] : ''; ?></td>
-                    <td><?php echo isset($row['email']) ? $row['email'] : ''; ?></td>
                     <td><?php echo isset($row['contact_number']) ? $row['contact_number'] : ''; ?></td>
                     <td><?php echo isset($row['college_name']) ? $row['college_name'] : ''; ?></td>
-                    <td><?php echo isset($row['college_id']) ? $row['college_id'] : ''; ?></td>
-                    <td><?php echo isset($row['course_name']) ? $row['course_name'] : ''; ?></td>
                     <td><?php echo isset($row['competition_name']) ? $row['competition_name'] : ''; ?></td>
                     <td><?php echo isset($row['team_name']) ? $row['team_name'] : ''; ?></td>
-                    <td><?php echo isset($row['team_members']) ? implode(", ", json_decode($row['team_members'])) : ''; ?></td>
-                    <td><?php echo isset($row['team_members_contact']) ? implode(", ", json_decode($row['team_members_contact'])) : ''; ?></td>
-                    <td><?php echo isset($row['payment_status']) ? $row['payment_status'] : ''; ?></td>
+                    <td><?php echo $team_size; ?></td>
+                    <td>
+                        <span class="status-badge <?php echo isset($row['payment_status']) && $row['payment_status'] == 'Paid' ? 'paid' : 'not-paid'; ?>">
+                            <?php echo isset($row['payment_status']) ? $row['payment_status'] : ''; ?>
+                        </span>
+                    </td>
                     <td><?php echo isset($row['payment_id']) ? $row['payment_id'] : ''; ?></td>
-                    <td><?php echo isset($row['amount_paid']) ? $row['amount_paid'] : ''; ?></td>
-                    <td><?php echo isset($row['payment_date']) ? $row['payment_date'] : ''; ?></td>
-                    <td><?php echo isset($row['registration_date']) ? $row['registration_date'] : ''; ?></td>
+                    <td><?php echo isset($row['amount_paid']) ? '₹'.$row['amount_paid'] : ''; ?></td>
+                    <td><?php echo isset($row['registration_date']) ? date('d M Y', strtotime($row['registration_date'])) : ''; ?></td>
                 </tr>
                 <?php endwhile; ?>
             </table>

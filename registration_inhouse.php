@@ -9,402 +9,20 @@ include 'src/main/registration_handler.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Adding Roboto font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <?php include 'includes/links.php'; ?>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/registration.css">
     <style>
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0, 0, 0, 0.49);
-            padding-top: 60px;
+        .registration-heading h1 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(54, 52, 52, 0.32); /* Semi-transparent background */
-            backdrop-filter: blur(10px); /* Blur effect */
-            margin: 1% auto;
-            padding: 50px;
-            border: 1px solid #888;
-            width: 90%;
-            max-width: 600px;
-            text-align: center;
-        }
-        .modal-buttons {
-            margin-top: 20px;
-        }
-        .modal-buttons button {
-            margin: 0 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: black; /* Black background */
-            color: white; /* White text */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Pointer cursor */
-        }
-        .modal-buttons button:hover {
-            background-color: #333; /* Darker background on hover */
-        }
-        .form-container {
-            margin: 40px; /* Add margin to create gap */
-            height: auto; /* Make height flexible */
-            max-width: 40rem; /* Ensure it doesn't exceed the container */
-            max-height: 100%; /* Ensure it doesn't exceed the container */
-        }
-        .banner-container{
-            margin: 40px;
-        }
-        .form-group input, .form-group select {
-            width: 100%; /* Increase input fields width */
-        }
-        .form-group select option {
-            background-color:rgba(16, 66, 45, 0.73); /* Adsd background color to dropdown options */
-        }
-        .payment-modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0, 0, 0, 0.49);
-            padding-top: 60px;
-        }
-        .payment-modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(54, 52, 52, 0.32); /* Semi-transparent background */
-            backdrop-filter: blur(10px); /* Blur effect */
-            margin: 1% auto;
-            padding: 50px;
-            border: 1px solid #888;
-            width: 90%;
-            max-width: 600px;
-            text-align: center;
-        }
-        .majisticheadlogo {
-            max-width: 100%;
-            height: auto;
-        }
-        .loading-spinner {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1000;
-            top:0;
-            padding-top: 42vh;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.73); /* Semi-black and semi-transparent background */
-            justify-content: center;
-            align-items: center;
-        }
-        #spinnerContent {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }.loading-spinner img {
-            width: 200px;
-            height: auto;
-            animation: pulse 0.8s infinite;
-        }
-        .loading-spinner p {
-            color: white;
-            font-size: 1rem;
-            margin-top: 20px;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* CSS for Register Button */
-        #registerButton {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #18181a;
-  color:rgb(250, 250, 253);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  padding: 12px 24px;
-  cursor: pointer;
-  background:rgb(86, 241, 92);
-  user-select: none;
-  border-radius: 8px;
-  min-width: 150px;
-  transition: color 0.3s ease;
-}
-
-#registerButton span:first-child {
-  position: relative;
-  transition: opacity 0.3s ease;
-  z-index: 20;
-}
-
-#registerButton span:last-child {
-  position: absolute;
-  color: white;
-  z-index: 20;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s ease;
-}
-
-#registerButton:after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #4CAF50;
-  transition: all 0.4s cubic-bezier(0.48, 0, 0.12, 1);
-  z-index: 10;
-}
-
-#registerButton:hover:after {
-  top: 0;
-}
-
-#registerButton:hover span:first-child {
-  opacity: 0;
-}
-
-#registerButton:hover span:last-child {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* CSS for Payment Button */
-p.mt-2 {
-  color: white; /* Color for the paragraph text */
-  font-size: 16px; /* Font size for the paragraph */
-  margin: 0; /* Remove default margin */
-  display: flex; /* Use flexbox to align items in a row */
-  align-items: center; /* Center align items vertically */
-}
-
-#paymentLink {
-  align-self: center;
-  background-color: rgb(86, 241, 92); /* Initial background color */
-  border-radius: 10px; /* Adjusted border radius */
-  border-style: solid;
-  border-width: 2px;
-  border-color: #41403e; /* Keep the border color the same */
-  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
-  box-sizing: border-box;
-  color:rgb(251, 250, 246); /* Text color */
-  cursor: pointer;
-  display: inline-block;
-  font-family: Neucha, sans-serif;
-  font-size: 0.9rem; /* Slightly decreased font size */
-  line-height: 20px; /* Adjusted line height */
-  outline: none;
-  padding: 0.5rem 1rem; /* Adjusted padding for height and width */
-  text-decoration: none;
-  transition: all 235ms ease-in-out; /* Smooth transition */
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  margin-left: 10px; /* Add margin to create space above the button */
-}
-
-#paymentLink:hover {
-  background-color: #4CAF50; /* Change background color to green on hover */
-  color: #fff; /* Change text color to white on hover */
-  box-shadow: rgba(76, 175, 80, 0.5) 2px 8px 8px -5px; /* Slight green shadow */
-  transform: translate3d(0, 2px, 0);
-}
-
-#paymentLink:focus {
-  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px; /* Focus shadow */
-}
-
-
-
- /* payment button  */
-#finalPay {
-  align-items: center;
-  background-color: #4CAF50; /* A vibrant green for the button */
-  border: 2px solid #FFD700; /* Yellow border for contrast */
-  border-radius: 8px;
-  box-sizing: border-box;
-  color: #fff; /* White text color */
-  cursor: pointer;
-  display: flex;
-  font-family: Inter, sans-serif;
-  font-size: 16px;
-  height: 48px;
-  justify-content: center;
-  line-height: 24px;
-  max-width: 100%;
-  padding: 0 25px;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  transition: background-color 0.3s ease; /* Smooth transition for background color */
-  margin-top: 10px; /* Add margin to create space above the button */
-}
-
-#finalPay:after {
-  background-color: rgba(203, 245, 88, 0.92); /* Light overlay for hover effect */
-  border-radius: 8px;
-  content: "";
-  display: block;
-  height: 48px;
-  left: 0;
-  width: 100%;
-  position: absolute;
-  top: -2px;
-  transform: translate(8px, 8px);
-  transition: transform 0.2s ease-out;
-  z-index: -1;
-}
-
-#finalPay:hover:after {
-  transform: translate(0, 0);
-}
-
-#finalPay:active {
-  background-color: #3e8e41; /* Darker green when active */
-  outline: 0;
-}
-
-#finalPay:hover {
-  background-color: #45a049; /* Slightly lighter green on hover */
-  outline: 0;
-}
-
-@media (min-width: 768px) {
-  .button-56 {
-    padding: 0 40px;
-  }
-}
-
-
-/*  for this div class <div id="confirmationModal" class="modal"> */
-
-.modal-buttons button {
-    padding: 10px 20px; /* Add some padding for better appearance */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 16px; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transition */
-}
-
-#confirmButton {
-    background-color: #4CAF50; /* Green background for Confirm button */
-    color: white; /* White text color */
-}
-
-#cancelButton {
-    background-color: #f44336; /* Red background for Cancel button */
-    color: white; /* White text color */
-}
-
-.modal-buttons button:hover {
-    transform: scale(1.05); /* Zoom in effect */
-}
-
-#confirmButton:hover {
-    background-color: #45a049; /* Darker green on hover */
-}
-
-#cancelButton:hover {
-    background-color: #e53935; /* Darker red on hover */
-}
-
-/* for this div class <div id="paymentModal" class="modal"> */
-.modal-buttons button {
-    padding: 10px 20px; /* Add some padding for better appearance */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 16px; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transition */
-}
-
-.modal-buttons button[type="submit"] {
-    background-color: #4CAF50; /* Green background for Submit button */
-    color: white; /* White text color */
-}
-
-.modal-buttons button[type="button"] {
-    background-color: #f44336; /* Red background for Cancel button */
-    color: white; /* White text color */
-}
-
-.modal-buttons button:hover {
-    transform: scale(1.05); /* Zoom in effect */
-}
-
-.modal-buttons button[type="submit"]:hover {
-    background-color: #45a049; /* Darker green on hover */
-}
-
-.modal-buttons button[type="button"]:hover {
-    background-color: #e53935; /* Darker red on hover */
-}
-
-.success-message {
-    width: 100%;
-    max-width: 500px;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 20px;
-    text-align: center;
-    border-radius: 10px;
-    border: 1px solid #888;
-    margin: 0 auto;
-}
-@media (max-width: 768px) {
-    .success-message {
-        width: 95%;
-        padding: 15px;
-    }
-}
-.verification-table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-}
-.verification-table th, .verification-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-.verification-table th {
-    background-color:rgb(62, 143, 136);
-    color: white;
-    text-align: center; /* Center align the text */
-}
     </style>
 </head>
-<body>
+<body class="<?php echo $registration_success ? 'registration-success' : ''; ?>">
     <?php include 'includes/header.php'; ?>
     <?php if (!empty($message)): ?>
         <div class="message-box <?php echo $registration_success ? 'success' : 'error'; ?>" id="messageBox"><?php echo $message; ?></div>
@@ -416,13 +34,15 @@ p.mt-2 {
         </script>
     <?php endif; ?>
     <section class="registration-container">
-    <h1 style="text-align: center; color: white; margin-bottom: 20px;">In-house Students Registration</h1>
+        <div class="registration-heading">
+            <h1>In-house Students Registration</h1>
+        </div>
         <div class="info-card">
             <ul>
-                <li>✅ Please ensure that all your details are correct before submitting the registration form.</li>
-                <li>🎟️ Event Ticket Price is <del>Rs. 500</del> Rs. 400 [Early Bird]</li>
-                <li>📞 For any queries, contact <strong>maJIStic support</strong></li>
-                <li>🛍️ For Merchandise, go to the <a href="merchandise.php"><strong>Merchandise page</strong></a></li>
+                <li><i class="fas fa-check-circle"></i> Please ensure that all your details are correct before submitting.</li>
+                <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <del>Rs. 500</del> <strong>Rs. 400</strong> [Early Bird]</li>
+                <li><i class="fas fa-phone-alt"></i> For queries, contact <strong>maJIStic support</strong></li>
+                <li><i class="fas fa-shopping-bag"></i> For Merchandise, visit <a href="merchandise.php"><strong>Merchandise page</strong></a></li>
             </ul>
         </div>
         <div class="content-wrapper">
@@ -430,63 +50,15 @@ p.mt-2 {
                 <img id="bannerImage" src="https://i.ibb.co/VWLkTX5j/banner1.png" alt="Event Banner">
             </div>
             <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
-                <img class="majisticheadlogo" src="images/majistic2k25_white.png" alt="maJIStic Logo">
+                <img class="majisticheadlogo" src="https://i.postimg.cc/xjFhxVsL/majistic2k25-white.png" alt="maJIStic Logo">
                 <?php if ($registration_success): ?>
-                    <div class="success-message" style="width: 500px; background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: center; border-radius: 10px; border: 1px solid #888;">                        <p><?php echo $message; ?></p>
-                        <table class="verification-table">
-                            <tr>
-                                <th colspan="2">VERIFY YOUR DETAILS BEFORE PAYMENT</th>
-                            </tr>
-                            <tr>
-                                <td>Student Name</td>
-                                <td><?php echo htmlspecialchars($student_name); ?></td>
-                            </tr>
-                            <tr>
-                                <td>JIS ID</td>
-                                <td><?php echo htmlspecialchars($jis_id); ?></td>
-                            </tr>
-                            <tr>
-                                <td>Mobile Number</td>
-                                <td><?php echo htmlspecialchars($mobile); ?></td>
-                            </tr>
-                            <tr>
-                                <td>Email</td>
-                                <td><?php echo htmlspecialchars($email); ?></td>
-                            </tr>
-                            <tr>
-                                <td>Roll Number</td>
-                                <td><?php echo htmlspecialchars($roll_no); ?></td>
-                            </tr>
-                            <tr>
-                                <td>Department</td>
-                                <td><?php echo htmlspecialchars($department); ?></td>
-                            </tr>
-                            <tr>
-                                <td>Inhouse Competition</td>
-                                <td><?php echo htmlspecialchars($inhouse_competition); ?></td>
-                            </tr>
-                            <tr>
-                                <td>Competition</td>
-                                <td><?php echo htmlspecialchars($competition); ?></td>
-                            </tr>
-                        </table>
-                        <?php if ($email_option): ?>
-                            <p>Would you like to receive your registration details via email?</p>
-                            <form method="POST" action="registration_inhouse.php">
-                                <input type="hidden" name="email_option" value="1">
-                                <input type="hidden" name="student_name" value="<?php echo $student_name; ?>">
-                                <input type="hidden" name="jis_id" value="<?php echo $jis_id; ?>">
-                                <input type="hidden" name="mobile" value="<?php echo $mobile; ?>">
-                                <input type="hidden" name="email" value="<?php echo $email; ?>">
-                                <input type="hidden" name="roll_no" value="<?php echo $roll_no; ?>">
-                                <input type="hidden" name="payment_transaction_id" value="<?php echo $payment_transaction_id; ?>"> <!-- Add payment transaction ID -->
-                                <button type="submit">Send Email</button>
-                            </form>
-                        <?php endif; ?>
-                    </div>
-                    <button id="finalPay" style="width: 150px;" onclick="window.location.href='src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'">Pay Now</button>
+                    <script>
+                        // Immediately redirect to payment page upon successful registration
+                        window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>';
+                    </script>
                 <?php else: ?>
-                    <form id="registrationForm" method="POST" action="registration_inhouse.php" onsubmit="return validateForm()">                        <div class="form-group">
+                    <form id="registrationForm" method="POST" action="registration_inhouse.php" onsubmit="return validateForm()">
+                        <div class="form-group">
                             <label for="student_name">Student Name:</label>
                             <input type="text" id="student_name" name="student_name" required>
                         </div>
@@ -501,7 +73,8 @@ p.mt-2 {
                         </div>
                         <div class="form-group">
                             <label for="jis_id">JIS ID:</label>
-                            <input type="text" id="jis_id" name="jis_id" pattern="JIS/\d{4}/\d{4}" placeholder="JIS/2025/0001" required>                        </div>
+                            <input type="text" id="jis_id" name="jis_id" pattern="JIS/\d{4}/\d{4}" placeholder="JIS/20XX/0000" required>                        
+                        </div>
                         <div class="form-group">
                             <label for="roll_no">Roll Number:</label>
                             <input type="text" id="roll_no" name="roll_no" pattern="\d+" required>
@@ -527,7 +100,8 @@ p.mt-2 {
                                 <option value="Diploma ME">Diploma ME</option>
                                 <option value="Diploma CE">Diploma CE</option>
                                 <option value="Diploma EE">Diploma EE</option>
-                                <option value="B. Pharmacy">Pharmacy</option>                            </select>
+                                <option value="B. Pharmacy">Pharmacy</option>                            
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="mobile">Mobile Number:</label>
@@ -568,11 +142,61 @@ p.mt-2 {
             </div>
         </div>
     </section>
+    
+    <!-- Scroll indicator for mobile -->
+    <div class="scroll-indicator">
+        <i class="fas fa-arrow-down"></i> Scroll for registration form
+    </div>
+    
+    <!-- Contact Box -->
+    <div class="tech-team-contact">
+        <div class="contact-header">
+            <i class="fas fa-headset"></i>
+            <h3>In case of any discrepancy, feel free to contact maJIStic Tech Team</h3>
+        </div>
+        <div class="contact-cards">
+            <div class="contact-card">
+                <div class="contact-card-inner">
+                    <div class="contact-info">
+                        <h4>Priyanshu Nayan</h4>
+                        <p>+91 7004706722</p>
+                    </div>
+                    <a href="https://wa.me/917004706722" target="_blank" class="whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-inner">
+                    <div class="contact-info">
+                        <h4>Sk Riyaz</h4>
+                        <p>+91 7029621489</p>
+                    </div>
+                    <a href="https://wa.me/917029621489" target="_blank" class="whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-inner">
+                    <div class="contact-info">
+                        <h4>Ronit Pal</h4>
+                        <p>+91 7501005155</p>
+                    </div>
+                    <a href="https://wa.me/917501005155" target="_blank" class="whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <?php include 'includes/footer.php'; ?>
+    
+    <!-- Confirmation Modal -->
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <p>Please review your entered details carefully before proceeding. Once you confirm, no changes can be made to your registration.</p>
-            <p>If everything looks correct, click 'Confirm' to complete your registration. If you need to make changes, click 'Cancel' to go back and edit your information.</p>
             <div class="modal-buttons">
                 <button id="confirmButton">Confirm</button>
                 <button id="cancelButton">Cancel</button>
@@ -604,7 +228,7 @@ p.mt-2 {
     <!-- Loading Spinner -->
     <div class="loading-spinner display-flex" id="loadingSpinner">
         <div id="spinnerContent">
-            <img src="images/majisticlogo.png" alt="maJIStic Logo">
+            <img src="https://i.postimg.cc/tCKfbtGT/majisticlogo.png" alt="maJIStic Logo">
             <p>Submitting...</p>
         </div>
     </div>
@@ -660,6 +284,8 @@ p.mt-2 {
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = 'none';
+            } else if (event.target == paymentModal) {
+                paymentModal.style.display = 'none';
             }
         }
 
@@ -669,12 +295,6 @@ p.mt-2 {
 
         paymentLink.onclick = function() {
             paymentModal.style.display = 'block';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == paymentModal) {
-                paymentModal.style.display = 'none';
-            }
         }
 
         paymentForm.onsubmit = function(event) {
@@ -703,16 +323,16 @@ p.mt-2 {
             var selectedCompetition = this.value;
             var bannerImage = document.getElementById('bannerImage');
             switch (selectedCompetition) {
-                case 'Taal Se Taal Mila (Dance)':
+                case 'Taal Se Taal Mila (Dance Events)':
                     bannerImage.src = 'https://i.ibb.co/0V1Cxvnr/dance.png';
                     break;
                 case 'Actomania (Drama)':
                     bannerImage.src = 'https://i.ibb.co/vvLXHMDF/drama.jpg';
                     break;
-                case 'Jam Room (Band)':
+                case 'Jam Room (Band Events)':
                     bannerImage.src = 'https://i.ibb.co/5h1Kw4KB/band.jpg';
                     break;
-                case 'Glam It Up(Fashion Show)':
+                case 'Fashion Fiesta (Fashion Show)':
                     bannerImage.src = 'https://i.ibb.co/9drCNqN/fashion.jpg';
                     break;
                 default:
@@ -721,7 +341,13 @@ p.mt-2 {
             }
         });
 
+        // Function to validate form
         function validateForm() {
+            // Reset all error messages first
+            clearErrorMessages();
+            
+            let isValid = true;
+            const errors = [];
             var studentName = document.getElementById('student_name').value.trim();
             var jisId = document.getElementById('jis_id').value.trim();
             var mobile = document.getElementById('mobile').value.trim();
@@ -732,55 +358,183 @@ p.mt-2 {
 
             // Validate student name (no numeric values allowed and not empty)
             if (studentName === "" || /\d/.test(studentName)) {
-                alert('Student name should not be empty or contain numeric values.');
-                return false;
+                errors.push({id: 'student_name', message: 'Student name should not contain numbers'});
+                isValid = false;
             }
 
             // Validate JIS ID format
             var jisIdPattern = /^JIS\/\d{4}\/\d{4}$/;
             if (jisId === "" || !jisIdPattern.test(jisId)) {
-                alert('JIS ID should be in the format JIS/2025/0001 and not be empty.');
-                return false;
+                errors.push({id: 'jis_id', message: 'Format should be JIS/20XX/0000'});
+                isValid = false;
             }
 
             // Validate mobile number (10 digits)
             var mobilePattern = /^\d{10}$/;
             if (mobile === "" || !mobilePattern.test(mobile)) {
-                alert('Mobile number should be 10 digits and not be empty.');
-                return false;
+                errors.push({id: 'mobile', message: 'Enter 10-digit mobile number'});
+                isValid = false;
             }
 
             // Validate email
-            if (email === "") {
-                alert('Email should not be empty.');
-                return false;
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (email === "" || !emailPattern.test(email)) {
+                errors.push({id: 'email', message: 'Please enter a valid email address'});
+                isValid = false;
             }
 
             // Validate roll number
             if (rollNo === "") {
-                alert('Roll number should not be empty.');
-                return false;
+                errors.push({id: 'roll_no', message: 'Roll number is required'});
+                isValid = false;
             }
 
             // Validate department
             if (department === "") {
-                alert('Department should not be empty.');
-                return false;
+                errors.push({id: 'department', message: 'Please select a department'});
+                isValid = false;
             }
 
             // Validate gender
             if (gender === "") {
-                alert('Gender should not be empty.');
-                return false;
+                errors.push({id: 'gender', message: 'Please select gender'});
+                isValid = false;
+            }
+            
+            // Display errors with a slight delay between each to make them noticeable
+            if (errors.length > 0) {
+                errors.forEach((error, index) => {
+                    setTimeout(() => {
+                        showError(error.id, error.message);
+                    }, index * 100); // 100ms delay between each error display
+                });
             }
 
-            return true;
+            return isValid;
         }
+        
+        // Function to show error message
+        function showError(inputId, message) {
+            const input = document.getElementById(inputId);
+            input.classList.add('input-error');
+            
+            // Create error message element
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            // Add to parent and position properly
+            input.parentElement.appendChild(errorDiv);
+            
+            // Position adjustment for special cases
+            if (inputId === 'inhouse_yes' || inputId === 'inhouse_no') {
+                // For radio buttons, append to the radio group container
+                const radioGroup = document.querySelector('.radio-group');
+                radioGroup.appendChild(errorDiv);
+            }
+            
+            // Automatically remove the error message and class after animation ends
+            setTimeout(() => {
+                if (errorDiv && errorDiv.parentNode) {
+                    errorDiv.remove();
+                }
+                
+                // Keep the error border a bit longer to ensure the user notices
+                setTimeout(() => {
+                    input.classList.remove('input-error');
+                }, 1500);
+            }, 3500); // Match this to the animation duration in CSS
+        }
+        
+        // Function to clear all error messages immediately
+        function clearErrorMessages() {
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(element => {
+                element.remove();
+            });
+            
+            const errorInputs = document.querySelectorAll('.input-error');
+            errorInputs.forEach(input => {
+                input.classList.remove('input-error');
+            });
+        }
+        
+        // Add input event listeners to clear errors when user starts typing
+        const formInputs = document.querySelectorAll('#registrationForm input, #registrationForm select');
+        formInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('input-error');
+                const errorDiv = this.parentElement.querySelector('.error-message');
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+            });
+        });
 
         // Clear the form when the user navigates back to the page
         window.onload = function() {
             document.getElementById('registrationForm').reset();
-        }
+            
+            // Show/hide scroll indicator based on scroll position and screen size
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            const formContainer = document.querySelector('.form-container');
+            let indicatorShown = true;
+            
+            function checkScrollIndicator() {
+                // Don't show scroll indicator if registration was successful
+                if (document.body.classList.contains('registration-success')) {
+                    scrollIndicator.style.display = 'none';
+                    return;
+                }
+                
+                if (window.innerWidth <= 768) {
+                    const formRect = formContainer.getBoundingClientRect();
+                    
+                    // Only show indicator when form is not visible in viewport
+                    if (formRect.top < window.innerHeight && formRect.bottom > 0) {
+                        scrollIndicator.style.opacity = '0';
+                        setTimeout(() => {
+                            scrollIndicator.style.display = 'none';
+                        }, 300);
+                        indicatorShown = false;
+                    } else if (!indicatorShown) {
+                        scrollIndicator.style.display = 'flex';
+                        setTimeout(() => {
+                            scrollIndicator.style.opacity = '0.95';
+                        }, 10);
+                        indicatorShown = true;
+                    }
+                } else {
+                    scrollIndicator.style.display = 'none';
+                    indicatorShown = false;
+                }
+            }
+            
+            // Check initially and on scroll
+            checkScrollIndicator();
+            window.addEventListener('scroll', checkScrollIndicator);
+            window.addEventListener('resize', checkScrollIndicator);
+            
+            // Smooth scroll to form when indicator is clicked
+            scrollIndicator.addEventListener('click', function() {
+                formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            
+            // Don't show the indicator again after user has scrolled to the form once
+            let userHasScrolledToForm = false;
+            
+            window.addEventListener('scroll', function() {
+                const formRect = formContainer.getBoundingClientRect();
+                
+                if (formRect.top < window.innerHeight && formRect.bottom > 0) {
+                    userHasScrolledToForm = true;
+                }
+                
+                if (userHasScrolledToForm) {
+                    scrollIndicator.style.display = 'none';
+                }
+            });
+        };
     </script>
 </body> 
 </html>

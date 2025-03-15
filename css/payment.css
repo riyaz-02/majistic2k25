@@ -1,0 +1,766 @@
+:root {
+    --primary-color: #6366f1; /* Changed to indigo */
+    --secondary-color: #4338ca; /* Darker indigo */
+    --accent-color: #c084fc; /* Purple accent */
+    --text-color: #333;
+    --light-text: #f5f5f5;
+    --background: #f9f9f9;
+    --card-bg: #ffffff;
+    --error-color: #e53935;
+    --success-color: #43a047;
+    --border-radius: 16px;
+    --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --gradient-primary: linear-gradient(135deg, #6366f1, #7c3aed); /* Indigo to purple gradient */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f5f5f5;
+    background-image: url('../../images/pageback.png');
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    gap: 2rem;
+}
+
+.payment-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    padding: 2rem;
+}
+
+.side-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.payment-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    width: 100%;
+    max-width: 500px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.payment-header {
+    background: var(--gradient-primary);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-logo {
+    max-width: 180px;
+    margin: 0 auto;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+}
+
+.payment-title {
+    color: var(--light-text);
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.payment-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+}
+
+.payment-body {
+    padding: 1.5rem;
+}
+
+.payment-details {
+    margin-bottom: 1.5rem;
+}
+
+.payment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.payment-table th, 
+.payment-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.payment-table th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.payment-table tr:last-child td {
+    border-bottom: none;
+}
+
+.payment-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 1.5rem 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.payment-button {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+}
+
+.payment-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 10px rgba(124, 58, 237, 0.3);
+}
+
+.payment-button:active {
+    transform: translateY(1px);
+}
+
+.payment-footer {
+    padding: 1rem 1.5rem;
+    text-align: center;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.status-paid {
+    background-color: rgba(67, 160, 71, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(67, 160, 71, 0.2);
+}
+
+.status-pending {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #ff9800;
+    border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+.status-failed {
+    background-color: rgba(229, 57, 53, 0.1);
+    color: var(--error-color);
+    border: 1px solid rgba(229, 57, 53, 0.2);
+}
+
+.payment-notice {
+    background-color: rgba(66, 165, 245, 0.1);
+    border-left: 4px solid #42a5f5;
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #0d47a1;
+}
+
+.payment-alert {
+    background-color: rgba(229, 57, 53, 0.1);
+    border-left: 4px solid var(--error-color);
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #b71c1c;
+}
+
+.payment-success {
+    background-color: rgba(67, 160, 71, 0.1);
+    border-left: 4px solid var(--success-color);
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #1b5e20;
+}
+
+.secure-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 15px;
+}
+
+.payment-help {
+    padding: 1.5rem;
+    background: #f5f7fa;
+    border-top: 1px solid #eee;
+    font-size: 0.9rem;
+}
+
+.payment-help h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.payment-help p {
+    margin: 0.5rem 0;
+    color: #555;
+}
+
+.help-contact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.help-contact a {
+    padding: 8px 12px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.help-whatsapp {
+    background-color: rgba(37, 211, 102, 0.1);
+    color: #25D366;
+    border: 1px solid rgba(37, 211, 102, 0.2);
+}
+
+.help-email {
+    background-color: rgba(66, 133, 244, 0.1);
+    color: #4285F4;
+    border: 1px solid rgba(66, 133, 244, 0.2);
+}
+
+.loader {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* New improved FAQ section with tab-based navigation */
+.faq-section {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 255, 0.95));
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 3px 10px rgba(99, 102, 241, 0.2);
+    padding: 1.3rem;  /* Reduced from 1.8rem */
+    margin-bottom: 1.3rem;  /* Reduced from 1.8rem */
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    position: relative;
+}
+
+.faq-title {
+    text-align: center;
+    margin-bottom: 1.2rem;  /* Reduced from 1.8rem */
+    color: var(--primary-color);
+    font-size: 1.3rem;  /* Slightly reduced from 1.4rem */
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;  /* Reduced from 12px */
+}
+
+.faq-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 3px;
+}
+
+.faq-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.faq-list-item {
+    margin-bottom: 0.7rem;  /* Reduced from 1rem */
+    position: relative;
+}
+
+.faq-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, rgba(99, 102, 241, 0.05), rgba(124, 58, 237, 0.05));
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 10px;
+    padding: 0.9rem 1.2rem;  /* Reduced from 1.2rem 1.5rem */
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-color);
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.faq-toggle:hover {
+    background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(124, 58, 237, 0.1));
+}
+
+.faq-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+.faq-toggle-icon {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.faq-toggle[aria-expanded="true"] .faq-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.faq-toggle[aria-expanded="true"] {
+    background: linear-gradient(to right, rgba(99, 102, 241, 0.15), rgba(124, 58, 237, 0.15));
+    color: var(--primary-color);
+    font-weight: 600;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.faq-content {
+    background: white;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.faq-content-inner {
+    padding: 1rem 1.2rem;  /* New specific padding for inner content */
+}
+
+/* Consolidated support and tech team section */
+.contact-section {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 255, 0.95));
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 3px 10px rgba(99, 102, 241, 0.2);
+    padding: 1.3rem;  /* Reduced from 1.8rem */
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    position: relative;
+}
+
+.contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #6366f1);
+    background-size: 200% 100%;
+    animation: gradientMove 4s linear infinite;
+}
+
+.contact-section-title {
+    text-align: center;
+    margin-bottom: 1.2rem;  /* Reduced from 1.8rem */
+    color: var(--primary-color);
+    font-size: 1.3rem;  /* Slightly reduced from 1.4rem */
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 8px;  /* Reduced from 12px */
+}
+
+.contact-section-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 3px;
+}
+
+.contact-tabs {
+    display: flex;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+    margin-bottom: 1.2rem;  /* Reduced from 1.5rem */
+}
+
+.contact-tab {
+    padding: 0.6rem 1.2rem;  /* Reduced from 0.8rem 1.5rem */
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.contact-tab:focus {
+    outline: none;
+}
+
+.contact-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    transition: width 0.3s ease;
+}
+
+.contact-tab.active {
+    color: var(--primary-color);
+}
+
+.contact-tab.active::after {
+    width: 100%;
+}
+
+.contact-panel {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.contact-panel.active {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.contact-description {
+    text-align: center;
+    margin-bottom: 1.2rem;  /* Reduced from 1.5rem */
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.6;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 10px 12px;  /* Reduced from 12px 15px */
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.contact-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;  /* Reduced from 15px */
+    margin-top: 15px;  /* Reduced from 20px */
+}
+
+.contact-card {
+    background: linear-gradient(145deg, #ffffff, #f5f7ff);
+    border-radius: 12px;
+    padding: 12px;  /* Reduced from 15px */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;  /* Reduced from 12px */
+    transition: all 0.3s ease;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.contact-card .icon {
+    width: 40px;  /* Reduced from 45px */
+    height: 40px;  /* Reduced from 45px */
+    border-radius: 10px;
+    background: var(--gradient-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.contact-card:hover .icon {
+    transform: rotate(10deg);
+}
+
+.contact-card .info {
+    flex: 1;
+}
+
+.contact-card h4 {
+    margin: 0 0 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.contact-card a {
+    color: #555;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.contact-card a:hover {
+    color: var(--primary-color);
+    transform: translateX(3px);
+}
+
+/* Remove old contact box and support box styles */
+.contact-wrapper,
+.contact-box,
+.support-box {
+    /* These will be replaced by the new consolidated section */
+}
+
+/* Enhanced back button styling */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--gradient-primary);
+    border-radius: 50px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+    background: linear-gradient(135deg, #7c3aed, #6366f1);
+}
+
+.back-button:active {
+    transform: translateX(-2px);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+@media (max-width: 992px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+    
+    .payment-container, .side-container {
+        width: 100%;
+    }
+    
+    .faq-section, .contact-box {
+        max-width: 100%;
+    }
+    
+    .contact-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .contact-card {
+        max-width: 100%;
+        width: calc(50% - 10px);
+    }
+    
+    .contact-wrapper {
+        flex-direction: column;
+    }
+    
+    .contact-box, .support-box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .payment-container {
+        padding: 1rem;
+    }
+    
+    .payment-card {
+        max-width: 100%;
+    }
+    
+    .payment-header {
+        padding: 1rem;
+    }
+    
+    .payment-body {
+        padding: 1rem;
+    }
+    
+    .payment-table th, 
+    .payment-table td {
+        padding: 10px;
+    }
+    
+    .payment-amount {
+        font-size: 1.5rem;
+    }
+    
+    .contact-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .contact-tabs {
+        flex-direction: column;
+        border-bottom: none;
+    }
+    
+    .contact-tab {
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+    }
+    
+    .contact-tab::after {
+        display: none;
+    }
+    
+    .contact-tab.active {
+        background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .contact-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .faq-section, 
+    .contact-section {
+        padding: 1rem;  /* Further reduced padding on mobile */
+    }
+    
+    .faq-title, 
+    .contact-section-title {
+        font-size: 1.2rem;  /* Slightly reduced on mobile */
+        margin-bottom: 1rem;
+    }
+    
+    .faq-toggle {
+        padding: 0.8rem 1rem;  /* Further reduced on mobile */
+    }
+    
+    .contact-tab {
+        padding: 0.5rem 1rem;
+    }
+    
+    .contact-description {
+        padding: 8px 10px;
+        font-size: 0.95rem;
+    }
+    
+    .contact-card {
+        padding: 10px;
+    }
+    
+    .contact-card .icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    /* ...existing media query code... */
+}
+
+/* Script loading indicator in case JavaScript is slow */
+.js-loading {
+    text-align: center;
+    padding: 20px 0;
+    color: #555;
+    font-style: italic;
+    display: none;
+}
