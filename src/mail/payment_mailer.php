@@ -285,9 +285,9 @@ function generateEmailTemplate($data) {
             <p>&copy; {$year} maJIStic 2025. All rights reserved.</p>
             <p>JIS College of Engineering, Kalyani, Nadia - 741235, West Bengal, India</p>
             <div class="social-links">
-                <a href="https://facebook.com/majistic" target="_blank">Facebook</a> |
-                <a href="https://instagram.com/majistic" target="_blank">Instagram</a> |
-                <a href="https://twitter.com/majistic" target="_blank">Twitter</a>
+                <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank">Facebook</a> |
+                <a href="https://www.instagram.com/majistic_jisce" target="_blank">Instagram</a> |
+                <a href="https://www.linkedin.com/company/majistic-jisce/" target="_blank">LinkedIN</a>
             </div>
         </div>
     </div>

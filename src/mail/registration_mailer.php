@@ -285,18 +285,22 @@ HTML;
             
             <p>If you have any questions or need further assistance, please don't hesitate to contact our support team.</p>
             
+            <p style='background-color: #ffeeee; border: 1px solid #ff6b6b; padding: 10px; color: #cc0000; font-weight: bold; text-align: center; margin: 15px 0;'>
+                <strong>IMPORTANT:</strong> College ID is MANDATORY for check-in on event day. No entry without ID.
+            </p>
             <p>We look forward to seeing you at maJIStic 2025!</p>
             
             <p>Warm Regards,<br>maJIStic Team</p>
+
         </div>
         
         <div class="footer">
             <p>&copy; {$year} maJIStic 2025. All rights reserved.</p>
             <p>JIS College of Engineering, Kalyani, Nadia - 741235, West Bengal, India</p>
             <div class="social-links">
-                <a href="https://facebook.com/majistic" target="_blank">Facebook</a> |
-                <a href="https://instagram.com/majistic" target="_blank">Instagram</a> |
-                <a href="https://twitter.com/majistic" target="_blank">Twitter</a>
+                <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank">Facebook</a> |
+                <a href="https://www.instagram.com/majistic_jisce" target="_blank">Instagram</a> |
+                <a href="https://www.linkedin.com/company/majistic-jisce/" target="_blank">LinkedIn</a>
             </div>
         </div>
     </div>

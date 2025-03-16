@@ -140,6 +140,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                                 <p>Thank you for registering for maJIStic 2k25. Please proceed to payment to confirm your participation.</p>
                                 <p><a href="https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=' . $jis_id . '">Click here to complete payment</a></p>
                                 <p>Regards,<br>maJIStic Team</p>
+                                <p style="background-color: #ffeeee; border: 1px solid #ff6b6b; padding: 10px; color: #cc0000; font-weight: bold; text-align: center; margin: 15px 0;">
+                                    <strong>IMPORTANT:</strong> College ID is MANDATORY for check-in on event day. No entry without ID.
+                                </p>
                             </body>
                             </html>';
                         
