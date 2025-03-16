@@ -105,6 +105,61 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the modal and related elements
+        var modal = document.getElementById("registerModal");
+        var closeBtn = document.getElementById("close-btn");
+        var registerBtn = document.getElementById("registerBtn");
+        
+        // Track how many times the modal has been shown
+        var modalShownCount = parseInt(sessionStorage.getItem('modalShownCount') || '0');
+        var maxShowCount = 2; // Maximum times to show the modal
+        
+        // Function to open the modal
+        function openModal() {
+            if (modalShownCount < maxShowCount) {
+                modal.style.display = "block";
+                modalShownCount++;
+                sessionStorage.setItem('modalShownCount', modalShownCount);
+            }
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // Event listeners for the register button and close button
+        registerBtn.addEventListener("click", openModal);
+        closeBtn.addEventListener("click", closeModal);
+
+        // Close modal when clicking outside of it
+        window.addEventListener("click", function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        });
+
+        // Create Intersection Observer for the footer section
+        const footerSection = document.querySelector('footer');
+        const footerObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && modalShownCount < maxShowCount) {
+                    // Show the modal when footer section is visible
+                    // and modal hasn't been shown the maximum number of times
+                    openModal();
+                }
+            });
+        }, { threshold: 0.2 }); // Trigger when 20% of the footer section is visible
+
+        // Start observing the footer section
+        if (footerSection) {
+            footerObserver.observe(footerSection);
+        }
+    });
+</script>
+
 <div class="heading-container flip-in" id="artist">
             <h1 class="text-center display-4 font-weight-bold section-title">Majistic 2K25: The Big Reveal</h1>
 </div>
