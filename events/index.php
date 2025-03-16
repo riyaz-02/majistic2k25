@@ -187,6 +187,7 @@
     <h2 style="color: #32cd32; text-shadow: 2px 2px 4px #000;">The Poetry Slam</h2>
     <p style="color: #fff; font-size: 16px; line-height: 1.5;">
       <strong style="color: #32cd32;">Words That Echo, Verses That Inspire!</strong> Step into the *fiery arena* of our poetry slam, where raw emotions collide and powerful lines soar! Unleash your *soul-stirring verses* to a crowd buzzing with energy—every word a spark, every stanza a blaze, ready to set our annual college fest ablaze with poetic passion!
+      <strong style="color: #32cd32;">EVENT CO-ORDINATORS:</strong><br> Jotisingdha Das (+91 97492 84221)
     </p>
     <button 
       style="background-color: #32cd32; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;"
