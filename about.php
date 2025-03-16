@@ -10,9 +10,10 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-image: url('images/pageback.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-repeat: repeat-y !important;
+            background-size: 100% !important;
+            background-position: top center !important;
+            background-attachment: initial !important;
             color: white;
         }
         .content-container {
@@ -187,7 +188,7 @@
                 ],
                 'Website Development Team' => [
                     ['name' => 'Priyanshu Nayan', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.postimg.cc/5tCnQ9k4/Priyanshu-Nayan.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => 'https://www.linkedin.com/in/priyanshu-nayan/']],
-                    ['name' => 'Sk Riyaz', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.ibb.co/6zbn482/riyaz.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/sk.riyaz.562329', 'instagram' => '#', 'linkedin' => 'https://www.linkedin.com/in/skriyaz1/']],
+                    ['name' => 'Sk Riyaz', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.ibb.co/zg57yyk/riyaz-profile-1.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/sk.riyaz.562329', 'instagram' => '#', 'linkedin' => 'https://www.linkedin.com/in/skriyaz1/']],
                     ['name' => 'Ronit Pal', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.postimg.cc/N071myYx/Ronit-Pal.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
                     ['name' => 'Mohit Kumar', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.postimg.cc/N0pKQRBZ/Mohit-Kumar.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
                 ],

@@ -9,9 +9,10 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-image: url('images/background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-repeat: repeat-y !important;
+            background-size: 100% !important;
+            background-position: top center !important;
+            background-attachment: initial !important;
             color: white;
             margin: 0;
         }
@@ -324,4 +325,4 @@
 
     <?php include 'includes/footer.php'; ?>
 </body>
-</html> 
+</html>

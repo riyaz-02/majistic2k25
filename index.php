@@ -387,33 +387,44 @@
 				<div id="horizontal-ticker-rtl" class="swiper horizontal-ticker__slider">
 					<div class="swiper-wrapper">
 
-                    <div class="swiper-slide horizontal-ticker__slide">
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
+
+                        </div>
+                        <div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
-
 						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
 
-						</div>
+                        </div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
+                        </div>
 						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-
-						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/g0Hd66vf/4-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/g0Hd66vf/4-1.png" alt="Tochiba">
-
-						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
 						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+                        </div>
 						<div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
+						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
+
+                        </div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
 						</div>
 
 						<!-- slides copies -->
@@ -423,29 +434,41 @@
 							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
 
 						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
+
+                        </div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
 
 						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
+                        </div>
 						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-
-						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/g0Hd66vf/4-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/g0Hd66vf/4-1.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
 
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
 						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+                        </div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
 						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+                            <img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+                        </div>
 
 					</div>
 				</div>
@@ -471,8 +494,8 @@
 
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/g0Hd66vf/4-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/g0Hd66vf/4-1.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
 
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
@@ -482,6 +505,18 @@
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
+						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
+						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
 						</div>
 
 						<!-- slides copies -->
@@ -502,8 +537,8 @@
 
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/g0Hd66vf/4-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/g0Hd66vf/4-1.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
 
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
@@ -514,6 +549,19 @@
 							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
 						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
+						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+						</div>
+
 
 					</div>
 				</div>

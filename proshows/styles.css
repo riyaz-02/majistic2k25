@@ -88,7 +88,7 @@ html, body {
   position: absolute;
   top: 20%;
   left: 5%;
-  font-family: "Kalam", cursive;
+  font-family: "Roxborough", "Roboto", sans-serif; ;
   font-size: 5rem;
   color: #fff;
   transition-delay: 0.3s;
@@ -436,7 +436,6 @@ html, body {
   }
   
   #proshows-carousel .hero {
-    right: 5%;
     bottom: 0;
   }
   
@@ -534,6 +533,9 @@ html, body {
   }
 
   #proshows-carousel .hero {
+    align-items: center;
+    justify-content: center;
+    left: 1%;
     width: 95%;
     max-width: 350px;
   }
