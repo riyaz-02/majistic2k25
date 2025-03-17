@@ -14,12 +14,11 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: url('images/pageback.jpg');
+            background-image: url('images/pageback.png');
             background-repeat: repeat-y !important;
             background-size: 100% !important;
             background-position: top center !important;
             background-attachment: initial !important;
-            color: white;
             font-size: 1.05rem; /* Increased base font size */
         }
         .content-container {

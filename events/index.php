@@ -92,7 +92,7 @@
   <div class="heading-container flip-in" id="events">
               <h1 class="text-center display-4 font-weight-bold section-title">MaJIStic Showdowns 2k25</h1>
           </div>
-<section id="events-carousel" class="zoom-in">
+<section id="events-carousel" class="fade-in">
   <div class="swiper">
     <div class="swiper-wrapper">
       <div class="swiper-slide swiper-slide--one">

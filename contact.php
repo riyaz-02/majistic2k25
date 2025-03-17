@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: url('images/background.jpg');
+            background-image: url('images/pageback.png');
             background-repeat: repeat-y !important;
             background-size: 100% !important;
             background-position: top center !important;
