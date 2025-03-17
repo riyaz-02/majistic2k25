@@ -428,7 +428,7 @@ $conn->close();
                     <a href="../../index.php" class="btn btn-primary">
                         <i class="fas fa-home"></i> Back to Home
                     </a>
-                    <a href="check_status.php" class="btn btn-secondary">
+                    <a href="../../check_status.php" class="btn btn-secondary">
                         <i class="fas fa-search"></i> Check Status
                     </a>
                     <a href="../../merchandise.php" class="btn btn-accent">
@@ -478,7 +478,7 @@ $conn->close();
         
         // Countdown timer
         function updateCountdown() {
-            const eventDate = new Date('2025-03-15T10:00:00'); // Set your event date here
+            const eventDate = new Date('2025-04-11T10:00:00'); // Set your event date here
             const now = new Date();
             const timeDifference = eventDate - now;
             

@@ -117,9 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt->affected_rows > 0) {
                 // Record successful payment in payment_attempts table for tracking
                 try {
-                    $payment_attempt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, attempt_time, ip_address, is_alumni) VALUES (?, 'completed', ?, NOW(), ?, 1)");
+                    $payment_attempt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, amount, attempt_time, ip_address, is_alumni) VALUES (?, 'completed', ?, ?, NOW(), ?, 1)");
                     $ip = $_SERVER['REMOTE_ADDR'];
-                    $payment_attempt->bind_param("sss", $jis_id, $payment_id, $ip);
+                    $payment_attempt->bind_param("ssds", $jis_id, $payment_id, $amount, $ip);
                     $payment_attempt->execute();
                 } catch (Exception $e) {
                     error_log("Warning: Could not record successful alumni payment attempt: " . $e->getMessage());
@@ -248,9 +248,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt->affected_rows > 0) {
                 // Record successful payment in payment_attempts table for tracking
                 try {
-                    $payment_attempt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, attempt_time, ip_address) VALUES (?, 'completed', ?, NOW(), ?)");
+                    $payment_attempt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, amount, attempt_time, ip_address, is_alumni) VALUES (?, 'completed', ?, ?, NOW(), ?, 0)");
                     $ip = $_SERVER['REMOTE_ADDR'];
-                    $payment_attempt->bind_param("sss", $jis_id, $payment_id, $ip);
+                    $payment_attempt->bind_param("ssds", $jis_id, $payment_id, $amount, $ip);
                     $payment_attempt->execute();
                 } catch (Exception $e) {
                     error_log("Warning: Could not record successful payment attempt: " . $e->getMessage());

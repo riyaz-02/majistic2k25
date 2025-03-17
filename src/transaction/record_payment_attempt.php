@@ -9,6 +9,12 @@ $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : null; // Amount
 $error_message = isset($_POST['error_message']) ? $_POST['error_message'] : null; // Error message if payment failed
 $is_alumni = isset($_POST['alumni']) && $_POST['alumni'] == '1'; // Check if this is an alumni payment
 
+// New fields from the table structure
+$transaction_reference = isset($_POST['transaction_reference']) ? $_POST['transaction_reference'] : null;
+$payment_method = isset($_POST['payment_method']) ? $_POST['payment_method'] : null;
+$payment_processor = isset($_POST['payment_processor']) ? $_POST['payment_processor'] : null;
+$response_data = isset($_POST['response_data']) ? $_POST['response_data'] : null;
+
 // Log all incoming data for debugging
 error_log("Payment attempt request received - ID: $registration_id, Status: $status, Payment ID: " . ($payment_id ?? 'NULL') . ", Amount: " . ($amount ?? 'NULL') . ", Is Alumni: " . ($is_alumni ? "Yes" : "No"));
 
@@ -87,56 +93,63 @@ if ($status === 'completed' && $amount === null && $payment_id !== null) {
     }
 }
 
+// Make sure is_alumni is always set properly even if not passed in the request
+$alumni_flag = $is_alumni ? 1 : 0;
+// Set registration_type based on alumni flag
+$registration_type = $is_alumni ? 'alumni' : 'inhouse';
+
 // Record the payment attempt in the database with all available information
 try {
-    // Add is_alumni parameter to all queries
-    if ($payment_id && $amount !== null && $error_message) {
-        // Full data available
-        $stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, amount, error_message, attempt_time, ip_address, is_alumni) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $stmt->bind_param("sssdssi", $registration_id, $status, $payment_id, $amount, $error_message, $ip, $alumni_flag);
-    } 
-    else if ($payment_id && $amount !== null) {
-        // Payment ID and amount available, no error
-        $stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, amount, attempt_time, ip_address, is_alumni) VALUES (?, ?, ?, ?, NOW(), ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $stmt->bind_param("sssdsi", $registration_id, $status, $payment_id, $amount, $ip, $alumni_flag);
-    }
-    else if ($payment_id && $error_message) {
-        // Payment ID and error available, no amount
-        $stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, error_message, attempt_time, ip_address, is_alumni) VALUES (?, ?, ?, ?, NOW(), ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $stmt->bind_param("sssssi", $registration_id, $status, $payment_id, $error_message, $ip, $alumni_flag);
-    }
-    else if ($amount !== null && $error_message) {
-        // Amount and error available, no payment ID
-        $stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, amount, error_message, attempt_time, ip_address, is_alumni) VALUES (?, ?, ?, ?, NOW(), ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $stmt->bind_param("ssdssi", $registration_id, $status, $amount, $error_message, $ip, $alumni_flag);
-    }
-    else if ($payment_id) {
-        // Only payment ID available
-        $stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, attempt_time, ip_address, is_alumni) VALUES (?, ?, ?, NOW(), ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $stmt->bind_param("ssssi", $registration_id, $status, $payment_id, $ip, $alumni_flag);
-    }
-    else if ($amount !== null) {
-        // Only amount available
-        $stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, amount, attempt_time, ip_address, is_alumni) VALUES (?, ?, ?, NOW(), ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $stmt->bind_param("ssdsi", $registration_id, $status, $amount, $ip, $alumni_flag);
-    }
-    else if ($error_message) {
-        // Only error message available
-        $stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, error_message, attempt_time, ip_address, is_alumni) VALUES (?, ?, ?, NOW(), ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $stmt->bind_param("ssssi", $registration_id, $status, $error_message, $ip, $alumni_flag);
-    }
-    else {
-        // Basic data only
-        $stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, attempt_time, ip_address, is_alumni) VALUES (?, ?, NOW(), ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $stmt->bind_param("sssi", $registration_id, $status, $ip, $alumni_flag);
+    // Create base SQL query with all fields
+    $sql_base = "INSERT INTO payment_attempts (
+        registration_id, 
+        registration_type, 
+        status, 
+        payment_id, 
+        amount, 
+        error_message, 
+        attempt_time, 
+        ip_address, 
+        transaction_reference,
+        payment_method,
+        payment_processor,
+        response_data,
+        last_updated
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, NOW()
+    )";
+    
+    // Prepare statement with all fields
+    $stmt = $conn->prepare($sql_base);
+    
+    // Bind all parameters (using null for optional parameters that weren't provided)
+    $stmt->bind_param(
+        "ssssdsssss", 
+        $registration_id, 
+        $registration_type,
+        $status, 
+        $payment_id, 
+        $amount, 
+        $error_message, 
+        $ip, 
+        $transaction_reference,
+        $payment_method,
+        $payment_processor
+    );
+    
+    // Set null parameters to NULL for proper SQL insertion
+    if ($payment_id === null) $stmt->bind_param(3, $null);
+    if ($amount === null) $stmt->bind_param(4, $null);
+    if ($error_message === null) $stmt->bind_param(5, $null);
+    if ($transaction_reference === null) $stmt->bind_param(8, $null);
+    if ($payment_method === null) $stmt->bind_param(9, $null);
+    if ($payment_processor === null) $stmt->bind_param(10, $null);
+    
+    // Handle JSON response data separately due to longtext/JSON type
+    if ($response_data !== null) {
+        $stmt->bind_param("b", $response_data);
+    } else {
+        $stmt->bind_param("b", $null);
     }
     
     if ($stmt->execute()) {
@@ -181,11 +194,14 @@ try {
             'message' => 'Payment attempt recorded successfully',
             'data' => [
                 'registration_id' => $registration_id,
+                'registration_type' => $registration_type,
                 'status' => $status,
                 'payment_id' => $payment_id,
                 'amount' => $amount,
                 'ip_address' => $ip,
-                'is_alumni' => $is_alumni,
+                'transaction_reference' => $transaction_reference,
+                'payment_method' => $payment_method,
+                'payment_processor' => $payment_processor,
                 'timestamp' => date('Y-m-d H:i:s')
             ]
         ]);

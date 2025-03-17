@@ -138,7 +138,7 @@ function generateAlumniEmailTemplate($data) {
     $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']) . "&alumni=1";
     
     // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = 'https://i.ibb.co/RGQ7Lj6K/majisticlogo.png';
+    $logoUrl = '../../images/majisticlogo.png';
     
     // HTML Template
     $html = <<<HTML
@@ -410,7 +410,7 @@ function generateAlumniPaymentEmailTemplate($data) {
     }
     
     // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = 'https://i.ibb.co/RGQ7Lj6K/majisticlogo.png';
+    $logoUrl = '../../images/majisticlogo.png';
     
     // HTML Template
     $html = <<<HTML

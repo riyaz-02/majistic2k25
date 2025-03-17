@@ -93,35 +93,6 @@ try {
         }
         
         $response['payment_attempts'] = $payment_attempts;
-        
-    } else {
-        // Fetch outhouse registration
-        $registration_query = "SELECT * FROM registrations_outhouse WHERE college_id = ?";
-        $stmt = $conn->prepare($registration_query);
-        $stmt->bind_param("s", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows === 0) {
-            echo json_encode(['error' => 'Outhouse registration not found']);
-            exit();
-        }
-        
-        $response['registration'] = $result->fetch_assoc();
-        
-        // Fetch payment attempts
-        $payment_query = "SELECT * FROM payment_attempts WHERE registration_id = ? ORDER BY attempt_time DESC";
-        $stmt = $conn->prepare($payment_query);
-        $stmt->bind_param("s", $id);
-        $stmt->execute();
-        $payment_result = $stmt->get_result();
-        
-        $payment_attempts = [];
-        while ($row = $payment_result->fetch_assoc()) {
-            $payment_attempts[] = $row;
-        }
-        
-        $response['payment_attempts'] = $payment_attempts;
     }
 
     // Return JSON response

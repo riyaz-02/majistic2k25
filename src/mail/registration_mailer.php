@@ -120,7 +120,7 @@ function generateRegistrationEmailTemplate($data) {
     $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']);
     
     // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = 'https://i.ibb.co/RGQ7Lj6K/majisticlogo.png';
+    $logoUrl = '../../images/majisticlogo.png';
     
     // HTML Template
     $html = <<<HTML

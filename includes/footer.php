@@ -26,7 +26,7 @@
             <div class="social mt-4">
                 <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/majistic_jisce/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <!--    <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>  -->
+            <!--    <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>  -->
                 <a href="https://www.linkedin.com/company/majistic-jisce/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
             </div>
         </div>

@@ -47,7 +47,6 @@ $server_info = [
 // Get database tables info
 $tables = [
     "registrations",
-    "registrations_outhouse",
     "alumni_registrations",
     "payment_attempts"
 ];

@@ -19,6 +19,40 @@ if (empty($jis_id)) {
 error_log("Check payment status - JIS ID: $jis_id, Is Alumni: " . ($is_alumni ? "Yes" : "No"));
 
 try {
+    // Add code to record the payment status check in payment_attempts table
+    try {
+        // Get the client IP address
+        function getClientIP() {
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                return $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                foreach ($ipList as $ip) {
+                    if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                        return trim($ip);
+                    }
+                }
+            }
+            return $_SERVER['REMOTE_ADDR'];
+        }
+        
+        $ip = getClientIP();
+        $status = 'initiated'; // Use 'initiated' for status checks
+        $payment_method = 'status_check';
+        
+        // Record in payment_attempts table with is_alumni flag
+        $record_stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, attempt_time, ip_address, payment_method, is_alumni) VALUES (?, ?, NOW(), ?, ?, ?)");
+        $alumni_flag = $is_alumni ? 1 : 0;
+        $record_stmt->bind_param("ssssi", $jis_id, $status, $ip, $payment_method, $alumni_flag);
+        $record_stmt->execute();
+        $record_stmt->close();
+        
+        error_log("Payment status check recorded for JIS ID: $jis_id, Is Alumni: " . ($is_alumni ? "Yes" : "No"));
+    } catch (Exception $e) {
+        // Non-critical error, just log it and continue with the main operation
+        error_log("Failed to record payment status check: " . $e->getMessage());
+    }
+
     if ($is_alumni) {
         // Check alumni registration status
         $query = $conn->prepare("SELECT payment_status, alumni_name, registration_date FROM alumni_registrations WHERE jis_id = ?");

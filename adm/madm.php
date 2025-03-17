@@ -36,10 +36,6 @@ include 'backend.php';
                 <i class="fas fa-school"></i>
                 Inhouse Registrations
             </div>
-            <div class="tab <?php echo $tab == 'outhouse' ? 'active' : ''; ?>" data-tab="outhouse">
-                <i class="fas fa-university"></i>
-                Outhouse Registrations
-            </div>
             <div class="tab <?php echo $tab == 'alumni' ? 'active' : ''; ?>" data-tab="alumni">
                 <i class="fas fa-user-graduate"></i>
                 Alumni Registrations
@@ -206,179 +202,6 @@ include 'backend.php';
                     <i class="fas fa-angle-right"></i>
                 </a>
                 <a href="?tab=inhouse&page=<?php echo $inhouse_total_pages; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-double-right"></i>
-                </a>
-                <?php endif; ?>
-            </div>
-            <?php endif; ?>
-        </div>
-
-        <!-- Outhouse Content -->
-        <div id="outhouse" class="tab-content <?php echo $tab == 'outhouse' ? 'active' : ''; ?>">
-            <!-- Statistics Cards -->
-            <div class="stats">
-                <div class="card blue">
-                    <i class="fas fa-users card-icon"></i>
-                    <h3><?php echo $outhouse_total_result['count']; ?></h3>
-                    <p>Total Registrations</p>
-                </div>
-                <div class="card green">
-                    <i class="fas fa-check-circle card-icon"></i>
-                    <h3><?php echo $outhouse_paid_result['count']; ?></h3>
-                    <p>Paid Registrations</p>
-                </div>
-                <div class="card red">
-                    <i class="fas fa-times-circle card-icon"></i>
-                    <h3><?php echo $outhouse_not_paid_result['count']; ?></h3>
-                    <p>Unpaid Registrations</p>
-                </div>
-                <div class="card blue">
-                    <i class="fas fa-rupee-sign card-icon"></i>
-                    <h3>₹<?php echo number_format($outhouse_revenue); ?></h3>
-                    <p>Total Revenue</p>
-                </div>
-            </div>
-
-            <!-- Filters -->
-            <div class="filters-container">
-                <div class="filters">
-                    <div class="filter-group">
-                        <label for="gender-outhouse"><i class="fas fa-venus-mars"></i> Gender</label>
-                        <select id="gender-outhouse">
-                            <option value="">All Genders</option>
-                            <option value="Male" <?php echo $gender_filter == 'Male' ? 'selected' : ''; ?>>Male</option>
-                            <option value="Female" <?php echo $gender_filter == 'Female' ? 'selected' : ''; ?>>Female</option>
-                            <option value="Other" <?php echo $gender_filter == 'Other' ? 'selected' : ''; ?>>Other</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="competition-outhouse"><i class="fas fa-trophy"></i> Competition</label>
-                        <select id="competition-outhouse">
-                            <option value="">All Competitions</option>
-                            <?php if($outhouse_competitions): while($comp = $outhouse_competitions->fetch_assoc()): ?>
-                            <option value="<?php echo $comp['competition_name']; ?>" <?php echo $competition_filter == $comp['competition_name'] ? 'selected' : ''; ?>><?php echo $comp['competition_name']; ?></option>
-                            <?php endwhile; endif; ?>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="college"><i class="fas fa-university"></i> College</label>
-                        <select id="college">
-                            <option value="">All Colleges</option>
-                            <?php if($colleges): while($coll = $colleges->fetch_assoc()): ?>
-                            <option value="<?php echo $coll['college_name']; ?>" <?php echo $college_filter == $coll['college_name'] ? 'selected' : ''; ?>><?php echo $coll['college_name']; ?></option>
-                            <?php endwhile; endif; ?>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="payment_status-outhouse"><i class="fas fa-money-bill-wave"></i> Payment Status</label>
-                        <select id="payment_status-outhouse">
-                            <option value="">All Payment Status</option>
-                            <option value="Paid" <?php echo $payment_status_filter == 'Paid' ? 'selected' : ''; ?>>Paid</option>
-                            <option value="Not Paid" <?php echo $payment_status_filter == 'Not Paid' ? 'selected' : ''; ?>>Not Paid</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="btn btn-filter" onclick="applyFilters('outhouse')">
-                    <i class="fas fa-filter"></i> Apply Filters
-                </button>
-            </div>
-
-            <!-- Table -->
-            <div class="table-header">
-                <h2><i class="fas fa-list"></i> Outhouse Registrations</h2>
-                <button class="btn btn-download" onclick="downloadCSV('outhouse')">
-                    <i class="fas fa-download"></i> Download CSV
-                </button>
-            </div>
-            
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sl. No.</th>
-                            <th>Leader Name</th>
-                            <th>Gender</th>
-                            <th>Contact Number</th>
-                            <th>College Name</th>
-                            <th>Competition</th>
-                            <th>Team Name</th>
-                            <th>Team Size</th>
-                            <th>Payment Status</th>
-                            <th>Payment ID</th>
-                            <th>Amount Paid</th>
-                            <th>Registration Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                        $sl_no = ($page - 1) * $items_per_page + 1;
-                        if ($outhouse_result && $outhouse_result->num_rows > 0) {
-                            while ($row = $outhouse_result->fetch_assoc()):
-                                $team_members = isset($row['team_members']) ? json_decode($row['team_members'], true) : [];
-                                $team_size = is_array($team_members) ? count($team_members) + 1 : 1;
-                        ?>
-                        <tr>
-                            <td><?php echo $sl_no++; ?></td>
-                            <td><?php echo isset($row['leader_name']) ? $row['leader_name'] : ''; ?></td>
-                            <td><?php echo isset($row['gender']) ? $row['gender'] : ''; ?></td>
-                            <td><?php echo isset($row['contact_number']) ? $row['contact_number'] : ''; ?></td>
-                            <td><?php echo isset($row['college_name']) ? $row['college_name'] : ''; ?></td>
-                            <td><?php echo isset($row['competition_name']) ? $row['competition_name'] : ''; ?></td>
-                            <td><?php echo isset($row['team_name']) ? $row['team_name'] : ''; ?></td>
-                            <td><?php echo $team_size; ?></td>
-                            <td>
-                                <span class="status-badge <?php echo isset($row['payment_status']) && $row['payment_status'] == 'Paid' ? 'paid' : 'not-paid'; ?>">
-                                    <?php echo isset($row['payment_status']) ? $row['payment_status'] : ''; ?>
-                                </span>
-                            </td>
-                            <td><?php echo isset($row['payment_id']) ? $row['payment_id'] : ''; ?></td>
-                            <td><?php echo isset($row['amount_paid']) ? '₹'.$row['amount_paid'] : ''; ?></td>
-                            <td><?php echo isset($row['registration_date']) ? date('d M Y', strtotime($row['registration_date'])) : ''; ?></td>
-                            <td>
-                                <button class="btn-view" onclick="viewDetails('outhouse', '<?php echo $row['college_id']; ?>')">
-                                    <i class="fas fa-eye"></i> View
-                                </button>
-                            </td>
-                        </tr>
-                        <?php 
-                            endwhile;
-                        } else {
-                            echo '<tr><td colspan="13" style="text-align: center;">No registrations found</td></tr>';
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Pagination for outhouse -->
-            <?php if ($outhouse_total_pages > 0): ?>
-            <div class="pagination">
-                <?php if ($page > 1): ?>
-                <a href="?tab=outhouse&page=1<?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $college_filter ? '&college='.$college_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-double-left"></i>
-                </a>
-                <a href="?tab=outhouse&page=<?php echo $page-1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $college_filter ? '&college='.$college_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-left"></i>
-                </a>
-                <?php endif; ?>
-                
-                <?php
-                $start_page = max(1, $page - 2);
-                $end_page = min($outhouse_total_pages, $page + 2);
-                
-                for ($i = $start_page; $i <= $end_page; $i++):
-                ?>
-                <a href="?tab=outhouse&page=<?php echo $i; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $college_filter ? '&college='.$college_filter : ''; ?>" class="pagination-btn <?php echo ($page == $i) ? 'active' : ''; ?>">
-                    <?php echo $i; ?>
-                </a>
-                <?php endfor; ?>
-                
-                <?php if ($page < $outhouse_total_pages): ?>
-                <a href="?tab=outhouse&page=<?php echo $page+1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $college_filter ? '&college='.$college_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-right"></i>
-                </a>
-                <a href="?tab=outhouse&page=<?php echo $outhouse_total_pages; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $college_filter ? '&college='.$college_filter : ''; ?>" class="pagination-btn">
                     <i class="fas fa-angle-double-right"></i>
                 </a>
                 <?php endif; ?>
@@ -611,11 +434,6 @@ include 'backend.php';
                 const competition = document.getElementById('competition-inhouse').value;
                 if (department) params.append('department', department);
                 if (competition) params.append('competition', competition);
-            } else if (tab === 'outhouse') {
-                const college = document.getElementById('college').value;
-                const competition = document.getElementById('competition-outhouse').value;
-                if (college) params.append('college', college);
-                if (competition) params.append('competition', competition);
             } else if (tab === 'alumni') {
                 const passout_year = document.getElementById('passout_year').value;
                 const department = document.getElementById('department-alumni').value;
@@ -676,8 +494,6 @@ include 'backend.php';
                         displayInhouseDetails(data);
                     } else if (type === 'alumni') {
                         displayAlumniDetails(data);
-                    } else {
-                        displayOuthouseDetails(data);
                     }
                 })
                 .catch(error => {
@@ -734,115 +550,6 @@ include 'backend.php';
                     <div class="detail-grid">
                         <div class="detail-item"><span>Payment Status:</span> <span class="status-badge ${registration.payment_status === 'Paid' ? 'paid' : 'not-paid'}">${registration.payment_status}</span></div>
                         <div class="detail-item"><span>Amount:</span> ₹${registration.amount}</div>
-                        <div class="detail-item"><span>Amount Paid:</span> ₹${registration.amount_paid}</div>
-                        <div class="detail-item"><span>Payment ID:</span> ${registration.payment_id || 'N/A'}</div>
-                        <div class="detail-item"><span>Registration Date:</span> ${new Date(registration.registration_date).toLocaleString()}</div>
-                        <div class="detail-item"><span>Payment Date:</span> ${registration.payment_date ? new Date(registration.payment_date).toLocaleString() : 'N/A'}</div>
-                    </div>
-                </div>`;
-                
-            if (paymentAttempts.length > 0) {
-                html += `
-                <div class="detail-section">
-                    <h3>Payment Attempts</h3>
-                    <div class="attempts-table-wrapper">
-                        <table class="attempts-table">
-                            <thead>
-                                <tr>
-                                    <th>Attempt Time</th>
-                                    <th>Status</th>
-                                    <th>Payment ID</th>
-                                    <th>Amount</th>
-                                    <th>IP Address</th>
-                                    <th>Error Message</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
-                
-                paymentAttempts.forEach(attempt => {
-                    html += `
-                        <tr>
-                            <td>${new Date(attempt.attempt_time).toLocaleString()}</td>
-                            <td><span class="status-badge ${attempt.status === 'completed' ? 'paid' : (attempt.status === 'failed' ? 'not-paid' : '')}">${attempt.status}</span></td>
-                            <td>${attempt.payment_id || 'N/A'}</td>
-                            <td>${attempt.amount ? '₹' + attempt.amount : 'N/A'}</td>
-                            <td>${attempt.ip_address}</td>
-                            <td>${attempt.error_message || 'N/A'}</td>
-                        </tr>`;
-                });
-                
-                html += `
-                            </tbody>
-                        </table>
-                    </div>
-                </div>`;
-            }
-            
-            document.querySelector('.registration-details').innerHTML = html;
-        }
-        
-        // Function to display outhouse registration details
-        function displayOuthouseDetails(data) {
-            const registration = data.registration;
-            const paymentAttempts = data.payment_attempts || [];
-            const teamMembers = registration.team_members ? JSON.parse(registration.team_members) : [];
-            const teamMembersContact = registration.team_members_contact ? JSON.parse(registration.team_members_contact) : [];
-            
-            let html = `
-                <div class="detail-section">
-                    <h3>Leader Information</h3>
-                    <div class="detail-grid">
-                        <div class="detail-item"><span>Name:</span> ${registration.leader_name}</div>
-                        <div class="detail-item"><span>Gender:</span> ${registration.gender}</div>
-                        <div class="detail-item"><span>Email:</span> ${registration.email}</div>
-                        <div class="detail-item"><span>Contact Number:</span> ${registration.contact_number}</div>
-                        <div class="detail-item"><span>College Name:</span> ${registration.college_name}</div>
-                        <div class="detail-item"><span>College ID:</span> ${registration.college_id}</div>
-                        <div class="detail-item"><span>Course:</span> ${registration.course_name}</div>
-                    </div>
-                </div>
-                
-                <div class="detail-section">
-                    <h3>Team Information</h3>
-                    <div class="detail-grid">
-                        <div class="detail-item"><span>Team Name:</span> ${registration.team_name || 'N/A'}</div>
-                        <div class="detail-item"><span>Competition:</span> ${registration.competition_name}</div>
-                    </div>`;
-                    
-            if (teamMembers.length > 0) {
-                html += `
-                    <div class="team-members-table-wrapper">
-                        <h4>Team Members</h4>
-                        <table class="team-members-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Contact</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
-                            
-                for (let i = 0; i < teamMembers.length; i++) {
-                    html += `
-                        <tr>
-                            <td>${teamMembers[i]}</td>
-                            <td>${teamMembersContact[i] || 'N/A'}</td>
-                        </tr>`;
-                }
-                
-                html += `
-                            </tbody>
-                        </table>
-                    </div>`;
-            }
-            
-            html += `
-                </div>
-                
-                <div class="detail-section">
-                    <h3>Payment Information</h3>
-                    <div class="detail-grid">
-                        <div class="detail-item"><span>Payment Status:</span> <span class="status-badge ${registration.payment_status === 'Paid' ? 'paid' : 'not-paid'}">${registration.payment_status}</span></div>
                         <div class="detail-item"><span>Amount Paid:</span> ₹${registration.amount_paid}</div>
                         <div class="detail-item"><span>Payment ID:</span> ${registration.payment_id || 'N/A'}</div>
                         <div class="detail-item"><span>Registration Date:</span> ${new Date(registration.registration_date).toLocaleString()}</div>

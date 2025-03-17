@@ -65,15 +65,15 @@ function sendPaymentConfirmationEmail($data) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
         $mail->SMTPAuth = true;
-        $mail->Username   = 'priyanshunayan1150@gmail.com';
-        $mail->Password   = 'nrsbkynbvqkpgjhk';
+        $mail->Username   = 'payment.majistic@gmail.com';
+        $mail->Password   = 'csibomhfcfmtxpjp';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         
         // Recipients
-        $mail->setFrom('priyanshunayan1150@gmail.com', 'maJIStic');
+        $mail->setFrom('payment.majistic@gmail.com', 'maJIStic');
         $mail->addAddress($data['email'], $data['student_name']);
-        $mail->addReplyTo('priyanshunayan1150@gmail.com', 'maJIStic Support');
+        $mail->addReplyTo('payment.majistic@gmail.com', 'maJIStic Support');
         
         // Content
         $mail->isHTML(true);
@@ -118,7 +118,7 @@ function generateEmailTemplate($data) {
     }
     
     // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = 'https://i.ibb.co/RGQ7Lj6K/majisticlogo.png';
+    $logoUrl = '../../images/majisticlogo.png';
     
     // HTML Template
     $html = <<<HTML

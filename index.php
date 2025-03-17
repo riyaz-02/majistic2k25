@@ -103,7 +103,8 @@
         <button onclick="window.open('registration_inhouse.php', '_blank')" class="modal-option mt-2">Student Registration</button>
 <!--    <button onclick="window.open('registration_outhouse.php', '_blank')" class="modal-option" >Out-house Student</button>  -->
         <button class="modal-option" onclick="window.open('registration_alumni.php', '_blank')" >Alumni Registration</button>
-        <button class="modal-option" onclick="window.open('merchandise.php', '_blank')" >Merchandise</button>
+        <button class="modal-option" onclick="window.open('merchandise.php', '_self')" >Merchandise</button>
+        <button class="modal-option" onclick="window.open('check_status.php', '_self')" >Check Status</button>
         <button class="close-btn" id = "close-btn" >Close</button>
     </div>
 </div>
