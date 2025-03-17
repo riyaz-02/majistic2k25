@@ -1,26 +1,23 @@
--- SQL query to create registrations_alumni table
+-- SQL query to create alumni_registrations table
 
-CREATE TABLE IF NOT EXISTS `registrations_alumni` (
+CREATE TABLE IF NOT EXISTS `alumni_registrations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `gender` varchar(10) NOT NULL,
+  `alumni_name` varchar(100) NOT NULL,
+  `gender` varchar(20) NOT NULL,
+  `jis_id` varchar(20) NOT NULL,
+  `mobile` varchar(15) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `mobile` varchar(20) NOT NULL,
+  `department` varchar(50) NOT NULL,
   `passout_year` varchar(4) NOT NULL,
-  `department` varchar(100) NOT NULL,
   `current_organization` varchar(100) DEFAULT NULL,
-  `current_role` varchar(100) DEFAULT NULL,
-  `event_type` varchar(50) DEFAULT 'Alumni Meet',
-  `participation_type` varchar(50) DEFAULT NULL COMMENT 'Speaker, Attendee, Panel Member, etc.',
-  `payment_status` varchar(20) DEFAULT 'Not Paid',
-  `payment_id` varchar(100) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT 0.00,
-  `amount_paid` decimal(10,2) DEFAULT 0.00,
+  `registration_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `payment_status` enum('Paid', 'Not Paid') NOT NULL DEFAULT 'Not Paid',
+  `payment_id` varchar(50) DEFAULT NULL,
+  `amount_paid` decimal(10,2) DEFAULT NULL,
   `payment_date` datetime DEFAULT NULL,
-  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`),
-  KEY `idx_payment_status` (`payment_status`),
-  KEY `idx_event_type` (`event_type`),
-  KEY `idx_passout_year` (`passout_year`)
+  KEY `jis_id` (`jis_id`),
+  KEY `mobile` (`mobile`),
+  KEY `email` (`email`),
+  KEY `passout_year` (`passout_year`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

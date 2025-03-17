@@ -64,15 +64,15 @@ function sendRegistrationConfirmationEmail($data) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
         $mail->SMTPAuth = true;
-        $mail->Username   = 'priyanshunayan1150@gmail.com';
-        $mail->Password   = 'nrsbkynbvqkpgjhk';
+        $mail->Username   = 'majistic.reg@gmail.com';
+        $mail->Password   = 'uflsvdypbnnbnisn';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         
         // Recipients
-        $mail->setFrom('priyanshunayan1150@gmail.com', 'maJIStic');
+        $mail->setFrom('majistic.reg@gmail.com', 'maJIStic');
         $mail->addAddress($data['email'], $data['student_name']);
-        $mail->addReplyTo('priyanshunayan1150@gmail.com', 'maJIStic Support');
+        $mail->addReplyTo('majistic.reg@gmail.com', 'maJIStic Support');
         
         // Content
         $mail->isHTML(true);

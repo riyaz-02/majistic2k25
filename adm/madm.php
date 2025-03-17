@@ -425,11 +425,11 @@ include 'backend.php';
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label for="event-type"><i class="fas fa-calendar-alt"></i> Event Type</label>
-                        <select id="event-type">
-                            <option value="">All Events</option>
-                            <?php if($event_types): while($event = $event_types->fetch_assoc()): ?>
-                            <option value="<?php echo $event['event_type']; ?>" <?php echo $event_type_filter == $event['event_type'] ? 'selected' : ''; ?>><?php echo $event['event_type']; ?></option>
+                        <label for="department-alumni"><i class="fas fa-building"></i> Department</label>
+                        <select id="department-alumni">
+                            <option value="">All Departments</option>
+                            <?php if($departments): while($dept = $departments->fetch_assoc()): ?>
+                            <option value="<?php echo $dept['department']; ?>" <?php echo $department_filter == $dept['department'] ? 'selected' : ''; ?>><?php echo $dept['department']; ?></option>
                             <?php endwhile; endif; ?>
                         </select>
                     </div>
@@ -470,13 +470,13 @@ include 'backend.php';
                         <tr>
                             <th>Sl. No.</th>
                             <th>Name</th>
+                            <th>JIS ID</th>
                             <th>Gender</th>
                             <th>Email</th>
                             <th>Mobile</th>
-                            <th>Passout Year</th>
                             <th>Department</th>
+                            <th>Passout Year</th>
                             <th>Current Organization</th>
-                            <th>Event Type</th>
                             <th>Payment Status</th>
                             <th>Payment ID</th>
                             <th>Amount Paid</th>
@@ -492,14 +492,14 @@ include 'backend.php';
                         ?>
                         <tr>
                             <td><?php echo $sl_no++; ?></td>
-                            <td><?php echo isset($row['name']) ? $row['name'] : ''; ?></td>
+                            <td><?php echo isset($row['alumni_name']) ? $row['alumni_name'] : ''; ?></td>
+                            <td><?php echo isset($row['jis_id']) ? $row['jis_id'] : ''; ?></td>
                             <td><?php echo isset($row['gender']) ? $row['gender'] : ''; ?></td>
                             <td><?php echo isset($row['email']) ? $row['email'] : ''; ?></td>
                             <td><?php echo isset($row['mobile']) ? $row['mobile'] : ''; ?></td>
-                            <td><?php echo isset($row['passout_year']) ? $row['passout_year'] : ''; ?></td>
                             <td><?php echo isset($row['department']) ? $row['department'] : ''; ?></td>
+                            <td><?php echo isset($row['passout_year']) ? $row['passout_year'] : ''; ?></td>
                             <td><?php echo isset($row['current_organization']) ? $row['current_organization'] : ''; ?></td>
-                            <td><?php echo isset($row['event_type']) ? $row['event_type'] : 'Alumni Meet'; ?></td>
                             <td>
                                 <span class="status-badge <?php echo isset($row['payment_status']) && $row['payment_status'] == 'Paid' ? 'paid' : 'not-paid'; ?>">
                                     <?php echo isset($row['payment_status']) ? $row['payment_status'] : ''; ?>
@@ -509,7 +509,7 @@ include 'backend.php';
                             <td><?php echo isset($row['amount_paid']) ? '₹'.$row['amount_paid'] : ''; ?></td>
                             <td><?php echo isset($row['registration_date']) ? date('d M Y', strtotime($row['registration_date'])) : ''; ?></td>
                             <td>
-                                <button class="btn-view" onclick="viewDetails('alumni', '<?php echo $row['email']; ?>')">
+                                <button class="btn-view" onclick="viewDetails('alumni', '<?php echo $row['jis_id']; ?>')">
                                     <i class="fas fa-eye"></i> View
                                 </button>
                             </td>
@@ -528,10 +528,10 @@ include 'backend.php';
             <?php if ($alumni_total_pages > 0): ?>
             <div class="pagination">
                 <?php if ($page > 1): ?>
-                <a href="?tab=alumni&page=1<?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn">
+                <a href="?tab=alumni&page=1<?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
                     <i class="fas fa-angle-double-left"></i>
                 </a>
-                <a href="?tab=alumni&page=<?php echo $page-1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn">
+                <a href="?tab=alumni&page=<?php echo $page-1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
                     <i class="fas fa-angle-left"></i>
                 </a>
                 <?php endif; ?>
@@ -542,16 +542,16 @@ include 'backend.php';
                 
                 for ($i = $start_page; $i <= $end_page; $i++):
                 ?>
-                <a href="?tab=alumni&page=<?php echo $i; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn <?php echo ($page == $i) ? 'active' : ''; ?>">
+                <a href="?tab=alumni&page=<?php echo $i; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn <?php echo ($page == $i) ? 'active' : ''; ?>">
                     <?php echo $i; ?>
                 </a>
                 <?php endfor; ?>
                 
                 <?php if ($page < $alumni_total_pages): ?>
-                <a href="?tab=alumni&page=<?php echo $page+1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn">
+                <a href="?tab=alumni&page=<?php echo $page+1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
                     <i class="fas fa-angle-right"></i>
                 </a>
-                <a href="?tab=alumni&page=<?php echo $alumni_total_pages; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn">
+                <a href="?tab=alumni&page=<?php echo $alumni_total_pages; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
                     <i class="fas fa-angle-double-right"></i>
                 </a>
                 <?php endif; ?>
@@ -601,22 +601,26 @@ include 'backend.php';
             
             // Get filter values based on active tab
             const gender = document.getElementById(`gender-${tab}`).value;
-            const competition = document.getElementById(`competition-${tab}`).value;
             const payment_status = document.getElementById(`payment_status-${tab}`).value;
             
             if (gender) params.append('gender', gender);
-            if (competition) params.append('competition', competition);
             if (payment_status) params.append('payment_status', payment_status);
             
             if (tab === 'inhouse') {
                 const department = document.getElementById('department').value;
+                const competition = document.getElementById('competition-inhouse').value;
                 if (department) params.append('department', department);
+                if (competition) params.append('competition', competition);
             } else if (tab === 'outhouse') {
                 const college = document.getElementById('college').value;
+                const competition = document.getElementById('competition-outhouse').value;
                 if (college) params.append('college', college);
+                if (competition) params.append('competition', competition);
             } else if (tab === 'alumni') {
                 const passout_year = document.getElementById('passout_year').value;
+                const department = document.getElementById('department-alumni').value;
                 if (passout_year) params.append('passout_year', passout_year);
+                if (department) params.append('department', department);
             }
             
             window.location.href = `madm.php?${params.toString()}`;
@@ -642,11 +646,21 @@ include 'backend.php';
             document.querySelector('.modal-loading').style.display = "block";
             document.querySelector('.registration-details').innerHTML = "";
             
+            // Debug information
+            console.log(`Fetching details for ${type} with ID: ${id}`);
+            
             // Fetch registration details via AJAX
             fetch(`get_registration_details.php?type=${type}&id=${id}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     document.querySelector('.modal-loading').style.display = "none";
+                    
+                    console.log("Response data:", data); // Debug the response
                     
                     if (data.error) {
                         document.querySelector('.registration-details').innerHTML = `
@@ -670,7 +684,7 @@ include 'backend.php';
                     document.querySelector('.modal-loading').style.display = "none";
                     document.querySelector('.registration-details').innerHTML = `
                         <div class="error-message">
-                            <i class="fas fa-exclamation-circle"></i> An error occurred while fetching data. Please try again.
+                            <i class="fas fa-exclamation-circle"></i> An error occurred while fetching data: ${error.message || 'Unknown error'}
                         </div>
                     `;
                     console.error('Error:', error);
@@ -885,21 +899,14 @@ include 'backend.php';
                 <div class="detail-section">
                     <h3>Alumni Information</h3>
                     <div class="detail-grid">
-                        <div class="detail-item"><span>Name:</span> ${registration.name}</div>
+                        <div class="detail-item"><span>Name:</span> ${registration.alumni_name}</div>
+                        <div class="detail-item"><span>JIS ID:</span> ${registration.jis_id}</div>
                         <div class="detail-item"><span>Gender:</span> ${registration.gender}</div>
                         <div class="detail-item"><span>Email:</span> ${registration.email}</div>
                         <div class="detail-item"><span>Mobile:</span> ${registration.mobile}</div>
                         <div class="detail-item"><span>Passout Year:</span> ${registration.passout_year}</div>
                         <div class="detail-item"><span>Department:</span> ${registration.department}</div>
                         <div class="detail-item"><span>Current Organization:</span> ${registration.current_organization || 'N/A'}</div>
-                        <div class="detail-item"><span>Current Role:</span> ${registration.current_role || 'N/A'}</div>
-                    </div>
-                </div>
-                
-                <div class="detail-section">
-                    <h3>Event Information</h3>
-                    <div class="detail-grid">
-                        <div class="detail-item"><span>Event Type:</span> ${registration.event_type || 'Alumni Meet'}</div>
                     </div>
                 </div>
                 
@@ -907,8 +914,7 @@ include 'backend.php';
                     <h3>Payment Information</h3>
                     <div class="detail-grid">
                         <div class="detail-item"><span>Payment Status:</span> <span class="status-badge ${registration.payment_status === 'Paid' ? 'paid' : 'not-paid'}">${registration.payment_status}</span></div>
-                        <div class="detail-item"><span>Amount:</span> ₹${registration.amount || 0}</div>
-                        <div class="detail-item"><span>Amount Paid:</span> ₹${registration.amount_paid}</div>
+                        <div class="detail-item"><span>Amount Paid:</span> ${registration.amount_paid ? '₹' + registration.amount_paid : 'N/A'}</div>
                         <div class="detail-item"><span>Payment ID:</span> ${registration.payment_id || 'N/A'}</div>
                         <div class="detail-item"><span>Registration Date:</span> ${new Date(registration.registration_date).toLocaleString()}</div>
                         <div class="detail-item"><span>Payment Date:</span> ${registration.payment_date ? new Date(registration.payment_date).toLocaleString() : 'N/A'}</div>

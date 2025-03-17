@@ -81,15 +81,15 @@ function sendAlumniRegistrationEmail($data) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; 
         $mail->SMTPAuth = true;
-        $mail->Username   = 'alumni.jismajistic@gmail.com'; // Alumni-specific email
-        $mail->Password   = 'zxcvbnm123456#'; // Replace with actual password for alumni email
+        $mail->Username   = 'majistic.alumni@gmail.com'; // Alumni-specific email
+        $mail->Password   = 'iakqdaxcbtmcfucr'; // Replace with actual password for alumni email
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         
         // Recipients
-        $mail->setFrom('alumni.jismajistic@gmail.com', 'maJIStic Alumni Association');
+        $mail->setFrom('majistic.alumni@gmail.com', 'maJIStic');
         $mail->addAddress($data['email'], $data['alumni_name']);
-        $mail->addReplyTo('alumni.jismajistic@gmail.com', 'maJIStic Alumni Support');
+        $mail->addReplyTo('majistic.alumni@gmail.com', 'maJIStic Alumni Support');
         
         // Content
         $mail->isHTML(true);
@@ -107,7 +107,7 @@ function sendAlumniRegistrationEmail($data) {
                         "Passout Year: {$data['passout_year']}\n" .
                         "Registration Date: {$data['registration_date']}\n\n" .
                         "Please proceed to complete your payment.\n\n" .
-                        "Regards,\nmaJIStic Alumni Team";
+                        "Regards,\nmaJIStic Team";
         
         $mail->send();
         return true;
@@ -321,7 +321,7 @@ HTML;
             </p>
             <p>We look forward to seeing you at maJIStic 2025!</p>
             
-            <p>Warm Regards,<br>maJIStic Alumni Team</p>
+            <p>Warm Regards,<br>maJIStic Team</p>
 
         </div>
         
@@ -357,15 +357,15 @@ function sendAlumniPaymentConfirmationEmail($data) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; 
         $mail->SMTPAuth = true;
-        $mail->Username   = 'alumni.jismajistic@gmail.com'; // Alumni-specific email
-        $mail->Password   = 'zxcvbnm123456#'; // Replace with actual password for alumni email
+        $mail->Username   = 'majistic.alumni@gmail.com'; // Alumni-specific email
+        $mail->Password   = 'iakqdaxcbtmcfucr'; // Replace with actual password for alumni email
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         
         // Recipients
-        $mail->setFrom('alumni.jismajistic@gmail.com', 'maJIStic Alumni Association');
+        $mail->setFrom('majistic.alumni@gmail.com', 'maJIStic');
         $mail->addAddress($data['email'], $data['alumni_name']);
-        $mail->addReplyTo('alumni.jismajistic@gmail.com', 'maJIStic Alumni Support');
+        $mail->addReplyTo('majistic.alumni@gmail.com', 'maJIStic Alumni Support');
         
         // Content
         $mail->isHTML(true);
@@ -585,7 +585,7 @@ function generateAlumniPaymentEmailTemplate($data) {
             
             <p>We look forward to welcoming you back to JIS for maJIStic 2025!</p>
             
-            <p>Warm Regards,<br>maJIStic Alumni Team</p>
+            <p>Warm Regards,<br>maJIStic Team</p>
         </div>
         
         <div class="footer">
