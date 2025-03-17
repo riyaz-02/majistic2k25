@@ -125,7 +125,7 @@ include 'src/main/registration_handler.php';
         <div class="info-card">
             <ul>
                 <li><i class="fas fa-check-circle"></i> Please ensure that all your details are correct before submitting.</li>
-                <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <del>Rs. 500</del> <strong>Rs. 400</strong> [Early Bird]</li>
+                <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <del>Rs. 600</del> <strong>Rs. 500</strong> [Early Bird]</li>
                 <li><i class="fas fa-id-card"></i> College ID is mandatory while checking in on the event day.</li>
                 <li><i class="fas fa-phone-alt"></i> For queries, contact <strong>maJIStic support</strong></li>
                 <li><i class="fas fa-shopping-bag"></i> For Merchandise, visit <a href="merchandise.php"><strong>Merchandise page</strong></a></li>

@@ -42,12 +42,12 @@ if ($registration['payment_status'] == 'Paid') {
 } else {
     $payment_done = false;
 
-    // Razorpay API credentials
-    $keyId = "rzp_test_5y6HDO2HsDx5lK"; // Replace with your Razorpay Key ID
-    $keySecret = "sOQvnTPi8LdXe8JYYv0eGF2P"; // Replace with your Razorpay Key Secret
+    // PayU Money API credentials
+    $keyId = "ce90a71710363ff5c1cbab97cf4a89f2d1ba6828b5e8a08b01d2343f24a753d3"; // PayU Money Client ID
+    $keySecret = "cfebc9c516fefef64a0fcc0fc05f7f291661e6746698c1c8ecf573ddcf3816f6"; // PayU Money Client Secret
 
-    // Create an order using Razorpay API
-    $api_url = "https://api.razorpay.com/v1/orders";
+    // Create an order using PayU Money API
+    $api_url = "https://api.payu.in/v1/orders";
     $amount_in_paise = $amount * 100; // Amount in paise (e.g., 50000 paise = 500 INR)
     $currency = "INR";
 
@@ -76,7 +76,7 @@ if ($registration['payment_status'] == 'Paid') {
     }
 
     if (!isset($order->id)) {
-        die("Failed to create Razorpay order.");
+        die("Failed to create PayU Money order.");
     }
 }
 
@@ -101,7 +101,7 @@ if (!$payment_done) {
     <?php include '../../includes/links.php'; ?>
     <link rel="stylesheet" href="../../style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://checkout.payu.in/v1/checkout.js"></script> <!-- Updated to PayU Money checkout -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/payment.css">
     <style>
@@ -201,7 +201,7 @@ if (!$payment_done) {
                                     ₹<?php echo htmlspecialchars($amount); ?>
                                 </div>
                                 
-                                <button type="button" id="rzp-button" class="payment-button">
+                                <button type="button" id="payu-button" class="payment-button">
                                     Pay Now <i class="fas fa-arrow-right ml-2"></i>
                                 </button>
                             <?php endif; ?>
@@ -216,7 +216,7 @@ if (!$payment_done) {
                             </button>
                         <?php else: ?>
                             <div class="secure-badge">
-                                <i class="fas fa-lock"></i> Secure payment powered by Razorpay
+                                <i class="fas fa-lock"></i> Secure payment powered by PayU Money <!-- Updated text -->
                             </div>
                         <?php endif; ?>
                     </div>
@@ -394,7 +394,7 @@ if (!$payment_done) {
                 "handler": function (response) {
                     document.getElementById('payment-loader').style.display = 'flex';
                     console.log("Payment successful, processing...");
-                    console.log("Payment ID:", response.razorpay_payment_id);
+                    console.log("Payment ID:", response.payu_payment_id); // Updated from razorpay_payment_id
                     
                     // Update payment status in the database
                     var xhr = new XMLHttpRequest();
@@ -413,17 +413,17 @@ if (!$payment_done) {
                                     if (jsonResponse.success) {
                                         window.location.reload();
                                     } else {
-                                        alert("Error updating payment status: " + jsonResponse.message + "\n\nYour payment was successful, but we couldn't update our records. Please note your payment ID: " + response.razorpay_payment_id + " and contact our support team.");
+                                        alert("Error updating payment status: " + jsonResponse.message + "\n\nYour payment was successful, but we couldn't update our records. Please note your payment ID: " + response.payu_payment_id + " and contact our support team."); // Updated from razorpay_payment_id
                                         document.getElementById('payment-loader').style.display = 'none';
                                     }
                                 } catch (e) {
                                     console.error("Failed to parse response:", e);
                                     console.error("Raw response:", xhr.responseText);
-                                    alert("Payment recorded but there was an error updating your records. Please contact support with your payment ID: " + response.razorpay_payment_id);
+                                    alert("Payment recorded but there was an error updating your records. Please contact support with your payment ID: " + response.payu_payment_id); // Updated from razorpay_payment_id
                                     document.getElementById('payment-loader').style.display = 'none';
                                 }
                             } else {
-                                alert("Payment recorded but there was an error updating your records. Please contact support with your payment ID: " + response.razorpay_payment_id);
+                                alert("Payment recorded but there was an error updating your records. Please contact support with your payment ID: " + response.payu_payment_id); // Updated from razorpay_payment_id
                                 document.getElementById('payment-loader').style.display = 'none';
                             }
                         }
@@ -431,7 +431,7 @@ if (!$payment_done) {
                     
                     // Send all necessary parameters for updating payment status
                     var params = "jis_id=<?php echo htmlspecialchars($registration_id); ?>" + 
-                                "&payment_id=" + response.razorpay_payment_id + 
+                                "&payment_id=" + response.payu_payment_id + // Updated from razorpay_payment_id
                                 "&payment_status=SUCCESS" + 
                                 "&amount=<?php echo htmlspecialchars($amount); ?>";
                     console.log("Sending params:", params);
@@ -456,11 +456,11 @@ if (!$payment_done) {
                 }
             };
 
-            // Initialize Razorpay
-            var rzp1 = new Razorpay(options);
+            // Initialize PayU Money
+            var payu1 = new PayU(options); // Updated from Razorpay
             
-            document.getElementById('rzp-button').onclick = function() {
-                rzp1.open();
+            document.getElementById('payu-button').onclick = function() { // Updated button ID
+                payu1.open(); // Updated from rzp1
                 
                 // Record the payment attempt
                 var xhr = new XMLHttpRequest();
