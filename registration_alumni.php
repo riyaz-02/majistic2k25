@@ -7,7 +7,7 @@ include 'src/main/registration_handler.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration</title>
+    <title>Alumni Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Adding Roboto font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
@@ -112,8 +112,8 @@ include 'src/main/registration_handler.php';
             
             // Redirect after the animation completes
             setTimeout(function() {
-                // window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'; // Payment redirect commented out
-                window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>'; // Redirect to success page
+                // window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Payment redirect commented out
+                window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Redirect to success page
             }, 3500); // Just after the progress bar completes
         });
     </script>
@@ -121,13 +121,13 @@ include 'src/main/registration_handler.php';
     
     <section class="registration-container">
         <div class="registration-heading">
-            <h1>In-house Students Registration</h1>
+            <h1>Alumni Registration</h1>
         </div>
         <div class="info-card">
             <ul>
                 <li><i class="fas fa-check-circle"></i> Please ensure that all your details are correct before submitting.</li>
-                <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <del>Rs. 500</del> <strong>Rs. 400</strong> [Early Bird]</li>
-                <li><i class="fas fa-id-card"></i> College ID is mandatory while checking in on the event day.</li>
+                <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <strong>Rs. 1000</strong> for Alumni</li>
+                <li><i class="fas fa-id-card"></i> Please bring your Alumni ID or any Government ID for verification on the event day.</li>
                 <li><i class="fas fa-phone-alt"></i> For queries, contact <strong>maJIStic support</strong></li>
                 <li><i class="fas fa-shopping-bag"></i> For Merchandise, visit <a href="merchandise.php"><strong>Merchandise page</strong></a></li>
             </ul>
@@ -139,9 +139,10 @@ include 'src/main/registration_handler.php';
             <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
                 <img class="majisticheadlogo" src="https://i.ibb.co/F4NytbBy/majistic2k25-white.png" alt="maJIStic Logo">
                 <?php if (!$registration_success): ?>
-                    <form id="registrationForm" method="POST" action="registration_inhouse.php" onsubmit="return validateForm()">
+                    <form id="registrationForm" method="POST" action="registration_alumni.php" onsubmit="return validateForm()">
+                        <input type="hidden" name="registration_type" value="alumni">
                         <div class="form-group">
-                            <label for="student_name">Student Name:</label>
+                            <label for="student_name">Full Name:</label>
                             <input type="text" id="student_name" name="student_name" required>
                         </div>
                         <div class="form-group">
@@ -150,14 +151,24 @@ include 'src/main/registration_handler.php';
                                 <option value="">--Select Gender--</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
-                                <option value="female">Prefer not say</option>
+                                <option value="other">Prefer not say</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="jis_id">JIS ID:</label>
                             <input type="text" id="jis_id" name="jis_id" pattern="JIS/\d{4}/\d{4}" placeholder="JIS/20XX/0000" required>                        
                         </div>
-                        <!-- Roll number field removed -->
+                        <div class="form-group">
+                            <label for="passout_year">Passout Year:</label>
+                            <select id="passout_year" name="passout_year" required>
+                                <option value="">--Select Passout Year--</option>
+                                <?php
+                                    for ($year = 2024; $year >= 2001; $year--) {
+                                        echo "<option value=\"$year\">$year</option>";
+                                    }
+                                ?>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="department">Department:</label>
                             <select id="department" name="department" required>
@@ -191,28 +202,12 @@ include 'src/main/registration_handler.php';
                             <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
-                            <label for="inhouse_competition">Do you want to take part in inhouse competitions?</label>
+                            <label for="current_organization">Current Organization/Company (Optional):</label>
+                            <input type="text" id="current_organization" name="current_organization">
                         </div>
-                        <div class="form-group radio-group">
-                            <label><input type="radio" id="inhouse_yes" name="inhouse_competition" value="Yes" required> Yes</label>
-                            <label><input type="radio" id="inhouse_no" name="inhouse_competition" value="No" required> No</label>
-                        </div>
-                        <div class="form-group hidden" id="competition_group">
-                            <label for="competition">Select Competition:</label>
-                            <select id="competition" name="competition">
-                                <option value="">--Select Competition--</option>
-                                <option value="Jam Room (Band Events)">Jam Room (Band Events)</option>
-                                <option value="Taal Se Taal Mila (Dance Events)">Taal Se Taal Mila (Dance Events)</option>
-                                <option value="Fashion Fiesta (Fashion Show)">Fashion Fiesta (Fashion Show)</option>
-                                <option value="Actomania (Drama)">Actomania (Drama)</option>
-                                <option value="The Poetry Slam (Recitation)">The Poetry Slam (Recitation)</option>
-                                <option value="Mic Hunters (Anchoring)">Mic Hunters (Anchoring)</option>
-                            </select>
-                        </div>
-                        <!-- <button type="button" id="registerButton">Register</button> -->
                         <button type="button" id="registerButton">
                             <span>Register</span>
-                            <span>Hurry Up!</span>
+                            <span>Reconnect with JIS!</span>
                         </button>
                         <p class="mt-2">Already registered but payment pending? <a href="#" id="paymentLink">Pay Now</a></p>
                         
@@ -231,7 +226,7 @@ include 'src/main/registration_handler.php';
     <div class="tech-team-contact">
         <div class="contact-header">
             <i class="fas fa-headset"></i>
-            <h3>In case of any discrepancy, feel free to contact maJIStic Tech Team</h3>
+            <h3>In case of any discrepancy, feel free to contact maJIStic Alumni Support Team</h3>
         </div>
         <div class="contact-cards">
             <div class="contact-card">
@@ -259,10 +254,10 @@ include 'src/main/registration_handler.php';
             <div class="contact-card">
                 <div class="contact-card-inner">
                     <div class="contact-info">
-                        <h4>Ronit Pal</h4>
-                        <p>+91 7501005155</p>
+                        <h4>Alumni Relations</h4>
+                        <p>+91 9830384902</p>
                     </div>
-                    <a href="https://wa.me/917501005155" target="_blank" class="whatsapp-btn">
+                    <a href="https://wa.me/919830384902" target="_blank" class="whatsapp-btn">
                         <i class="fab fa-whatsapp"></i>
                     </a>
                 </div>
@@ -291,8 +286,8 @@ include 'src/main/registration_handler.php';
                 <div class="form-group">
                     <label for="modal_jis_id">JIS ID:</label>
                     <input type="text" id="modal_jis_id" name="modal_jis_id" required>
+                    <input type="hidden" name="alumni" value="1">
                 </div>
-                <!-- Roll number field removed -->
                 <div class="modal-buttons">
                     <button type="submit">Submit</button>
                     <button type="button" onclick="closeModal('paymentModal')">Cancel</button>
@@ -326,15 +321,6 @@ include 'src/main/registration_handler.php';
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
-
-        document.getElementById('competition_group').style.display = 'none';
-        document.getElementById('inhouse_yes').addEventListener('change', function() {
-            document.getElementById('competition_group').style.display = 'block';
-        });
-        document.getElementById('inhouse_no').addEventListener('change', function() {
-            document.getElementById('competition_group').style.display = 'none';
-            document.getElementById('competition').value = ''; // Clear competition selection
-        });
 
         var modal = document.getElementById('confirmationModal');
         var registerButton = document.getElementById('registerButton');
@@ -376,7 +362,6 @@ include 'src/main/registration_handler.php';
         paymentForm.onsubmit = function(event) {
             event.preventDefault();
             var jis_id = document.getElementById('modal_jis_id').value;
-            // Roll number reference removed
             
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "src/transaction/check_payment_status.php", true);
@@ -385,37 +370,14 @@ include 'src/main/registration_handler.php';
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.status === 'pending') {
-                        window.location.href = 'src/transaction/payment.php?jis_id=' + jis_id;
+                        window.location.href = 'src/transaction/payment.php?jis_id=' + jis_id + '&alumni=1';
                     } else {
                         showPaymentMessage(response.message, response.status === 'success');
                     }
                 }
             };
-            xhr.send("jis_id=" + jis_id);
+            xhr.send("jis_id=" + jis_id + "&alumni=1");
         }
-
-        // Update banner image based on selected competition
-        document.getElementById('competition').addEventListener('change', function() {
-            var selectedCompetition = this.value;
-            var bannerImage = document.getElementById('bannerImage');
-            switch (selectedCompetition) {
-                case 'Taal Se Taal Mila (Dance Events)':
-                    bannerImage.src = 'https://i.ibb.co/0V1Cxvnr/dance.png';
-                    break;
-                case 'Actomania (Drama)':
-                    bannerImage.src = 'https://i.ibb.co/vvLXHMDF/drama.jpg';
-                    break;
-                case 'Jam Room (Band Events)':
-                    bannerImage.src = 'https://i.ibb.co/5h1Kw4KB/band.jpg';
-                    break;
-                case 'Fashion Fiesta (Fashion Show)':
-                    bannerImage.src = 'https://i.ibb.co/9drCNqN/fashion.jpg';
-                    break;
-                default:
-                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
-                    break;
-            }
-        });
 
         // Function to validate form
         function validateForm() {
@@ -428,13 +390,13 @@ include 'src/main/registration_handler.php';
             var jisId = document.getElementById('jis_id').value.trim();
             var mobile = document.getElementById('mobile').value.trim();
             var email = document.getElementById('email').value.trim();
-            // Remove roll number validation
+            var passoutYear = document.getElementById('passout_year').value.trim();
             var department = document.getElementById('department').value.trim();
             var gender = document.getElementById('gender').value.trim();
 
             // Validate student name (no numeric values allowed and not empty)
             if (studentName === "" || /\d/.test(studentName)) {
-                errors.push({id: 'student_name', message: 'Student name should not contain numbers'});
+                errors.push({id: 'student_name', message: 'Name should not contain numbers'});
                 isValid = false;
             }
 
@@ -459,7 +421,11 @@ include 'src/main/registration_handler.php';
                 isValid = false;
             }
 
-            // Roll number validation removed
+            // Validate passout year
+            if (passoutYear === "") {
+                errors.push({id: 'passout_year', message: 'Please select passout year'});
+                isValid = false;
+            }
 
             // Validate department
             if (department === "") {
@@ -497,13 +463,6 @@ include 'src/main/registration_handler.php';
             
             // Add to parent and position properly
             input.parentElement.appendChild(errorDiv);
-            
-            // Position adjustment for special cases
-            if (inputId === 'inhouse_yes' || inputId === 'inhouse_no') {
-                // For radio buttons, append to the radio group container
-                const radioGroup = document.querySelector('.radio-group');
-                radioGroup.appendChild(errorDiv);
-            }
             
             // Automatically remove the error message and class after animation ends
             setTimeout(() => {

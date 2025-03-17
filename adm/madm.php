@@ -40,6 +40,10 @@ include 'backend.php';
                 <i class="fas fa-university"></i>
                 Outhouse Registrations
             </div>
+            <div class="tab <?php echo $tab == 'alumni' ? 'active' : ''; ?>" data-tab="alumni">
+                <i class="fas fa-user-graduate"></i>
+                Alumni Registrations
+            </div>
         </div>
 
         <!-- Inhouse Content -->
@@ -381,6 +385,179 @@ include 'backend.php';
             </div>
             <?php endif; ?>
         </div>
+
+        <!-- Alumni Content -->
+        <div id="alumni" class="tab-content <?php echo $tab == 'alumni' ? 'active' : ''; ?>">
+            <!-- Statistics Cards -->
+            <div class="stats">
+                <div class="card blue">
+                    <i class="fas fa-users card-icon"></i>
+                    <h3><?php echo $alumni_total_result['count']; ?></h3>
+                    <p>Total Registrations</p>
+                </div>
+                <div class="card green">
+                    <i class="fas fa-check-circle card-icon"></i>
+                    <h3><?php echo $alumni_paid_result['count']; ?></h3>
+                    <p>Paid Registrations</p>
+                </div>
+                <div class="card red">
+                    <i class="fas fa-times-circle card-icon"></i>
+                    <h3><?php echo $alumni_not_paid_result['count']; ?></h3>
+                    <p>Unpaid Registrations</p>
+                </div>
+                <div class="card blue">
+                    <i class="fas fa-rupee-sign card-icon"></i>
+                    <h3>₹<?php echo number_format($alumni_revenue); ?></h3>
+                    <p>Total Revenue</p>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-container">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="gender-alumni"><i class="fas fa-venus-mars"></i> Gender</label>
+                        <select id="gender-alumni">
+                            <option value="">All Genders</option>
+                            <option value="Male" <?php echo $gender_filter == 'Male' ? 'selected' : ''; ?>>Male</option>
+                            <option value="Female" <?php echo $gender_filter == 'Female' ? 'selected' : ''; ?>>Female</option>
+                            <option value="Other" <?php echo $gender_filter == 'Other' ? 'selected' : ''; ?>>Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="event-type"><i class="fas fa-calendar-alt"></i> Event Type</label>
+                        <select id="event-type">
+                            <option value="">All Events</option>
+                            <?php if($event_types): while($event = $event_types->fetch_assoc()): ?>
+                            <option value="<?php echo $event['event_type']; ?>" <?php echo $event_type_filter == $event['event_type'] ? 'selected' : ''; ?>><?php echo $event['event_type']; ?></option>
+                            <?php endwhile; endif; ?>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="passout_year"><i class="fas fa-graduation-cap"></i> Passout Year</label>
+                        <select id="passout_year">
+                            <option value="">All Years</option>
+                            <?php if($passout_years): while($year = $passout_years->fetch_assoc()): ?>
+                            <option value="<?php echo $year['passout_year']; ?>" <?php echo $passout_year_filter == $year['passout_year'] ? 'selected' : ''; ?>><?php echo $year['passout_year']; ?></option>
+                            <?php endwhile; endif; ?>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="payment_status-alumni"><i class="fas fa-money-bill-wave"></i> Payment Status</label>
+                        <select id="payment_status-alumni">
+                            <option value="">All Payment Status</option>
+                            <option value="Paid" <?php echo $payment_status_filter == 'Paid' ? 'selected' : ''; ?>>Paid</option>
+                            <option value="Not Paid" <?php echo $payment_status_filter == 'Not Paid' ? 'selected' : ''; ?>>Not Paid</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-filter" onclick="applyFilters('alumni')">
+                    <i class="fas fa-filter"></i> Apply Filters
+                </button>
+            </div>
+
+            <!-- Table -->
+            <div class="table-header">
+                <h2><i class="fas fa-list"></i> Alumni Registrations</h2>
+                <button class="btn btn-download" onclick="downloadCSV('alumni')">
+                    <i class="fas fa-download"></i> Download CSV
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sl. No.</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Passout Year</th>
+                            <th>Department</th>
+                            <th>Current Organization</th>
+                            <th>Event Type</th>
+                            <th>Payment Status</th>
+                            <th>Payment ID</th>
+                            <th>Amount Paid</th>
+                            <th>Registration Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $sl_no = ($page - 1) * $items_per_page + 1;
+                        if ($alumni_result && $alumni_result->num_rows > 0) {
+                            while ($row = $alumni_result->fetch_assoc()):
+                        ?>
+                        <tr>
+                            <td><?php echo $sl_no++; ?></td>
+                            <td><?php echo isset($row['name']) ? $row['name'] : ''; ?></td>
+                            <td><?php echo isset($row['gender']) ? $row['gender'] : ''; ?></td>
+                            <td><?php echo isset($row['email']) ? $row['email'] : ''; ?></td>
+                            <td><?php echo isset($row['mobile']) ? $row['mobile'] : ''; ?></td>
+                            <td><?php echo isset($row['passout_year']) ? $row['passout_year'] : ''; ?></td>
+                            <td><?php echo isset($row['department']) ? $row['department'] : ''; ?></td>
+                            <td><?php echo isset($row['current_organization']) ? $row['current_organization'] : ''; ?></td>
+                            <td><?php echo isset($row['event_type']) ? $row['event_type'] : 'Alumni Meet'; ?></td>
+                            <td>
+                                <span class="status-badge <?php echo isset($row['payment_status']) && $row['payment_status'] == 'Paid' ? 'paid' : 'not-paid'; ?>">
+                                    <?php echo isset($row['payment_status']) ? $row['payment_status'] : ''; ?>
+                                </span>
+                            </td>
+                            <td><?php echo isset($row['payment_id']) ? $row['payment_id'] : ''; ?></td>
+                            <td><?php echo isset($row['amount_paid']) ? '₹'.$row['amount_paid'] : ''; ?></td>
+                            <td><?php echo isset($row['registration_date']) ? date('d M Y', strtotime($row['registration_date'])) : ''; ?></td>
+                            <td>
+                                <button class="btn-view" onclick="viewDetails('alumni', '<?php echo $row['email']; ?>')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                        <?php 
+                            endwhile;
+                        } else {
+                            echo '<tr><td colspan="14" style="text-align: center;">No registrations found</td></tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination for alumni -->
+            <?php if ($alumni_total_pages > 0): ?>
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                <a href="?tab=alumni&page=1<?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+                <a href="?tab=alumni&page=<?php echo $page-1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+                <?php endif; ?>
+                
+                <?php
+                $start_page = max(1, $page - 2);
+                $end_page = min($alumni_total_pages, $page + 2);
+                
+                for ($i = $start_page; $i <= $end_page; $i++):
+                ?>
+                <a href="?tab=alumni&page=<?php echo $i; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn <?php echo ($page == $i) ? 'active' : ''; ?>">
+                    <?php echo $i; ?>
+                </a>
+                <?php endfor; ?>
+                
+                <?php if ($page < $alumni_total_pages): ?>
+                <a href="?tab=alumni&page=<?php echo $page+1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <a href="?tab=alumni&page=<?php echo $alumni_total_pages; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $event_type_filter ? '&event_type='.$event_type_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?>" class="pagination-btn">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+        </div>
     </div>
 
     <!-- Modal for viewing registration details -->
@@ -409,6 +586,11 @@ include 'backend.php';
                 document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
                 this.classList.add('active');
                 document.getElementById(this.getAttribute('data-tab')).classList.add('active');
+                
+                // Update URL when switching tabs
+                const params = new URLSearchParams(window.location.search);
+                params.set('tab', this.getAttribute('data-tab'));
+                window.history.replaceState({}, '', `madm.php?${params.toString()}`);
             });
         });
 
@@ -429,9 +611,12 @@ include 'backend.php';
             if (tab === 'inhouse') {
                 const department = document.getElementById('department').value;
                 if (department) params.append('department', department);
-            } else {
+            } else if (tab === 'outhouse') {
                 const college = document.getElementById('college').value;
                 if (college) params.append('college', college);
+            } else if (tab === 'alumni') {
+                const passout_year = document.getElementById('passout_year').value;
+                if (passout_year) params.append('passout_year', passout_year);
             }
             
             window.location.href = `madm.php?${params.toString()}`;
@@ -475,6 +660,8 @@ include 'backend.php';
                     // Check registration type and display accordingly
                     if (type === 'inhouse') {
                         displayInhouseDetails(data);
+                    } else if (type === 'alumni') {
+                        displayAlumniDetails(data);
                     } else {
                         displayOuthouseDetails(data);
                     }
@@ -514,7 +701,6 @@ include 'backend.php';
                         <div class="detail-item"><span>Name:</span> ${registration.student_name}</div>
                         <div class="detail-item"><span>Gender:</span> ${registration.gender}</div>
                         <div class="detail-item"><span>JIS ID:</span> ${registration.jis_id}</div>
-                        <div class="detail-item"><span>Roll No:</span> ${registration.roll_no}</div>
                         <div class="detail-item"><span>Email:</span> ${registration.email}</div>
                         <div class="detail-item"><span>Mobile:</span> ${registration.mobile}</div>
                         <div class="detail-item"><span>Department:</span> ${registration.department}</div>
@@ -675,6 +861,87 @@ include 'backend.php';
                             <td><span class="status-badge ${attempt.status === 'completed' ? 'paid' : (attempt.status === 'failed' ? 'not-paid' : '')}">${attempt.status}</span></td>
                             <td>${attempt.payment_id || 'N/A'}</td>
                             <td>${attempt.amount ? '₹' + attempt.amount : 'N/A'}</td>
+                            <td>${attempt.ip_address}</td>
+                            <td>${attempt.error_message || 'N/A'}</td>
+                        </tr>`;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+            
+            document.querySelector('.registration-details').innerHTML = html;
+        }
+        
+        // Function to display alumni registration details
+        function displayAlumniDetails(data) {
+            const registration = data.registration;
+            const paymentAttempts = data.payment_attempts || [];
+            
+            let html = `
+                <div class="detail-section">
+                    <h3>Alumni Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item"><span>Name:</span> ${registration.name}</div>
+                        <div class="detail-item"><span>Gender:</span> ${registration.gender}</div>
+                        <div class="detail-item"><span>Email:</span> ${registration.email}</div>
+                        <div class="detail-item"><span>Mobile:</span> ${registration.mobile}</div>
+                        <div class="detail-item"><span>Passout Year:</span> ${registration.passout_year}</div>
+                        <div class="detail-item"><span>Department:</span> ${registration.department}</div>
+                        <div class="detail-item"><span>Current Organization:</span> ${registration.current_organization || 'N/A'}</div>
+                        <div class="detail-item"><span>Current Role:</span> ${registration.current_role || 'N/A'}</div>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Event Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item"><span>Event Type:</span> ${registration.event_type || 'Alumni Meet'}</div>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3>Payment Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item"><span>Payment Status:</span> <span class="status-badge ${registration.payment_status === 'Paid' ? 'paid' : 'not-paid'}">${registration.payment_status}</span></div>
+                        <div class="detail-item"><span>Amount:</span> ₹${registration.amount || 0}</div>
+                        <div class="detail-item"><span>Amount Paid:</span> ₹${registration.amount_paid}</div>
+                        <div class="detail-item"><span>Payment ID:</span> ${registration.payment_id || 'N/A'}</div>
+                        <div class="detail-item"><span>Registration Date:</span> ${new Date(registration.registration_date).toLocaleString()}</div>
+                        <div class="detail-item"><span>Payment Date:</span> ${registration.payment_date ? new Date(registration.payment_date).toLocaleString() : 'N/A'}</div>
+                    </div>
+                </div>`;
+                
+            if (paymentAttempts.length > 0) {
+                html += `
+                <div class="detail-section">
+                    <h3>Payment Attempts</h3>
+                    <div class="attempts-table-wrapper">
+                        <table class="attempts-table">
+                            <thead>
+                                <tr>
+                                    <th>Attempt Time</th>
+                                    <th>Status</th>
+                                    <th>Payment ID</th>
+                                    <th>Amount</th>
+                                    <th>Payment Method</th>
+                                    <th>IP Address</th>
+                                    <th>Error Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                
+                paymentAttempts.forEach(attempt => {
+                    html += `
+                        <tr>
+                            <td>${new Date(attempt.attempt_time).toLocaleString()}</td>
+                            <td><span class="status-badge ${attempt.status === 'completed' ? 'paid' : (attempt.status === 'failed' ? 'not-paid' : '')}">${attempt.status}</span></td>
+                            <td>${attempt.payment_id || 'N/A'}</td>
+                            <td>${attempt.amount ? '₹' + attempt.amount : 'N/A'}</td>
+                            <td>${attempt.payment_method || 'N/A'}</td>
                             <td>${attempt.ip_address}</td>
                             <td>${attempt.error_message || 'N/A'}</td>
                         </tr>`;

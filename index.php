@@ -100,8 +100,9 @@
     <div class="modal-content">
         <img class="majisticheadlogo" src="images/majisticlogo.png" alt="maJIStic Logo">
         <h2 class="align-center MT-3">Register for maJIStic 2k25</h2>
-        <button onclick="window.open('registration_inhouse.php', '_blank')" class="modal-option mt-2">In-house Student</button>
+        <button onclick="window.open('registration_inhouse.php', '_blank')" class="modal-option mt-2">Student Registration</button>
 <!--    <button onclick="window.open('registration_outhouse.php', '_blank')" class="modal-option" >Out-house Student</button>  -->
+        <button class="modal-option" onclick="window.open('registration_alumni.php', '_blank')" >Alumni Registration</button>
         <button class="modal-option" onclick="window.open('merchandise.php', '_blank')" >Merchandise</button>
         <button class="close-btn" id = "close-btn" >Close</button>
     </div>
