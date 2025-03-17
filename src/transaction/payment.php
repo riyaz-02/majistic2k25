@@ -3,26 +3,26 @@
 date_default_timezone_set('Asia/Kolkata');
 include '../../includes/db_config.php';
 
-// Determine the type of registration and get the registration ID from the URL
-$registration_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : (isset($_GET['email']) ? $_GET['email'] : null);
-$is_inhouse = isset($_GET['jis_id']);
-$is_outhouse = isset($_GET['email']);
+// Get the registration ID from the URL
+$registration_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : null;
+// Check if this is an alumni registration
+$is_alumni = isset($_GET['alumni']) && $_GET['alumni'] == '1';
 
 if (!$registration_id) {
     die("Invalid registration ID.");
 }
 
-// Fetch the registration details based on the type
-if ($is_inhouse) {
+// Fetch the registration details
+if ($is_alumni) {
+    // Alumni registration
+    $query = $conn->prepare("SELECT * FROM alumni_registrations WHERE jis_id = ?");
+    $query->bind_param("s", $registration_id);
+    $amount = 1000; // Set amount for alumni registration
+} else {
+    // Regular student registration
     $query = $conn->prepare("SELECT * FROM registrations WHERE jis_id = ?");
     $query->bind_param("s", $registration_id);
-    $amount = 400; // Updated amount for inhouse registration
-} else if ($is_outhouse) {
-    $query = $conn->prepare("SELECT * FROM registrations_outhouse WHERE email = ?");
-    $query->bind_param("s", $registration_id);
-    $amount = 9000; // Amount for outhouse registration
-} else {
-    die("Invalid registration type.");
+    $amount = 500; // Amount for inhouse registration
 }
 
 $query->execute();
@@ -32,6 +32,9 @@ $registration = $result->fetch_assoc();
 if (!$registration) {
     die("Registration not found.");
 }
+
+// For alumni, use different field names
+$student_name = $is_alumni ? $registration['alumni_name'] : $registration['student_name'];
 
 // Check if payment is already done
 if ($registration['payment_status'] == 'Paid') {
@@ -97,7 +100,7 @@ if (!$payment_done) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment - maJIStic 2k25</title>
+    <title><?php echo $is_alumni ? 'Alumni' : 'Student'; ?> Payment - maJIStic 2k25</title>
     <?php include '../../includes/links.php'; ?>
     <link rel="stylesheet" href="../../style.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -132,6 +135,9 @@ if (!$payment_done) {
                 <div class="payment-card">
                     <div class="payment-header">
                         <img src="https://i.postimg.cc/02CTRDb2/majisticlogoblack.png" alt="maJIStic Logo" class="payment-logo">
+                        <?php if ($is_alumni): ?>
+                            <div class="badge badge-primary">Alumni Registration</div>
+                        <?php endif; ?>
                     </div>
                     
                     <div class="payment-body">
@@ -156,9 +162,15 @@ if (!$payment_done) {
                                     <td><?php echo htmlspecialchars($registration_id); ?></td>
                                 </tr>
                                 <tr>
-                                    <th>Participant</th>
-                                    <td><?php echo htmlspecialchars($registration['student_name']); ?></td>
+                                    <th><?php echo $is_alumni ? 'Alumni' : 'Participant'; ?></th>
+                                    <td><?php echo htmlspecialchars($student_name); ?></td>
                                 </tr>
+                                <?php if ($is_alumni && isset($registration['passout_year'])): ?>
+                                <tr>
+                                    <th>Passout Year</th>
+                                    <td><?php echo htmlspecialchars($registration['passout_year']); ?></td>
+                                </tr>
+                                <?php endif; ?>
                                 <?php if ($payment_done): ?>
                                     <tr>
                                         <th>Payment Status</th>
@@ -388,7 +400,7 @@ if (!$payment_done) {
                 "amount": "<?php echo htmlspecialchars($order->amount); ?>",
                 "currency": "INR",
                 "name": "maJIStic 2k25",
-                "description": "Event Registration Fee",
+                "description": "<?php echo $is_alumni ? 'Alumni' : 'Student'; ?> Registration Fee",
                 "image": "https://i.postimg.cc/02CTRDb2/majisticlogoblack.png",
                 "order_id": "<?php echo htmlspecialchars($order->id); ?>",
                 "handler": function (response) {
@@ -433,12 +445,13 @@ if (!$payment_done) {
                     var params = "jis_id=<?php echo htmlspecialchars($registration_id); ?>" + 
                                 "&payment_id=" + response.payu_payment_id + // Updated from razorpay_payment_id
                                 "&payment_status=SUCCESS" + 
-                                "&amount=<?php echo htmlspecialchars($amount); ?>";
+                                "&amount=<?php echo htmlspecialchars($amount); ?>" +
+                                "<?php echo $is_alumni ? '&alumni=1' : ''; ?>";
                     console.log("Sending params:", params);
                     xhr.send(params);
                 },
                 "prefill": {
-                    "name": "<?php echo htmlspecialchars($registration['student_name']); ?>",
+                    "name": "<?php echo htmlspecialchars($student_name); ?>",
                     "email": "<?php echo htmlspecialchars($registration['email']); ?>",
                     "contact": "<?php echo htmlspecialchars($registration['mobile']); ?>"
                 },
@@ -451,7 +464,7 @@ if (!$payment_done) {
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", "record_payment_attempt.php", true);
                         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        xhr.send("registration_id=<?php echo htmlspecialchars($registration_id); ?>&status=abandoned");
+                        xhr.send("registration_id=<?php echo htmlspecialchars($registration_id); ?>&status=abandoned<?php echo $is_alumni ? '&alumni=1' : ''; ?>");
                     }
                 }
             };
@@ -466,7 +479,7 @@ if (!$payment_done) {
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "record_payment_attempt.php", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.send("registration_id=<?php echo htmlspecialchars($registration_id); ?>&status=initiated");
+                xhr.send("registration_id=<?php echo htmlspecialchars($registration_id); ?>&status=initiated<?php echo $is_alumni ? '&alumni=1' : ''; ?>");
             };
 
             // Fixed FAQ and contact tab functionality
