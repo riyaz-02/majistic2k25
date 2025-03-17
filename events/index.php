@@ -159,7 +159,7 @@
     <h2 style="color: #ff4500; text-shadow: 2px 2px 4px #000;">Taal Se Taal Mila</h2>
     <p style="color: #fff; font-size: 16px; line-height: 1.5;">
       <strong style="color: #ff4500;">Taal-Darpana:</strong> Prepare for an *electrifying explosion* of rhythm and soul in this inter-college dance showdown! The stage blazes with *jaw-dropping choreography*, spellbinding moves, and a tidal wave of unleashed creativity. Dancers from every corner unite, fusing their fiery passion and vibrant cultural vibes into a *spectacle of motion and music* that’ll light up our annual college fest with unforgettable energy!<br><br>
-      <strong style="color: #ff4500;">EVENT CO-ORDINATORS:</strong><br>Upasana Paul (+91 6291324934)
+      <strong style="color: #ff4500;">EVENT CO-ORDINATORS:</strong><br>Krishnasish Bose (+91 95316 02043), Debalina Talukder (+91 6290918293)
     </p>
     <button 
       style="background-color: #ff4500; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;"
@@ -215,7 +215,7 @@
     <h2 style="color: #ff69b4; text-shadow: 2px 2px 4px #000;">Fashion Fiesta</h2>
     <p style="color: #fff; font-size: 16px; line-height: 1.5;">
       <strong style="color: #ff69b4;">GlaM It Up:</strong> Strut into the *dazzling whirlwind* of this inter-college fashion face-off, where the runway transforms into a *sparkling canvas* for fearless style! Visionaries and trendsetters collide, unveiling *mind-bending designs* that dance between bold innovation and timeless grace. It’s a *glorious riot of couture*—a tribute to the wild, wondrous world of fashion artistry, set to light up our annual college fest with glamour and glory!<br><br>
-      <strong style="color: #ff69b4;">EVENT CO-ORDINATORS:</strong>
+      <strong style="color: #ff69b4;">EVENT CO-ORDINATORS:</strong>Upasana Paul (+91 6291324934)
     </p>
     <button 
       style="background-color: #ff69b4; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;"

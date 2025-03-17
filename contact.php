@@ -207,7 +207,8 @@
                 <p>JIS College of Engineering<br>Kalyani Block A, Phase III<br>Kalyani, Nadia - 741235, West Bengal</p>
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3673.746095513457!2d88.44517707531195!3d22.95957617921794!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a027730302f6e25%3A0xe50dfccae21e1fc!2sJIS%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1742024298934!5m2!1sen!2sin" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
-
+            
+            
             <!-- Terms of Service Section -->
             <div class="policy-section">
                 <h2>Terms of Service</h2>
@@ -311,7 +312,7 @@
                 <p>We retain your personal information only as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required or permitted by law (e.g., for tax or legal compliance). After this period, data is securely deleted or anonymized.</p>
 
                 <h3>8. International Data Transfers</h3>
-                <p>Your information may be transferred to and processed in countries outside your region, including India, where our servers or service providers are located. We ensure that such transfers comply with applicable data protection laws, including the use of standard contractual clauses where required.</p>
+                <p>Your information is not transferred and processed in countries outside your region, including India, where our servers or service providers are located. We ensure that such transfers comply with applicable data protection laws, including the use of standard contractual clauses where required.</p>
 
                 <h3>9. Changes to This Privacy Policy</h3>
                 <p>We may update this Privacy Policy to reflect changes in our practices or legal requirements. Any updates will be posted on this page with a revised "Last Updated" date. We encourage you to review this policy periodically. If significant changes are made, we will notify you via email or a prominent notice on our website.</p>

@@ -21,8 +21,8 @@
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>Contact maJIStic</h5>
             <a href="mailto:majistic@jiscollege.ac.in"><i class="fa-solid fa-envelope"></i> majistic@jiscollege.ac.in</a><br>
-            <a href="tel:+1234567890"><i class="fa-solid fa-phone"></i> +91 1234567890</a><br>
-            <a href="tel:+0987654321"><i class="fa-solid fa-phone"></i> +91 9876543210</a>
+            <a href="tel:+1234567890"><i class="fa-solid fa-phone"></i> +91 79805 32913</a><br>
+            <a href="tel:+0987654321"><i class="fa-solid fa-phone"></i> +91 79809 79789</a>
             <div class="social mt-4">
                 <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/majistic_jisce/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
