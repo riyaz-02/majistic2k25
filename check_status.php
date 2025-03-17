@@ -820,7 +820,7 @@ $conn->close();
                                 <input type="text" id="jis_id" name="jis_id" placeholder="JIS/20XX/0000" required>
                             </div>
                             <div style="text-align: center;">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg,rgb(146, 46, 204),rgb(43, 22, 136)); color: white;">
                                     <i class="fas fa-search"></i> Check Status
                                 </button>
                             </div>
@@ -833,7 +833,7 @@ $conn->close();
                             <h3>Registration Not Found</h3>
                             <p>We couldn't find any registration matching the details you provided. Please verify your JIS ID and name, then try again.</p>
                             <p>If you haven't registered yet, please visit the registration page to participate in maJIStic 2k25.</p>
-                            <a href="registration.php" class="btn btn-primary">
+                            <a href="registration_inhouse.php" class="btn btn-primary">
                                 Register Now
                             </a>
                         </div>

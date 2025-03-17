@@ -331,6 +331,15 @@ if (!$payment_done) {
                                     <a href="tel:+917501005155">+91 7501005155</a>
                                 </div>
                             </div>
+                            <div class="contact-card">
+                                <div class="icon">
+                                    <i class="fas fa-user-cog"></i>
+                                </div>
+                                <div class="info">
+                                    <h4>Mohit Kumar</h4>
+                                    <a href="tel:+918016804158">+91 8016804158</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -366,6 +375,7 @@ if (!$payment_done) {
                                     <a href="mailto:majistic@jiscollege.ac.in">majistic@jiscollege.ac.in</a>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </section>

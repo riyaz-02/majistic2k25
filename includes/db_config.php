@@ -5,17 +5,12 @@ $username = "root"; // Replace with your MySQL username
 $password = ""; // Replace with your MySQL password
 $dbname = "majistic2k25";
 
-// Database connection parameters
-// $servername = "localhost";
-// $username = "root"; // Replace with your MySQL username
-// $password = ""; // Replace with your MySQL password
-// $dbname = "majistic2k25";
 
 // Database connection parameters
-$servername = "localhost";
-$username = "u901957751_majistic2k25"; // Replace with your MySQL username
-$password = "maJIStic@2k25"; // Replace with your MySQL password
-$dbname = "u901957751_majistic2k25";
+// $servername = "localhost";
+// $username = "u901957751_majistic2k25"; // Replace with your MySQL username
+// $password = "maJIStic@2k25"; // Replace with your MySQL password
+// $dbname = "u901957751_majistic2k25";
 
 
 // Create connection
