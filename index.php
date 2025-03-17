@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
     <link rel="stylesheet" href="events/styles.css">
 
+    <link rel="stylesheet" href="sponsors/style.css">
+
     <style>
         .modal-option {
         transition: transform 0.3s ease; /* Smooth transition for the transform */
@@ -373,16 +375,17 @@
         </div>-->
     </section>
 
-    <!-- Sponsors Section -->
-    <section class="base-template">
     <div class="heading-container flip-in" id="sponsors">
             <h1 class="text-center display-4 font-weight-bold section-title">Partners in Celebration</h1>
         </div>
+    <!-- Sponsors Section -->
+    <!-- <section class="base-template">
+    
 	<div class="wrapper base-template__wrapper">
 		<div class="base-template__content">
 			<div class="horizontal-ticker">
 
-				<!-- Horizontal Ticker: Slider RTL -->
+				<!-- Horizontal Ticker: Slider RTL 
 
 				<div id="horizontal-ticker-rtl" class="swiper horizontal-ticker__slider">
 					<div class="swiper-wrapper">
@@ -427,7 +430,7 @@
 							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
 						</div>
 
-						<!-- slides copies -->
+						<!-- slides copies 
 
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
@@ -473,7 +476,7 @@
 					</div>
 				</div>
 
-				<!-- Horizontal Ticker: Slider LTR -->
+				<!-- Horizontal Ticker: Slider LTR 
 
 				<div id="horizontal-ticker-ltr" class="swiper horizontal-ticker__slider">
 					<div class="swiper-wrapper">
@@ -519,7 +522,7 @@
 							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
 						</div>
 
-						<!-- slides copies -->
+						<!-- slides copies 
 
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
@@ -569,10 +572,14 @@
 			</div>
 		</div>
 	</div>
-</section>
+</section> -->
+
+
+<?php include 'sponsors/index.php'; ?>
 
     <?php include 'includes/footer.php'; ?>
     <?php include 'includes/scripts.php'; ?>
+    <script src="sponsors/script.js"></script>
     <script>
         // Bounce-in, bounce-out, and pulse animation on scroll for stats section
         document.addEventListener('DOMContentLoaded', function() {
