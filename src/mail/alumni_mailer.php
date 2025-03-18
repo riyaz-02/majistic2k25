@@ -25,9 +25,9 @@ foreach ($autoloaderPaths as $path) {
 
 // If autoloader isn't found, create a dummy function that logs the error but doesn't crash
 if (!$autoloaderLoaded) {
-    error_log("PHPMailer autoloader not found. Email functionality for alumni will be disabled.");
+    error_log("PHPMailer autoloader not found. Alumni email functionality will be disabled.");
     
-    function sendAlumniRegistrationEmail($data) {
+    function sendAlumniPaymentConfirmationEmail($data) {
         error_log("Alumni email sending skipped - PHPMailer not available");
         // Record the intended email in a log file instead
         $logFile = __DIR__ . '/../../logs/alumni_email_queue.log';
@@ -35,8 +35,9 @@ if (!$autoloaderLoaded) {
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
-        $logEntry = date('Y-m-d H:i:s') . " - Would have sent alumni registration email to: " . $data['email'] . 
-                    " - JIS ID: " . $data['jis_id'] . "\n";
+        $logEntry = date('Y-m-d H:i:s') . " - Would have sent alumni email to: " . $data['email'] . 
+                    " - Payment ID: " . $data['payment_id'] . 
+                    " - Amount: " . $data['amount'] . "\n";
         file_put_contents($logFile, $logEntry, FILE_APPEND);
         return false;
     }
@@ -45,305 +46,12 @@ if (!$autoloaderLoaded) {
         return "Alumni email template generation skipped - PHPMailer not available";
     }
     
-    function sendAlumniPaymentConfirmationEmail($data) {
-        error_log("Alumni payment email sending skipped - PHPMailer not available");
-        $logFile = __DIR__ . '/../../logs/alumni_email_queue.log';
-        $dir = dirname($logFile);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        $logEntry = date('Y-m-d H:i:s') . " - Would have sent alumni payment confirmation email to: " . $data['email'] . 
-                    " - Payment ID: " . $data['payment_id'] . "\n";
-        file_put_contents($logFile, $logEntry, FILE_APPEND);
-        return false;
-    }
-    
-    function generateAlumniPaymentEmailTemplate($data) {
-        return "Alumni payment email template generation skipped - PHPMailer not available";
-    }
-    
     // Exit this file early
     return;
 }
 
 /**
- * Function to send alumni registration confirmation email
- * 
- * @param array $data Registration data
- * @return bool Whether the email was sent successfully
- */
-function sendAlumniRegistrationEmail($data) {
-    // Create a new PHPMailer instance
-    $mail = new PHPMailer(true);
-    
-    try {
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; 
-        $mail->SMTPAuth = true;
-        $mail->Username   = 'majistic.alumni@gmail.com'; // Alumni-specific email
-        $mail->Password   = 'iakqdaxcbtmcfucr'; // Replace with actual password for alumni email
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
-        
-        // Recipients
-        $mail->setFrom('majistic.alumni@gmail.com', 'maJIStic');
-        $mail->addAddress($data['email'], $data['alumni_name']);
-        $mail->addReplyTo('majistic.alumni@gmail.com', 'maJIStic Alumni Support');
-        
-        // Content
-        $mail->isHTML(true);
-        $mail->Subject = 'Alumni Registration Confirmation - maJIStic 2025';
-        
-        // Email HTML body
-        $mail->Body = generateAlumniEmailTemplate($data);
-        
-        // Plain text version for non-HTML mail clients
-        $mail->AltBody = "Alumni Registration Confirmation - maJIStic 2025\n\n" .
-                        "Dear {$data['alumni_name']},\n\n" .
-                        "Thank you for registering for maJIStic 2025 as an alumni.\n" .
-                        "JIS ID: {$data['jis_id']}\n" .
-                        "Department: {$data['department']}\n" .
-                        "Passout Year: {$data['passout_year']}\n" .
-                        "Registration Date: {$data['registration_date']}\n\n" .
-                        "Please proceed to complete your payment.\n\n" .
-                        "Regards,\nmaJIStic Team";
-        
-        $mail->send();
-        return true;
-    } catch (Exception $e) {
-        error_log("Alumni email could not be sent. Mailer Error: {$mail->ErrorInfo}");
-        return false;
-    }
-}
-
-/**
- * Function to generate HTML email template for alumni registration
- * 
- * @param array $data Registration data
- * @return string HTML content of the email
- */
-function generateAlumniEmailTemplate($data) {
-    // Get current year for copyright (using IST)
-    $year = date('Y');
-    
-    // Format registration date for display in email if not already formatted
-    if (isset($data['registration_date']) && strtotime($data['registration_date'])) {
-        $formatted_date = date('d M Y, h:i A', strtotime($data['registration_date']));
-    } else {
-        $formatted_date = date('d M Y, h:i A'); // Use current time if not provided
-    }
-    
-    // Generate payment link
-    $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']) . "&alumni=1";
-    
-    // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = '../../images/majisticlogo.png';
-    
-    // HTML Template
-    $html = <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Registration Confirmation</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0;
-        }
-        .email-container {
-            border: 1px solid #dddddd;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .header {
-            background-color: #000000;
-            padding: 20px;
-            text-align: center;
-        }
-        .header img {
-            max-width: 250px;
-            height: auto;
-        }
-        .content {
-            padding: 30px;
-            background-color: #ffffff;
-        }
-        .registration-info {
-            background-color: #f7f7f7;
-            border: 1px solid #eeeeee;
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-        .registration-info table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .registration-info td {
-            padding: 8px 0;
-            border-bottom: 1px solid #eeeeee;
-        }
-        .registration-info td:first-child {
-            font-weight: bold;
-            width: 40%;
-        }
-        .footer {
-            background-color: #f0f0f0;
-            padding: 15px;
-            text-align: center;
-            font-size: 12px;
-            color: #666666;
-        }
-        .social-links {
-            margin-top: 15px;
-        }
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            color: #666666;
-            text-decoration: none;
-        }
-        .button {
-            display: inline-block;
-            background-color: #4CAF50;
-            color: white !important;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        .payment-note {
-            margin-top: 25px;
-            padding: 15px;
-            background-color: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            color: #92400e;
-            font-size: 14px;
-        }
-        .alumni-header {
-            background: linear-gradient(to right, #3498db, #8e44ad);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="email-container">
-        <div class="header">
-            <img src="{$logoUrl}" alt="maJIStic 2025 Logo">
-        </div>
-        
-        <div class="content">
-            <div class="alumni-header">
-                <h2>Alumni Registration Confirmation</h2>
-            </div>
-            
-            <p>Dear {$data['alumni_name']},</p>
-            <p>Thank you for registering for maJIStic 2025 as an alumni. We're excited to welcome you back to your alma mater for this special event. Your registration has been successfully received and recorded in our system.</p>
-            
-            <div class="registration-info">
-                <h3>Registration Details</h3>
-                <table>
-                    <tr>
-                        <td>JIS ID</td>
-                        <td>{$data['jis_id']}</td>
-                    </tr>
-                    <tr>
-                        <td>Name</td>
-                        <td>{$data['alumni_name']}</td>
-                    </tr>
-                    <tr>
-                        <td>Department</td>
-                        <td>{$data['department']}</td>
-                    </tr>
-                    <tr>
-                        <td>Passout Year</td>
-                        <td>{$data['passout_year']}</td>
-                    </tr>
-                    <tr>
-                        <td>Email</td>
-                        <td>{$data['email']}</td>
-                    </tr>
-                    <tr>
-                        <td>Mobile</td>
-                        <td>{$data['mobile']}</td>
-                    </tr>
-HTML;
-
-    // Add current organization if available
-    if (isset($data['current_organization']) && !empty($data['current_organization'])) {
-        $html .= <<<HTML
-                    <tr>
-                        <td>Current Organization</td>
-                        <td>{$data['current_organization']}</td>
-                    </tr>
-HTML;
-    }
-
-    $html .= <<<HTML
-                    <tr>
-                        <td>Registration Date</td>
-                        <td>{$formatted_date}</td>
-                    </tr>
-                    <tr>
-                        <td>Payment Status</td>
-                        <td><strong style="color: #f59e0b;">PENDING</strong></td>
-                    </tr>
-                </table>
-            </div>
-            
-            <p>Your registration is almost complete! To confirm your spot at maJIStic 2025, please complete the payment process by clicking the button below:</p>
-            
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="{$payment_link}" class="button">Complete Payment (₹1000)</a>
-            </div>
-            
-            <div class="payment-note">
-                <p><strong>Note:</strong> If you've already completed the payment, please disregard this message. You will receive a separate payment confirmation email.</p>
-            </div>
-            
-            <p>If you have any questions or need further assistance, please don't hesitate to contact our alumni support team.</p>
-            
-            <p style='background-color: #ffeeee; border: 1px solid #ff6b6b; padding: 10px; color: #cc0000; font-weight: bold; text-align: center; margin: 15px 0;'>
-                <strong>IMPORTANT:</strong> Please bring your Alumni ID or any Government ID for verification on the event day.
-            </p>
-            <p>We look forward to seeing you at maJIStic 2025!</p>
-            
-            <p>Warm Regards,<br>maJIStic Team</p>
-
-        </div>
-        
-        <div class="footer">
-            <p>&copy; {$year} maJIStic 2025. All rights reserved.</p>
-            <p>JIS College of Engineering, Kalyani, Nadia - 741235, West Bengal, India</p>
-            <div class="social-links">
-                <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank">Facebook</a> |
-                <a href="https://www.instagram.com/majistic_jisce" target="_blank">Instagram</a> |
-                <a href="https://www.linkedin.com/company/majistic-jisce/" target="_blank">LinkedIn</a>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-HTML;
-
-    return $html;
-}
-
-/**
- * Function to send alumni payment confirmation email
+ * Function to send payment confirmation email to alumni
  * 
  * @param array $data Payment and alumni data
  * @return bool Whether the email was sent successfully
@@ -355,50 +63,50 @@ function sendAlumniPaymentConfirmationEmail($data) {
     try {
         // Server settings
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; 
+        $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
         $mail->SMTPAuth = true;
-        $mail->Username   = 'majistic.alumni@gmail.com'; // Alumni-specific email
-        $mail->Password   = 'iakqdaxcbtmcfucr'; // Replace with actual password for alumni email
+        $mail->Username   = 'payment.majistic@gmail.com';
+        $mail->Password   = 'csibomhfcfmtxpjp';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         
         // Recipients
-        $mail->setFrom('majistic.alumni@gmail.com', 'maJIStic');
+        $mail->setFrom('payment.majistic@gmail.com', 'maJIStic');
         $mail->addAddress($data['email'], $data['alumni_name']);
-        $mail->addReplyTo('majistic.alumni@gmail.com', 'maJIStic Alumni Support');
+        $mail->addReplyTo('payment.majistic@gmail.com', 'maJIStic Support');
         
         // Content
         $mail->isHTML(true);
-        $mail->Subject = 'Payment Confirmation - maJIStic 2025 Alumni';
+        $mail->Subject = 'Alumni Payment Confirmation - maJIStic 2025';
         
         // Email HTML body
-        $mail->Body = generateAlumniPaymentEmailTemplate($data);
+        $mail->Body = generateAlumniEmailTemplate($data);
         
         // Plain text version for non-HTML mail clients
-        $mail->AltBody = "Payment Confirmation - maJIStic 2025 Alumni\n\n" .
+        $mail->AltBody = "Alumni Payment Confirmation - maJIStic 2025\n\n" .
                         "Dear {$data['alumni_name']},\n\n" .
-                        "Your payment for maJIStic 2025 has been successfully received.\n" .
+                        "Your alumni registration payment for maJIStic 2025 has been successfully received.\n" .
                         "Payment ID: {$data['payment_id']}\n" .
                         "Amount: Rs. {$data['amount']}\n" .
                         "Date: {$data['payment_date']}\n\n" .
-                        "Thank you for registering for maJIStic 2025. We look forward to seeing you at the event!\n\n" .
-                        "Regards,\nmaJIStic Alumni Team";
+                        "Thank you for registering as an alumnus for maJIStic 2025. We look forward to welcoming you back!\n\n" .
+                        "Regards,\nmaJIStic Team";
         
         $mail->send();
         return true;
     } catch (Exception $e) {
-        error_log("Alumni payment email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        error_log("Alumni email could not be sent. Mailer Error: {$mail->ErrorInfo}");
         return false;
     }
 }
 
 /**
- * Function to generate HTML email template for alumni payment
+ * Function to generate HTML email template for alumni
  * 
  * @param array $data Payment and alumni data
  * @return string HTML content of the email
  */
-function generateAlumniPaymentEmailTemplate($data) {
+function generateAlumniEmailTemplate($data) {
     // Get current year for copyright (using IST)
     $year = date('Y');
     
@@ -410,16 +118,16 @@ function generateAlumniPaymentEmailTemplate($data) {
     }
     
     // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = '../../images/majisticlogo.png';
+    $logoUrl = 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
     
-    // HTML Template
+    // HTML Template with alumni-specific details
     $html = <<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Confirmation - Alumni</title>
+    <title>Alumni Payment Confirmation</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -519,13 +227,14 @@ function generateAlumniPaymentEmailTemplate($data) {
         .event-pass-box strong {
             font-weight: 600;
         }
-        .alumni-header {
-            background: linear-gradient(to right, #3498db, #8e44ad);
+        .alumni-badge {
+            display: inline-block;
+            background-color: #7c3aed;
             color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -536,12 +245,10 @@ function generateAlumniPaymentEmailTemplate($data) {
         </div>
         
         <div class="content">
-            <div class="alumni-header">
-                <h2>Alumni Payment Confirmation</h2>
-            </div>
-            
+            <span class="alumni-badge">ALUMNI REGISTRATION</span>
+            <h2>Payment Confirmation</h2>
             <p>Dear {$data['alumni_name']},</p>
-            <p>Thank you for your payment for maJIStic 2025. Your transaction has been successfully processed.</p>
+            <p>Thank you for your alumni registration payment for maJIStic 2025. Your transaction has been successfully processed.</p>
             
             <div class="ticket-info">
                 <h3>Payment Details</h3>
@@ -551,12 +258,12 @@ function generateAlumniPaymentEmailTemplate($data) {
                         <td>{$data['jis_id']}</td>
                     </tr>
                     <tr>
-                        <td>Passout Year</td>
-                        <td>{$data['passout_year']}</td>
-                    </tr>
-                    <tr>
                         <td>Department</td>
                         <td>{$data['department']}</td>
+                    </tr>
+                    <tr>
+                        <td>Passout Year</td>
+                        <td>{$data['passout_year']}</td>
                     </tr>
                     <tr>
                         <td>Payment ID</td>
@@ -578,12 +285,12 @@ function generateAlumniPaymentEmailTemplate($data) {
             </div>
             
             <div class="event-pass-box">
-                <p><strong>Important:</strong> You will receive your Alumni Event Pass in your registered email 3 days before the event. Don't forget to check your email, including spam folder.</p>
+                <p><strong>Important:</strong> You will receive additional alumni event details in your registered email closer to the event date. Don't forget to check your email, including spam folder.</p>
             </div>
             
-            <p>Please keep this email for your records. You may be required to show this confirmation at the event.</p>
+            <p>Please keep this email for your records. You may be required to show this confirmation at the alumni meet during maJIStic 2025.</p>
             
-            <p>We look forward to welcoming you back to JIS for maJIStic 2025!</p>
+            <p>We look forward to welcoming you back at maJIStic 2025!</p>
             
             <p>Warm Regards,<br>maJIStic Team</p>
         </div>
@@ -594,7 +301,7 @@ function generateAlumniPaymentEmailTemplate($data) {
             <div class="social-links">
                 <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank">Facebook</a> |
                 <a href="https://www.instagram.com/majistic_jisce" target="_blank">Instagram</a> |
-                <a href="https://www.linkedin.com/company/majistic-jisce/" target="_blank">LinkedIn</a>
+                <a href="https://www.linkedin.com/company/majistic-jisce/" target="_blank">LinkedIN</a>
             </div>
         </div>
     </div>

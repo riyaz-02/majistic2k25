@@ -22,7 +22,7 @@
                 <div class="swiper-slide">
                     <div class="artist-container">
                         <div class="artist-banner">
-                            <div class="artist-image" style="background-image: url('https://i.postimg.cc/440j5WCt/360-F-565324708-RYdt-KOxe-VUJKBu-JDeq-Bq-J5hxxg8x-XUv-Y.jpg')">
+                            <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
                                 <div class="artist-overlay">
                                     <h2 class="artist-name">DJ Night</h2>
                                     <p class="artist-type">Get Ready for a Night of Electrifying Beats!</p>
@@ -57,7 +57,7 @@
                 <div class="swiper-slide">
                     <div class="artist-container">
                         <div class="artist-banner">
-                            <div class="artist-image" style="background-image: url('https://i.postimg.cc/8kxnWsWm/pngtree-music-party-jpg-banner-picture-image-1776672.png')">
+                            <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
                                 <div class="artist-overlay">
                                     <h2 class="artist-name">Band Night</h2>
                                     <p class="artist-type">A High-Octane Band is Coming to Shake Majistic 2K25!</p>
@@ -92,7 +92,7 @@
                 <div class="swiper-slide">
                     <div class="artist-container">
                         <div class="artist-banner">
-                            <div class="artist-image" style="background-image: url('https://i.postimg.cc/CxbydkQ8/silhouette-musicians-stage-festival-dancing-crowd-fans-hall-music-concert-poster-banner-cool-1867254.webp')">
+                            <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
                                 <div class="artist-overlay">
                                     <h2 class="artist-name">Solo Singer Concert</h2>
                                     <p class="artist-type">One Voice, One Stage, Infinite Emotions!</p>

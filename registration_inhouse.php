@@ -1,5 +1,11 @@
 <?php
 include 'src/main/registration_handler.php';
+// Include payment configuration
+if(file_exists('src/config/payment_config.php')) {
+    include 'src/config/payment_config.php';
+} else {
+    define('PAYMENT_ENABLED', true); // Default to enabled if config doesn't exist
+}
 ?>
 
 <!DOCTYPE html>
@@ -98,8 +104,11 @@ include 'src/main/registration_handler.php';
         <img src="images/majisticlogo.png" alt="maJIStic Logo">
         <h2>Registration Successful!</h2>
         <p>Congratulations! Your registration has been completed.</p>
-        <p>Redirecting to confirmation page...</p>
+        <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
         <p>Redirecting to Payment page...</p>
+        <?php else: ?>
+        <p>Redirecting to confirmation page...</p>
+        <?php endif; ?>
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -113,8 +122,11 @@ include 'src/main/registration_handler.php';
             
             // Redirect after the animation completes
             setTimeout(function() {
-                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'; // Payment redirect commented out
-                //window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>'; // Redirect to success page
+                <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
+                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'; // Payment redirect
+                <?php else: ?>
+                window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>'; // Redirect to success page
+                <?php endif; ?>
             }, 3500); // Just after the progress bar completes
         });
     </script>

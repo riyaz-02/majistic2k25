@@ -1,10 +1,27 @@
 <?php
 // Set timezone to IST at the beginning of the file
 date_default_timezone_set('Asia/Kolkata');
-include '../../includes/db_config.php';
+
+// Check email payment config and redirect if disabled
+$email_config_file = __DIR__ . '/../config/email_payment_config.php';
+$email_payment_enabled = true; // Default to enabled if config file doesn't exist
+
+if (file_exists($email_config_file)) {
+    include_once $email_config_file;
+    $email_payment_enabled = defined('EMAIL_PAYMENT_ENABLED') ? EMAIL_PAYMENT_ENABLED : true;
+}
 
 // Get the registration ID from the URL
 $registration_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : null;
+
+// If email payments are disabled and there's a JIS ID, redirect to payment unavailable page
+if (!$email_payment_enabled && $registration_id) {
+    header("Location: ../handler/payment_unavailable.php?jis_id=" . urlencode($registration_id));
+    exit;
+}
+
+include '../../includes/db_config.php';
+
 // Check if this is an alumni registration
 $is_alumni = isset($_GET['alumni']) && $_GET['alumni'] == '1';
 
@@ -822,7 +839,7 @@ if (!$payment_done) {
                                 </div>
                                 <div class="info">
                                     <h4>Dr. Proloy Ghosh</h4>
-                                    <a href="tel:+91xxxxxxxxxxx">+91 xxxxxxxxxx</a>
+                                    <a href="tel:+917980532913">+91 7980532913</a>
                                 </div>
                             </div>
                             <div class="contact-card">

@@ -7,7 +7,11 @@ include '../includes/db_config.php';
 
 // If already logged in, redirect to admin panel
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-    header('Location: madm.php');
+    if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'website manager') {
+        header('Location: management.php');
+    } else {
+        header('Location: madm.php');
+    }
     exit();
 }
 
@@ -24,30 +28,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $login_attempt = true;
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $role = $_POST['role'];
 
-    $query = "SELECT * FROM admin_users WHERE username = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $username);
+    // Query to check if username exists with the specified role
+    $stmt = $conn->prepare("SELECT id, username, password, role FROM admin_users WHERE username = ? AND role = ?");
+    $stmt->bind_param("ss", $username, $role);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        // Use password_verify if passwords are hashed, otherwise do a direct comparison
-        if (password_verify($password, $row['password']) || $password === $row['password']) {
+    if ($result->num_rows === 1) {
+        $user = $result->fetch_assoc();
+        
+        // Check if password is correct
+        if (password_verify($password, $user['password']) || $password === $user['password']) { // Second condition for transition period
+            // Set session variables
             $_SESSION['admin_logged_in'] = true;
-            $_SESSION['admin_username'] = $row['username'];
-            $_SESSION['admin_id'] = $row['id'];
+            $_SESSION['admin_id'] = $user['id'];
+            $_SESSION['admin_username'] = $user['username'];
+            $_SESSION['admin_role'] = $user['role'];
             
-            // Redirect to admin panel
-            header('Location: madm.php');
-            exit();
+            // Redirect based on role
+            if ($user['role'] === 'website manager') {
+                header('Location: management.php');
+            } else {
+                header('Location: madm.php');
+            }
+            exit;
         } else {
-            $error = "Invalid password. Please try again.";
+            $error = "Invalid username, password or role";
         }
     } else {
-        $error = "Username not found. Please try again.";
+        $error = "Invalid username, password or role";
     }
+    $stmt->close();
+}
+
+// Get available roles from the database
+$roles = [];
+$role_query = "SELECT DISTINCT role FROM admin_users ORDER BY role";
+$role_result = $conn->query($role_query);
+if ($role_result && $role_result->num_rows > 0) {
+    while ($row = $role_result->fetch_assoc()) {
+        $roles[] = $row['role'];
+    }
+} else {
+    // Fallback in case there's an issue with the query
+    $roles = ['admin', 'website manager','verifier','HOD','faculty coordinator','student'];
 }
 ?>
 
@@ -154,6 +180,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             right: 15px;
             top: 40px;
             color: var(--primary);
+        }
+        
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%232c3e50"/></svg>') no-repeat;
+            background-position: right 15px center;
+            background-color: white;
+        }
+        
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
         
         .btn-login {
@@ -277,6 +324,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <i class="fas fa-lock icon"></i>
                 </div>
                 
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" name="role" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <?php foreach ($roles as $role): ?>
+                            <option value="<?php echo htmlspecialchars($role); ?>" <?php echo isset($_POST['role']) && $_POST['role'] === $role ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars(ucfirst($role)); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <i class="fas fa-user-tag icon"></i>
+                </div>
+                
                 <button type="submit" class="btn-login">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </button>
@@ -290,7 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <script>
         // Add focus effects
-        const inputs = document.querySelectorAll('input');
+        const inputs = document.querySelectorAll('input, select');
         inputs.forEach(input => {
             input.addEventListener('focus', function() {
                 this.parentElement.querySelector('.icon').style.color = '#3498db';
