@@ -377,7 +377,17 @@
             
                 ],
                 'Website Development Team' => [
-                    ['name' => 'Priyanshu Nayan', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.postimg.cc/5tCnQ9k4/Priyanshu-Nayan.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => 'https://www.linkedin.com/in/priyanshu-nayan/']],
+                    [
+                        'name' => 'Priyanshu Nayan',
+                        'role' => 'Student Team Lead, CSE, 3rd YR',
+                        'image' => 'https://drive.google.com/uc?id=14zHHMCS8ulF0Iqayz_9oiKefo6kY9SYF',
+                        'social' => [
+                            'twitter' => '#',
+                            'facebook' => '#',
+                            'instagram' => '#',
+                            'linkedin' => 'https://www.linkedin.com/in/priyanshu-nayan/'
+                        ]
+                    ],
                     ['name' => 'Sk Riyaz', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.ibb.co/zg57yyk/riyaz-profile-1.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/sk.riyaz.562329', 'instagram' => '#', 'linkedin' => 'https://www.linkedin.com/in/skriyaz1/']],
                     ['name' => 'Ronit Pal', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.postimg.cc/N071myYx/Ronit-Pal.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
                     ['name' => 'Mohit Kumar', 'role' => 'Student Team Lead, CSE, 3rd YR', 'image' => 'https://i.postimg.cc/N0pKQRBZ/Mohit-Kumar.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
@@ -454,8 +464,6 @@
                 echo "</div>";
             }
             ?>
-        </div>
-    </div>
 
     <?php include 'includes/footer.php'; ?>
 </body>

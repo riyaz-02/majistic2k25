@@ -23,7 +23,8 @@
             </div>
           </div>
         </div>
-        <img class="hero" src="https://i.ibb.co/fdQ5XQPj/snig.png" alt="Snigdhajit and Liveline" loading="lazy" />
+        <!-- <img class="hero" src="https://i.ibb.co/fdQ5XQPj/snig.png" alt="Snigdhajit and Liveline" loading="lazy" /> -->
+        <img class="hero" src="images\carousel\snig.png" alt="Snigdhajit and Liveline" loading="lazy" />
       </div>
       <div class="swiper-slide">
         <div class="gradient"></div>
@@ -44,7 +45,8 @@
             </div>
           </div>
         </div>
-        <img class="hero" src="https://i.ibb.co/fzQ9d2vt/somlata.png" alt="Somlata and Aces" loading="lazy" />
+        <!-- <img class="hero" src="https://i.ibb.co/fzQ9d2vt/somlata.png" alt="Somlata and Aces" loading="lazy" /> -->
+        <img class="hero" src="images\carousel\somlata.png" alt="Somlata and Aces" loading="lazy" />
       </div>
       <div class="swiper-slide">
         <div class="gradient"></div>
@@ -65,7 +67,8 @@
             </div>
           </div>
         </div>
-        <img class="hero" src="https://i.ibb.co/4npmVR6K/trap.png" alt="TRAP" loading="lazy" />
+        <!-- <img class="hero" src="https://i.ibb.co/4npmVR6K/trap.png" alt="TRAP" loading="lazy" /> -->
+        <img class="hero" src="images\carousel\trap.png" alt="TRAP" loading="lazy" />
       </div>
     </div>
   </div>
