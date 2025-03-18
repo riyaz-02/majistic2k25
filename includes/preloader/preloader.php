@@ -124,7 +124,8 @@
 <body>
     <div class="preloader">
         <div class="logo-container">
-        <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="Majistic Logo" class="logo">        </div>
+        <img src="../../images/majisticlogo.png" alt="Majistic Logo" class="logo">        
+        </div>
         <div class="loading-bar">
             <div class="loading-progress"></div>
         </div>

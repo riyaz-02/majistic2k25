@@ -16,6 +16,9 @@ if (!$registration_id) {
 if ($is_alumni) {
     // Alumni registration
     $query = $conn->prepare("SELECT * FROM alumni_registrations WHERE jis_id = ?");
+
+
+
     $query->bind_param("s", $registration_id);
     $amount = 1000; // Set amount for alumni registration
 } else {
@@ -45,12 +48,12 @@ if ($registration['payment_status'] == 'Paid') {
 } else {
     $payment_done = false;
 
-    // PayU Money API credentials
-    $keyId = "ce90a71710363ff5c1cbab97cf4a89f2d1ba6828b5e8a08b01d2343f24a753d3"; // PayU Money Client ID
-    $keySecret = "cfebc9c516fefef64a0fcc0fc05f7f291661e6746698c1c8ecf573ddcf3816f6"; // PayU Money Client Secret
+    // Razorpay API credentials
+    $keyId = "rzp_test_5y6HDO2HsDx5lK"; // Replace with your Razorpay Key ID
+    $keySecret = "sOQvnTPi8LdXe8JYYv0eGF2P"; // Replace with your Razorpay Key Secret
 
-    // Create an order using PayU Money API
-    $api_url = "https://api.payu.in/v1/orders";
+    // Create an order using Razorpay API
+    $api_url = "https://api.razorpay.com/v1/orders";
     $amount_in_paise = $amount * 100; // Amount in paise (e.g., 50000 paise = 500 INR)
     $currency = "INR";
 
@@ -79,7 +82,7 @@ if ($registration['payment_status'] == 'Paid') {
     }
 
     if (!isset($order->id)) {
-        die("Failed to create PayU Money order.");
+        die("Failed to create Razorpay order.");
     }
 }
 
@@ -104,7 +107,7 @@ if (!$payment_done) {
     <?php include '../../includes/links.php'; ?>
     <link rel="stylesheet" href="../../style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://checkout.payu.in/v1/checkout.js"></script> <!-- Updated to PayU Money checkout -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/payment.css">
     <style>
@@ -141,24 +144,8 @@ if (!$payment_done) {
                     </div>
                     
                     <div class="payment-body">
-                        <?php if ($payment_done): ?>
-                            <div class="payment-success">
-                                <i class="fas fa-check-circle"></i> Your payment was successfully processed. Thank you!
-                            </div>
-                        <?php elseif($failed_transaction): ?>
-                            <div class="payment-alert">
-                                <i class="fas fa-exclamation-circle"></i> We noticed your previous payment attempt failed. Please try again.
-                            </div>
-                        <?php endif; ?>
 
-                        <div class="payment-details">
-                            <table class="payment-table">
-                                <tr>
-                                    <th>Event</th>
-                                    <td>maJIStic 2k25</td>
-                                </tr>
-                                <tr>
-                                    <th>Registration ID</th>
+@@ -156,239 +162,245 @@
                                     <td><?php echo htmlspecialchars($registration_id); ?></td>
                                 </tr>
                                 <tr>
@@ -213,7 +200,7 @@ if (!$payment_done) {
                                     ₹<?php echo htmlspecialchars($amount); ?>
                                 </div>
                                 
-                                <button type="button" id="payu-button" class="payment-button">
+                                <button type="button" id="rzp-button" class="payment-button">
                                     Pay Now <i class="fas fa-arrow-right ml-2"></i>
                                 </button>
                             <?php endif; ?>
@@ -228,7 +215,7 @@ if (!$payment_done) {
                             </button>
                         <?php else: ?>
                             <div class="secure-badge">
-                                <i class="fas fa-lock"></i> Secure payment powered by PayU Money <!-- Updated text -->
+                                <i class="fas fa-lock"></i> Secure payment powered by Razorpay
                             </div>
                         <?php endif; ?>
                     </div>
@@ -331,15 +318,6 @@ if (!$payment_done) {
                                     <a href="tel:+917501005155">+91 7501005155</a>
                                 </div>
                             </div>
-                            <div class="contact-card">
-                                <div class="icon">
-                                    <i class="fas fa-user-cog"></i>
-                                </div>
-                                <div class="info">
-                                    <h4>Mohit Kumar</h4>
-                                    <a href="tel:+918016804158">+91 8016804158</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     
@@ -375,7 +353,6 @@ if (!$payment_done) {
                                     <a href="mailto:majistic@jiscollege.ac.in">majistic@jiscollege.ac.in</a>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                 </section>
@@ -414,46 +391,11 @@ if (!$payment_done) {
                 "image": "https://i.postimg.cc/02CTRDb2/majisticlogoblack.png",
                 "order_id": "<?php echo htmlspecialchars($order->id); ?>",
                 "handler": function (response) {
-                    document.getElementById('payment-loader').style.display = 'flex';
-                    console.log("Payment successful, processing...");
-                    console.log("Payment ID:", response.payu_payment_id); // Updated from razorpay_payment_id
-                    
-                    // Update payment status in the database
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "update_payment_status.php", true);
-                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === 4) {
-                            console.log("Response status:", xhr.status);
-                            console.log("Response text:", xhr.responseText);
-                            
-                            if (xhr.status === 200) {
-                                try {
-                                    var jsonResponse = JSON.parse(xhr.responseText);
-                                    console.log("Payment update response:", jsonResponse);
-                                    
-                                    if (jsonResponse.success) {
-                                        window.location.reload();
-                                    } else {
-                                        alert("Error updating payment status: " + jsonResponse.message + "\n\nYour payment was successful, but we couldn't update our records. Please note your payment ID: " + response.payu_payment_id + " and contact our support team."); // Updated from razorpay_payment_id
-                                        document.getElementById('payment-loader').style.display = 'none';
-                                    }
-                                } catch (e) {
-                                    console.error("Failed to parse response:", e);
-                                    console.error("Raw response:", xhr.responseText);
-                                    alert("Payment recorded but there was an error updating your records. Please contact support with your payment ID: " + response.payu_payment_id); // Updated from razorpay_payment_id
-                                    document.getElementById('payment-loader').style.display = 'none';
-                                }
-                            } else {
-                                alert("Payment recorded but there was an error updating your records. Please contact support with your payment ID: " + response.payu_payment_id); // Updated from razorpay_payment_id
-                                document.getElementById('payment-loader').style.display = 'none';
-                            }
-                        }
-                    };
-                    
-                    // Send all necessary parameters for updating payment status
+
+
+@@ -433,12 +445,13 @@ if (!$payment_done) {
                     var params = "jis_id=<?php echo htmlspecialchars($registration_id); ?>" + 
-                                "&payment_id=" + response.payu_payment_id + // Updated from razorpay_payment_id
+                                "&payment_id=" + response.razorpay_payment_id + 
                                 "&payment_status=SUCCESS" + 
                                 "&amount=<?php echo htmlspecialchars($amount); ?>" +
                                 "<?php echo $is_alumni ? '&alumni=1' : ''; ?>";
@@ -465,12 +407,8 @@ if (!$payment_done) {
                     "email": "<?php echo htmlspecialchars($registration['email']); ?>",
                     "contact": "<?php echo htmlspecialchars($registration['mobile']); ?>"
                 },
-                "theme": {
-                    "color": "#6366f1" // Updated to match our new indigo color
-                },
-                "modal": {
-                    "ondismiss": function() {
-                        // Record the abandoned payment attempt
+
+@@ -451,175 +464,175 @@
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", "record_payment_attempt.php", true);
                         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -479,11 +417,11 @@ if (!$payment_done) {
                 }
             };
 
-            // Initialize PayU Money
-            var payu1 = new PayU(options); // Updated from Razorpay
+            // Initialize Razorpay
+            var rzp1 = new Razorpay(options);
             
-            document.getElementById('payu-button').onclick = function() { // Updated button ID
-                payu1.open(); // Updated from rzp1
+            document.getElementById('rzp-button').onclick = function() {
+                rzp1.open();
                 
                 // Record the payment attempt
                 var xhr = new XMLHttpRequest();

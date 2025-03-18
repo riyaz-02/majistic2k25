@@ -95,10 +95,11 @@ include 'src/main/registration_handler.php';
     <!-- Success preloader - shown only when registration is successful -->
     <?php if ($registration_success): ?>
     <div class="success-preloader" id="successPreloader">
-        <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo">
+        <img src="images/majisticlogo.png" alt="maJIStic Logo">
         <h2>Registration Successful!</h2>
         <p>Congratulations! Your registration has been completed.</p>
         <p>Redirecting to confirmation page...</p>
+        <p>Redirecting to Payment page...</p>
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -112,8 +113,8 @@ include 'src/main/registration_handler.php';
             
             // Redirect after the animation completes
             setTimeout(function() {
-                // window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'; // Payment redirect commented out
-                window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>'; // Redirect to success page
+                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'; // Payment redirect commented out
+                //window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>'; // Redirect to success page
             }, 3500); // Just after the progress bar completes
         });
     </script>
@@ -137,7 +138,7 @@ include 'src/main/registration_handler.php';
                 <img id="bannerImage" src="https://i.ibb.co/VWLkTX5j/banner1.png" alt="Event Banner">
             </div>
             <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
-                <img class="majisticheadlogo" src="https://i.ibb.co/F4NytbBy/majistic2k25-white.png" alt="maJIStic Logo">
+                <img class="majisticheadlogo" src="images/majistic2k25_white.png" alt="maJIStic Logo">
                 <?php if (!$registration_success): ?>
                     <form id="registrationForm" method="POST" action="registration_inhouse.php" onsubmit="return validateForm()">
                         <div class="form-group">
@@ -304,7 +305,7 @@ include 'src/main/registration_handler.php';
     <!-- Loading Spinner -->
     <div class="loading-spinner display-flex" id="loadingSpinner">
         <div id="spinnerContent">
-            <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo">
+            <img src="images/majisticlogo.png" alt="maJIStic Logo">
             <p>Submitting...</p>
         </div>
     </div>

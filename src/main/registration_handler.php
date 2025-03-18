@@ -131,13 +131,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                             $mail->isSMTP();
                             $mail->Host       = 'smtp.gmail.com';
                             $mail->SMTPAuth   = true;
-                            $mail->Username   = 'alumni.jismajistic@gmail.com';
-                            $mail->Password   = 'zxcvbnm123456#';  // Replace with actual password
+                            $mail->Username   = 'majistic.alumni@gmail.com';
+                            $mail->Password   = 'iakqdaxcbtmcfucr';  // Replace with actual password
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                             $mail->Port       = 587;
 
                             // Recipients
-                            $mail->setFrom('alumni.jismajistic@gmail.com', 'maJIStic Alumni');
+                            $mail->setFrom('majistic.alumni@gmail.com', 'maJIStic');
                             $mail->addAddress($email);
 
                             // Content
@@ -263,13 +263,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                             $mail->isSMTP();
                             $mail->Host       = 'smtp.gmail.com';
                             $mail->SMTPAuth   = true;
-                            $mail->Username   = 'priyanshunayan1150@gmail.com';
-                            $mail->Password   = 'nrsbkynbvqkpgjhk';
+                            $mail->Username   = 'majistic.reg@gmail.com';
+                            $mail->Password   = 'uflsvdypbnnbnisn';
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                             $mail->Port       = 587;
 
                             // Recipients
-                            $mail->setFrom('priyanshunayan1150@gmail.com', 'maJIStic');
+                            $mail->setFrom('majistic.reg@gmail.com', 'maJIStic');
                             $mail->addAddress($email);
 
                             // Content

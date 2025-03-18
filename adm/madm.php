@@ -21,7 +21,7 @@ include 'backend.php';
 <body>
     <nav class="navbar">
         <div class="navbar-title">
-            <img src="../assets/images/logo.png" alt="MaJIStic Logo" class="navbar-logo">
+            <img src="../images/majisticlogo.png" alt="MaJIStic Logo" class="navbar-logo">
             <h1>MaJIStic 2K25 Admin Panel</h1>
         </div>
         <a href="logout.php" class="logout-btn">

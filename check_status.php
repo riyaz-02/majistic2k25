@@ -776,7 +776,7 @@ $conn->close();
     <div class="status-container">
         <div class="status-card">
             <div class="card-header">
-                <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo" class="logo">
+                <img src="images/majisticlogo.png" alt="maJIStic Logo" class="logo">
                 
                 <div class="countdown-container">
                     <h3 class="countdown-title">maJIStic 2k25 Begins In</h3>

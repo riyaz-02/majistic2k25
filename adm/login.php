@@ -244,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="login-container <?php echo $login_attempt && $error ? 'shake' : ''; ?>">
         <div class="login-header">
-            <img src="../assets/images/logo.png" alt="MaJIStic Logo" class="login-logo">
+            <img src="../images/majisticlogo.png" alt="MaJIStic Logo" class="login-logo">
             <h1>MaJIStic 2K25</h1>
             <p>Admin Panel Login</p>
         </div>

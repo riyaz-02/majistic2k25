@@ -95,7 +95,7 @@ include 'src/main/registration_handler.php';
     <!-- Success preloader - shown only when registration is successful -->
     <?php if ($registration_success): ?>
     <div class="success-preloader" id="successPreloader">
-        <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo">
+        <img src="images/majisticlogo.png" alt="maJIStic Logo">
         <h2>Registration Successful!</h2>
         <p>Congratulations! Your registration has been completed.</p>
         <p>Redirecting to confirmation page...</p>
@@ -137,7 +137,7 @@ include 'src/main/registration_handler.php';
                 <img id="bannerImage" src="https://i.ibb.co/VWLkTX5j/banner1.png" alt="Event Banner">
             </div>
             <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
-                <img class="majisticheadlogo" src="https://i.ibb.co/F4NytbBy/majistic2k25-white.png" alt="maJIStic Logo">
+                <img class="majisticheadlogo" src="images/majistic2k25_white.png" alt="maJIStic Logo">
                 <?php if (!$registration_success): ?>
                     <form id="registrationForm" method="POST" action="registration_alumni.php" onsubmit="return validateForm()">
                         <input type="hidden" name="registration_type" value="alumni">
@@ -299,7 +299,7 @@ include 'src/main/registration_handler.php';
     <!-- Loading Spinner -->
     <div class="loading-spinner display-flex" id="loadingSpinner">
         <div id="spinnerContent">
-            <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo">
+            <img src="images/majisticlogo.png" alt="maJIStic Logo">
             <p>Submitting...</p>
         </div>
     </div>

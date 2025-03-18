@@ -360,7 +360,7 @@ $conn->close();
     <div class="success-container">
         <div class="success-card animate-in">
             <div class="card-header">
-                <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo" class="logo">
+                <img src="../../images/majisticlogo.png" alt="maJIStic Logo" class="logo">
                 <h2>maJIStic 2k25</h2>
             </div>
             

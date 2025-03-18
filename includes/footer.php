@@ -1,7 +1,7 @@
 <footer>
     <div class="container footer-container mb-lg-5 pt-lg-5">
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <img src="https://i.ibb.co/RGQ7Lj6K/majisticlogo.png" alt="maJIStic Logo">
+            <img src="../images/majisticlogo.png" alt="maJIStic Logo">
             <span class="address">JIS College of Engineering, Block A, Phase III, Kalyani, Nadia - 741235, West Bengal.</span>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12">
