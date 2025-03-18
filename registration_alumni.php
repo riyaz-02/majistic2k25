@@ -99,6 +99,7 @@ include 'src/main/registration_handler.php';
         <h2>Registration Successful!</h2>
         <p>Congratulations! Your registration has been completed.</p>
         <p>Redirecting to confirmation page...</p>
+        <p>Redirecting to Payment page...</p>
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -112,8 +113,8 @@ include 'src/main/registration_handler.php';
             
             // Redirect after the animation completes
             setTimeout(function() {
-                // window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Payment redirect commented out
-                window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Redirect to success page
+                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Payment redirect commented out
+                //window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Redirect to success page
             }, 3500); // Just after the progress bar completes
         });
     </script>

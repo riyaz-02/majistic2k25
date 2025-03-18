@@ -1,7 +1,7 @@
 <footer>
     <div class="container footer-container mb-lg-5 pt-lg-5">
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <img src="../images/majisticlogo.png" alt="maJIStic Logo">
+            <img src="https://i.ibb.co/s9pJ72SV/majisticlogo.png" alt="maJIStic Logo">
             <span class="address">JIS College of Engineering, Block A, Phase III, Kalyani, Nadia - 741235, West Bengal.</span>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12">
@@ -13,7 +13,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>Quick Links</h5>
             <a href="#"><i class="fa-solid fa-angle-right"></i> Home</a><br>
-            <a href="../index.php"><i class="fa-solid fa-angle-right"></i> Events</a><br>
+            <a href="../index.php#events"><i class="fa-solid fa-angle-right"></i> Events</a><br>
             <a href="../merchandise.php"><i class="fa-solid fa-angle-right"></i> Merchandise</a><br>
             <a href="../about.php"><i class="fa-solid fa-angle-right"></i> About</a><br>
             <a href="../contact.php"><i class="fa-solid fa-angle-right"></i> Contact Us</a><br>
