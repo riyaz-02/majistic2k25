@@ -21,33 +21,50 @@ error_log("Check payment status - JIS ID: $jis_id, Is Alumni: " . ($is_alumni ? 
 try {
     // Add code to record the payment status check in payment_attempts table
     try {
-        // Get the client IP address
+        // Get the client IP address - enhanced version
         function getClientIP() {
+            // Check for Cloudflare
+            if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+                return $_SERVER["HTTP_CF_CONNECTING_IP"];
+            }
+            
+            // Check for shared internet/ISP IP
             if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
                 return $_SERVER['HTTP_CLIENT_IP'];
-            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            }
+            
+            // Check for IPs passing through proxies
+            if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                // HTTP_X_FORWARDED_FOR can contain multiple IPs separated by commas
                 $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
                 foreach ($ipList as $ip) {
-                    if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    if (filter_var(trim($ip), FILTER_VALIDATE_IP)) {
                         return trim($ip);
                     }
                 }
             }
+            
+            // Check for AWS ELB
+            if (!empty($_SERVER['HTTP_X_FORWARDED_AWS_ELB'])) {
+                return $_SERVER['HTTP_X_FORWARDED_AWS_ELB'];
+            }
+            
+            // If above methods fail, use REMOTE_ADDR
             return $_SERVER['REMOTE_ADDR'];
         }
         
         $ip = getClientIP();
-        $status = 'initiated'; // Use 'initiated' for status checks
+        $status = 'check'; // Use 'check' for status checks
         $payment_method = 'status_check';
+        $registration_type = $is_alumni ? 'alumni' : 'inhouse';
         
-        // Record in payment_attempts table with is_alumni flag
-        $record_stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, attempt_time, ip_address, payment_method, is_alumni) VALUES (?, ?, NOW(), ?, ?, ?)");
-        $alumni_flag = $is_alumni ? 1 : 0;
-        $record_stmt->bind_param("ssssi", $jis_id, $status, $ip, $payment_method, $alumni_flag);
+        // Record in payment_attempts table with registration_type
+        $record_stmt = $conn->prepare("INSERT INTO payment_attempts (registration_id, registration_type, status, attempt_time, ip_address, payment_method) VALUES (?, ?, ?, NOW(), ?, ?)");
+        $record_stmt->bind_param("sssss", $jis_id, $registration_type, $status, $ip, $payment_method);
         $record_stmt->execute();
         $record_stmt->close();
         
-        error_log("Payment status check recorded for JIS ID: $jis_id, Is Alumni: " . ($is_alumni ? "Yes" : "No"));
+        error_log("Payment status check recorded for JIS ID: $jis_id, Is Alumni: " . ($is_alumni ? "Yes" : "No") . ", IP: $ip");
     } catch (Exception $e) {
         // Non-critical error, just log it and continue with the main operation
         error_log("Failed to record payment status check: " . $e->getMessage());

@@ -12,7 +12,7 @@ $is_alumni = isset($_POST['alumni']) && $_POST['alumni'] == '1'; // Check if thi
 // New fields from the table structure
 $transaction_reference = isset($_POST['transaction_reference']) ? $_POST['transaction_reference'] : null;
 $payment_method = isset($_POST['payment_method']) ? $_POST['payment_method'] : null;
-$payment_processor = isset($_POST['payment_processor']) ? $_POST['payment_processor'] : null;
+$payment_processor = isset($_POST['payment_processor']) ? $_POST['payment_processor'] : 'Razorpay'; // Default to Razorpay
 $response_data = isset($_POST['response_data']) ? $_POST['response_data'] : null;
 
 // Log all incoming data for debugging
@@ -26,13 +26,18 @@ if (empty($registration_id)) {
 }
 
 // Valid statuses
-$valid_statuses = ['initiated', 'completed', 'failed', 'abandoned'];
+$valid_statuses = ['initiated', 'completed', 'failed', 'abandoned', 'error'];
 if (!in_array($status, $valid_statuses)) {
     $status = 'initiated'; // Default to initiated if invalid status
 }
 
-// Get real client IP address
+// Get real client IP address - enhanced version
 function getClientIP() {
+    // Check for Cloudflare
+    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+        return $_SERVER["HTTP_CF_CONNECTING_IP"];
+    }
+    
     // Check for shared internet/ISP IP
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         return $_SERVER['HTTP_CLIENT_IP'];
@@ -43,10 +48,15 @@ function getClientIP() {
         // HTTP_X_FORWARDED_FOR can contain multiple IPs separated by commas
         $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
         foreach ($ipList as $ip) {
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+            if (filter_var(trim($ip), FILTER_VALIDATE_IP)) {
                 return trim($ip);
             }
         }
+    }
+    
+    // Check for AWS ELB
+    if (!empty($_SERVER['HTTP_X_FORWARDED_AWS_ELB'])) {
+        return $_SERVER['HTTP_X_FORWARDED_AWS_ELB'];
     }
     
     // If above methods fail, use REMOTE_ADDR
@@ -57,7 +67,7 @@ $ip = getClientIP();
 
 // If amount is not provided but should be (especially for completed status), 
 // try to fetch it from the registration record
-if ($status === 'completed' && $amount === null && $payment_id !== null) {
+if (($status === 'completed' || $status === 'initiated') && $amount === null) {
     try {
         if ($is_alumni) {
             // Check alumni registrations
@@ -75,7 +85,7 @@ if ($status === 'completed' && $amount === null && $payment_id !== null) {
             $fetch_stmt->close();
         } else {
             // Check inhouse registrations
-            $fetch_stmt = $conn->prepare("SELECT 400 as amount FROM registrations WHERE jis_id = ? LIMIT 1");
+            $fetch_stmt = $conn->prepare("SELECT 500 as amount FROM registrations WHERE jis_id = ? LIMIT 1");
             $fetch_stmt->bind_param("s", $registration_id);
             $fetch_stmt->execute();
             $fetch_result = $fetch_stmt->get_result();
@@ -93,15 +103,13 @@ if ($status === 'completed' && $amount === null && $payment_id !== null) {
     }
 }
 
-// Make sure is_alumni is always set properly even if not passed in the request
-$alumni_flag = $is_alumni ? 1 : 0;
 // Set registration_type based on alumni flag
 $registration_type = $is_alumni ? 'alumni' : 'inhouse';
 
 // Record the payment attempt in the database with all available information
 try {
     // Create base SQL query with all fields
-    $sql_base = "INSERT INTO payment_attempts (
+    $sql = "INSERT INTO payment_attempts (
         registration_id, 
         registration_type, 
         status, 
@@ -115,46 +123,41 @@ try {
         payment_processor,
         response_data,
         last_updated
-    ) VALUES (
-        ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, NOW()
-    )";
+    ) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, NOW())";
     
-    // Prepare statement with all fields
-    $stmt = $conn->prepare($sql_base);
+    // Prepare and bind parameters
+    $stmt = $conn->prepare($sql);
     
-    // Bind all parameters (using null for optional parameters that weren't provided)
+    // Determine null values for SQL
+    $null = null;
+    
+    // Bind all parameters
     $stmt->bind_param(
-        "ssssdsssss", 
+        "ssssdssssss", 
         $registration_id, 
         $registration_type,
         $status, 
-        $payment_id, 
-        $amount, 
-        $error_message, 
+        $payment_id_param, 
+        $amount_param, 
+        $error_message_param, 
         $ip, 
-        $transaction_reference,
-        $payment_method,
-        $payment_processor
+        $transaction_reference_param,
+        $payment_method_param,
+        $payment_processor,
+        $response_data_param
     );
     
-    // Set null parameters to NULL for proper SQL insertion
-    if ($payment_id === null) $stmt->bind_param(3, $null);
-    if ($amount === null) $stmt->bind_param(4, $null);
-    if ($error_message === null) $stmt->bind_param(5, $null);
-    if ($transaction_reference === null) $stmt->bind_param(8, $null);
-    if ($payment_method === null) $stmt->bind_param(9, $null);
-    if ($payment_processor === null) $stmt->bind_param(10, $null);
-    
-    // Handle JSON response data separately due to longtext/JSON type
-    if ($response_data !== null) {
-        $stmt->bind_param("b", $response_data);
-    } else {
-        $stmt->bind_param("b", $null);
-    }
+    // Handle null parameters properly
+    $payment_id_param = $payment_id ?? $null;
+    $amount_param = $amount ?? $null;
+    $error_message_param = $error_message ?? $null;
+    $transaction_reference_param = $transaction_reference ?? $null;
+    $payment_method_param = $payment_method ?? $null;
+    $response_data_param = $response_data ?? $null;
     
     if ($stmt->execute()) {
         // Log success for debugging
-        error_log("Payment attempt recorded successfully: Registration ID: $registration_id, Status: $status, Payment ID: " . ($payment_id ?? 'NULL') . ", Amount: " . ($amount ?? 'NULL') . ", Is Alumni: " . ($is_alumni ? "Yes" : "No"));
+        error_log("Payment attempt recorded successfully: Registration ID: $registration_id, Status: $status, Payment ID: " . ($payment_id ?? 'NULL') . ", IP: $ip");
         
         // If payment is completed, update the registration record with payment info
         if ($status === 'completed' && $payment_id) {
