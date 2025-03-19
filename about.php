@@ -381,8 +381,6 @@
             </p>
             <ul class="list-disc list-inside mb-4 styled-paragraph">
                 <li><span class="highlight">Cultural Performances:</span> From electrifying dance battles to soulful musical renditions, students will have the stage to showcase their artistic flair.</li>
-                <li><span class="highlight">Competitions:</span> An exciting lineup of contests across music, dance, drama, fine arts, photography, and more.</li>
-                <li><span class="highlight">Workshops:</span> Interactive sessions with industry experts to inspire and educate participants.</li>
                 <li><span class="highlight">Celebrity Performances:</span> Special appearances and performances by renowned artists and entertainers to captivate the audience.</li>
                 <li><span class="highlight">Food and Fun:</span> A vibrant carnival atmosphere with food stalls, games, and a bustling flea market.</li>
             </ul>
