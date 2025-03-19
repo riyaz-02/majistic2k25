@@ -914,18 +914,18 @@ if (!$payment_done) {
                                     recordPaymentAttempt('completed', response.razorpay_payment_id);
                                     
                                     // Show success message and redirect
-                                    alert("Payment successful! You will receive a confirmation email shortly.");
+                                    //alert("Payment successful! You will receive a confirmation email shortly.");
                                     window.location.href = "payment.php?jis_id=<?php echo htmlspecialchars($registration_id); ?><?php echo $is_alumni ? '&alumni=1' : ''; ?>";
                                 } else {
                                     // Record failed update in payment_attempts
                                     recordPaymentAttempt('error', response.razorpay_payment_id, 'Update failed: ' + result.message);
                                     
-                                    alert("Payment processed but status update failed. Please contact support with your payment ID: " + response.razorpay_payment_id);
+                                    alert("Payment processed but status update failed. Please contact tech support with your payment ID: " + response.razorpay_payment_id);
                                     document.getElementById('payment-loader').style.display = 'none';
                                 }
                             } catch(e) {
                                 console.error("Error parsing server response:", e);
-                                alert("Payment may have been processed, but we encountered a system error. Please contact support with your payment ID: " + response.razorpay_payment_id);
+                                alert("Payment may have been processed, but we encountered a system error. Please contact tech support with your payment ID: " + response.razorpay_payment_id);
                                 document.getElementById('payment-loader').style.display = 'none';
                                 
                                 // Record error in payment_attempts

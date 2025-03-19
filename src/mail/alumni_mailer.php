@@ -553,11 +553,11 @@ function generateAlumniRegistrationTemplate($data) {
             <p>If you have any questions or need further assistance, please don't hesitate to contact our alumni support team.</p>
             
             <p style='background-color: #ffeeee; border: 1px solid #ff6b6b; padding: 10px; color: #cc0000; font-weight: bold; text-align: center; margin: 15px 0;'>
-                <strong>IMPORTANT:</strong> Please bring your Alumni ID or any Government ID for verification on the event day.
+                <strong>IMPORTANT:</strong> Please bring your College ID or any Government ID for verification on the event day.
             </p>
             <p>We look forward to welcoming you back at maJIStic 2025!</p>
             
-            <p>Warm Regards,<br>maJIStic Alumni Team</p>
+            <p>Warm Regards,<br>maJIStic Team</p>
 
         </div>
         

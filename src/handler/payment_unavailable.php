@@ -479,9 +479,9 @@ $jis_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : '';
                     </div>
                     
                     <div class="card-body">
-                        <h1>Payment Currently Unavailable</h1>
+                        <h1>Not Accepting Payments</h1>
                         
-                        <p>We're sorry, but the payment system is temporarily unavailable. Our team is working to reopen payment collection for maJIStic 2k25 registrations.</p>
+                        <p>maJIStic is not accepting payments currently due to some unavoidable technical circumstances.</p>
                         
                         <?php if (!empty($jis_id)): ?>
                         <div class="info-box">
@@ -491,7 +491,7 @@ $jis_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : '';
                             </div>
                             <div class="info-row">
                                 <span class="info-label">Registration Status:</span>
-                                <span class="info-value">Complete - Payment Pending</span>
+                                <span class="info-value">Complete</span>
                             </div>
                             <div class="info-row">
                                 <span class="info-label">Current Time:</span>
@@ -500,7 +500,7 @@ $jis_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : '';
                         </div>
                         <?php endif; ?>
                         
-                        <p>Please check back later or contact our support team for assistance. You can try the payment link again in the future.</p>
+                        <p>You will be notified once payment system is resumed. Please check back later or contact our support team for assistance.</p>
                         
                         <div class="buttons-container">
                             
