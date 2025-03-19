@@ -508,11 +508,11 @@ $jis_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : '';
                                 <i class="fas fa-tshirt"></i> Merchandise
                             </a>
                             <?php if (!empty($jis_id)): ?>
-                            <a href="../../status.php?jis_id=<?php echo htmlspecialchars($jis_id); ?>" class="btn btn-accent">
+                            <a href="../../check_status.php?jis_id=<?php echo htmlspecialchars($jis_id); ?>" class="btn btn-accent">
                                 <i class="fas fa-search"></i> Check Status
                             </a>
                             <?php else: ?>
-                            <a href="../../status.php" class="btn btn-accent">
+                            <a href="../../check_status.php" class="btn btn-accent">
                                 <i class="fas fa-search"></i> Check Status
                             </a>
                             <?php endif; ?>
