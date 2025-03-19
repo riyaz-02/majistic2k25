@@ -14,6 +14,12 @@ $autoloaderPaths = [
     '../../../vendor/autoload.php'
 ];
 
+// Include logo configuration
+$logoConfigPath = __DIR__ . '/../../src/config/email_logo_config.php';
+if (file_exists($logoConfigPath)) {
+    include_once $logoConfigPath;
+}
+
 $autoloaderLoaded = false;
 foreach ($autoloaderPaths as $path) {
     if (file_exists($path)) {
@@ -117,8 +123,8 @@ function generateAlumniEmailTemplate($data) {
         $formatted_date = $data['payment_date'];
     }
     
-    // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
+    // Logo URL - get from config or use default
+    $logoUrl = defined('EMAIL_LOGO_URL') ? EMAIL_LOGO_URL : 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
     
     // HTML Template with alumni-specific details
     $html = <<<HTML
@@ -383,8 +389,8 @@ function generateAlumniRegistrationTemplate($data) {
     // Generate payment link
     $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']) . "&alumni=1";
     
-    // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
+    // Logo URL - get from config or use default
+    $logoUrl = defined('EMAIL_LOGO_URL') ? EMAIL_LOGO_URL : 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
     
     // HTML Template
     $html = <<<HTML

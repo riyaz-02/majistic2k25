@@ -24,6 +24,7 @@ if (isset($_GET['logout'])) {
 // Path to the configuration files
 $config_file = __DIR__ . '/../src/config/payment_config.php';
 $email_config_file = __DIR__ . '/../src/config/email_payment_config.php';
+$email_logo_config_file = __DIR__ . '/../src/config/email_logo_config.php';
 
 // Process form submission
 $message = '';
@@ -34,19 +35,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $payment_status = isset($_POST['payment_status']) ? true : false;
     $email_payment_status = isset($_POST['email_payment_status']) ? true : false;
     
+    // Get the logo URL from the form - Use a default if empty
+    $logo_url = isset($_POST['logo_url']) && !empty($_POST['logo_url']) 
+        ? $_POST['logo_url'] 
+        : 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
+    
     // Create configuration content
     $config_content = "<?php\n// Configuration file for payment status\ndefine('PAYMENT_ENABLED', " . ($payment_status ? 'true' : 'false') . ");\n?>";
     $email_config_content = "<?php\n// Configuration file for email payment link status\ndefine('EMAIL_PAYMENT_ENABLED', " . ($email_payment_status ? 'true' : 'false') . ");\n?>";
+    $email_logo_config_content = "<?php\n// Configuration file for email logo URL\ndefine('EMAIL_LOGO_URL', '" . $logo_url . "');\n?>";
     
     // Write to config files
     $main_config_success = file_put_contents($config_file, $config_content);
     $email_config_success = file_put_contents($email_config_file, $email_config_content);
+    $email_logo_config_success = file_put_contents($email_logo_config_file, $email_logo_config_content);
     
-    if ($main_config_success && $email_config_success) {
-        $message = "Payment settings updated successfully!";
+    if ($main_config_success && $email_config_success && $email_logo_config_success) {
+        $message = "Settings updated successfully!";
         $success = true;
     } else {
-        $message = "Failed to update one or more payment settings. Check file permissions.";
+        $message = "Failed to update one or more settings. Check file permissions.";
     }
 }
 
@@ -61,6 +69,13 @@ $email_payment_enabled = false;
 if (file_exists($email_config_file)) {
     include $email_config_file;
     $email_payment_enabled = defined('EMAIL_PAYMENT_ENABLED') ? EMAIL_PAYMENT_ENABLED : false;
+}
+
+// Get current logo URL
+$logo_url = 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png'; // Default URL
+if (file_exists($email_logo_config_file)) {
+    include $email_logo_config_file;
+    $logo_url = defined('EMAIL_LOGO_URL') ? EMAIL_LOGO_URL : $logo_url;
 }
 ?>
 
@@ -256,6 +271,34 @@ if (file_exists($email_config_file)) {
             padding: 10px;
             margin: 15px 0;
         }
+        /* Adding styles for the logo URL field */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .logo-preview {
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .logo-preview img {
+            max-width: 100%;
+            max-height: 100px;
+        }
     </style>
 </head>
 <body>
@@ -329,6 +372,28 @@ if (file_exists($email_config_file)) {
                         </span>
                     </div>
                 </div>
+
+                <div style="margin-top: 30px;">
+                    <h3><i class="fas fa-image"></i> Email Logo URL Control</h3>
+                    
+                    <div class="info-text">
+                        <p><strong>Current Logo URL:</strong> The logo URL for all email templates can be changed below.</p>
+                    </div>
+                    
+                    <div class="warning-text">
+                        <p><strong>Important:</strong> The URL must be a direct link to an image file (preferably PNG or JPG). The image should be publicly accessible.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="logo-url">Email Logo URL:</label>
+                        <input type="url" id="logo-url" name="logo_url" class="form-control" value="<?php echo htmlspecialchars($logo_url); ?>" required>
+                        
+                        <div class="logo-preview">
+                            <p>Logo Preview:</p>
+                            <img id="logo-preview-img" src="<?php echo htmlspecialchars($logo_url); ?>" alt="Email Logo Preview" onerror="this.src='';this.alt='Image preview not available'">
+                        </div>
+                    </div>
+                </div>
                 
                 <button type="submit" class="btn" style="margin-top: 20px;">Save Settings</button>
             </form>
@@ -337,6 +402,7 @@ if (file_exists($email_config_file)) {
                 <h3>How this works:</h3>
                 <p>- <strong>Payment System:</strong> When enabled, users will be redirected to the payment page after successful registration.</p>
                 <p>- <strong>Email Payment Link:</strong> When enabled, the payment link in confirmation emails will direct users to the actual payment page. When disabled, users will be redirected to a notification page.</p>
+                <p>- <strong>Email Logo URL:</strong> The URL of the logo image that appears in all email templates. Change this if the current URL expires or you want to update the logo.</p>
             </div>
         </div>
         
@@ -364,6 +430,12 @@ if (file_exists($email_config_file)) {
             } else {
                 emailStatusLabel.textContent = 'Email Payment Link Disabled';
             }
+        });
+        
+        // Live preview of the logo image when URL changes
+        document.getElementById('logo-url').addEventListener('input', function() {
+            const previewImg = document.getElementById('logo-preview-img');
+            previewImg.src = this.value;
         });
     </script>
 </body>
