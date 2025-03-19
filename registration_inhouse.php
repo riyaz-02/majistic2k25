@@ -204,18 +204,18 @@ if(file_exists('src/config/payment_config.php')) {
                             <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
-                            <label for="inhouse_competition">Do you want to take part in inhouse competitions?</label>
+                            <label for="inhouse_competition">Do you want to take part in event? (optional)</label>
                         </div>
                         <div class="form-group radio-group">
                             <label><input type="radio" id="inhouse_yes" name="inhouse_competition" value="Yes" required> Yes</label>
                             <label><input type="radio" id="inhouse_no" name="inhouse_competition" value="No" required> No</label>
                         </div>
                         <div class="form-group hidden" id="competition_group">
-                            <label for="competition">Select Competition:</label>
+                            <label for="competition">Select Event:</label>
                             <select id="competition" name="competition">
-                                <option value="">--Select Competition--</option>
-                                <option value="Jam Room (Band Events)">Jam Room (Band Events)</option>
-                                <option value="Taal Se Taal Mila (Dance Events)">Taal Se Taal Mila (Dance Events)</option>
+                                <option value="">--Select Event--</option>
+                                <option value="Jam Room (Band)">Jam Room (Band)</option>
+                                <option value="Taal Se Taal Mila (Dance)">Taal Se Taal Mila (Dance)</option>
                                 <option value="Fashion Fiesta (Fashion Show)">Fashion Fiesta (Fashion Show)</option>
                                 <option value="Actomania (Drama)">Actomania (Drama)</option>
                                 <option value="The Poetry Slam (Recitation)">The Poetry Slam (Recitation)</option>

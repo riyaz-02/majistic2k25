@@ -311,4 +311,270 @@ HTML;
 
     return $html;
 }
+
+/**
+ * Function to send alumni registration confirmation email
+ * 
+ * @param array $data Registration data
+ * @return bool Whether the email was sent successfully
+ */
+function sendAlumniRegistrationEmail($data) {
+    // Create a new PHPMailer instance
+    $mail = new PHPMailer(true);
+    
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+        $mail->SMTPAuth = true;
+        $mail->Username   = 'majistic.alumni@gmail.com';
+        $mail->Password   = 'iakqdaxcbtmcfucr';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+        
+        // Recipients
+        $mail->setFrom('majistic.alumni@gmail.com', 'maJIStic Alumni');
+        $mail->addAddress($data['email'], $data['alumni_name']);
+        $mail->addReplyTo('majistic.alumni@gmail.com', 'maJIStic Alumni Support');
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Alumni Registration Confirmation - maJIStic 2025';
+        
+        // Email HTML body
+        $mail->Body = generateAlumniRegistrationTemplate($data);
+        
+        // Plain text version for non-HTML mail clients
+        $mail->AltBody = "Alumni Registration Confirmation - maJIStic 2025\n\n" .
+                        "Dear {$data['alumni_name']},\n\n" .
+                        "Thank you for registering for maJIStic 2025 as an alumnus.\n" .
+                        "JIS ID: {$data['jis_id']}\n" .
+                        "Department: {$data['department']}\n" .
+                        "Passout Year: {$data['passout_year']}\n" .
+                        "Registration Date: {$data['registration_date']}\n\n" .
+                        "Please proceed to complete your payment.\n\n" .
+                        "Regards,\nmaJIStic Alumni Team";
+        
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Alumni registration email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        return false;
+    }
+}
+
+/**
+ * Function to generate HTML email template for alumni registration
+ * 
+ * @param array $data Registration data
+ * @return string HTML content of the email
+ */
+function generateAlumniRegistrationTemplate($data) {
+    // Get current year for copyright (using IST)
+    $year = date('Y');
+    
+    // Format registration date for display in email if not already formatted
+    if (isset($data['registration_date']) && strtotime($data['registration_date'])) {
+        $formatted_date = date('d M Y, h:i A', strtotime($data['registration_date']));
+    } else {
+        $formatted_date = date('d M Y, h:i A'); // Use current time if not provided
+    }
+    
+    // Generate payment link
+    $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']) . "&alumni=1";
+    
+    // Logo URL - update with actual URL to the maJIStic logo
+    $logoUrl = 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
+    
+    // HTML Template
+    $html = <<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Registration Confirmation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        .email-container {
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #000000;
+            padding: 20px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 250px;
+            height: auto;
+        }
+        .content {
+            padding: 30px;
+            background-color: #ffffff;
+        }
+        .registration-info {
+            background-color: #f7f7f7;
+            border: 1px solid #eeeeee;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .registration-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .registration-info td {
+            padding: 8px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .registration-info td:first-child {
+            font-weight: bold;
+            width: 40%;
+        }
+        .footer {
+            background-color: #f0f0f0;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #666666;
+        }
+        .social-links {
+            margin-top: 15px;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #666666;
+            text-decoration: none;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white !important;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .payment-note {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+            font-size: 14px;
+        }
+        .alumni-badge {
+            display: inline-block;
+            background-color: #7c3aed;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <img src="{$logoUrl}" alt="maJIStic 2025 Logo">
+        </div>
+        
+        <div class="content">
+            <span class="alumni-badge">ALUMNI REGISTRATION</span>
+            <h2>Registration Confirmation</h2>
+            <p>Dear {$data['alumni_name']},</p>
+            <p>Thank you for registering for maJIStic 2025 as an alumnus. Your registration has been successfully received and recorded in our system.</p>
+            
+            <div class="registration-info">
+                <h3>Registration Details</h3>
+                <table>
+                    <tr>
+                        <td>JIS ID</td>
+                        <td>{$data['jis_id']}</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>{$data['alumni_name']}</td>
+                    </tr>
+                    <tr>
+                        <td>Department</td>
+                        <td>{$data['department']}</td>
+                    </tr>
+                    <tr>
+                        <td>Passout Year</td>
+                        <td>{$data['passout_year']}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{$data['email']}</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile</td>
+                        <td>{$data['mobile']}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Organization</td>
+                        <td>{$data['current_organization']}</td>
+                    </tr>
+                    <tr>
+                        <td>Registration Date</td>
+                        <td>{$formatted_date}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Status</td>
+                        <td><strong style="color: #f59e0b;">PENDING</strong></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <p>Your alumni registration is almost complete! To confirm your spot at maJIStic 2025, please complete the payment process by clicking the button below:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{$payment_link}" class="button">Complete Payment</a>
+            </div>
+            
+            <div class="payment-note">
+                <p><strong>Note:</strong> If you've already completed the payment, please disregard this message. You will receive a separate payment confirmation email.</p>
+            </div>
+            
+            <p>If you have any questions or need further assistance, please don't hesitate to contact our alumni support team.</p>
+            
+            <p style='background-color: #ffeeee; border: 1px solid #ff6b6b; padding: 10px; color: #cc0000; font-weight: bold; text-align: center; margin: 15px 0;'>
+                <strong>IMPORTANT:</strong> Please bring your Alumni ID or any Government ID for verification on the event day.
+            </p>
+            <p>We look forward to welcoming you back at maJIStic 2025!</p>
+            
+            <p>Warm Regards,<br>maJIStic Alumni Team</p>
+
+        </div>
+        
+        <div class="footer">
+            <p>&copy; {$year} maJIStic 2025. All rights reserved.</p>
+            <p>JIS College of Engineering, Kalyani, Nadia - 741235, West Bengal, India</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank">Facebook</a> |
+                <a href="https://www.instagram.com/majistic_jisce" target="_blank">Instagram</a> |
+                <a href="https://www.linkedin.com/company/majistic-jisce/" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+HTML;
+
+    return $html;
+}
 ?>

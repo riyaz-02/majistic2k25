@@ -277,7 +277,7 @@ if (file_exists($email_config_file)) {
 
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-cog"></i> maJIStic Admin Management</h1>
+            <h1><i class="fas fa-cog"></i> Site Management</h1>
         </div>
         
         <?php if ($message): ?>
