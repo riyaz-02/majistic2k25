@@ -116,11 +116,12 @@ function generateRegistrationEmailTemplate($data) {
         $formatted_date = date('d M Y, h:i A'); // Use current time if not provided
     }
     $jis_id=$data['jis_id'];
-    // Generate payment link
+    
+    // Generate payment link - always use the same URL
     $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']);
     
     // Logo URL - update with actual URL to the maJIStic logo
-    $logoUrl = '../../images/majisticlogo.png';
+    $logoUrl = 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
     
     // HTML Template
     $html = <<<HTML

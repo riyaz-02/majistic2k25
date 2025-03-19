@@ -30,6 +30,7 @@ $conn->close();
     <title>Registration Successful - maJIStic 2k25</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <?php include '../../includes/links.php'; ?>
     <link rel="stylesheet" href="../../style.css">
     <style>
@@ -38,29 +39,37 @@ $conn->close();
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             color: #ffffff;
+            position: relative;
+            overflow-x: hidden;
         }
         
         .success-container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 40px auto;
             padding: 0 20px;
         }
         
         .success-card {
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
+            background: rgba(10, 10, 30, 0.75);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 30px;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .success-card:hover {
+            transform: translateY(-5px);
         }
         
         .card-header {
-            background: linear-gradient(135deg, #3498db, #8e44ad);
-            padding: 20px;
+            background: linear-gradient(135deg, #6e48aa, #9d50bb, #6e48aa);
+            padding: 25px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -71,9 +80,9 @@ $conn->close();
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 200%;
             height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             animation: shine 3s infinite;
         }
         
@@ -83,210 +92,283 @@ $conn->close();
         }
         
         .logo {
-            width: 150px;
+            width: 180px;
             margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
             animation: pulsate 2s infinite;
         }
         
         @keyframes pulsate {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); }
+            100% { transform: scale(1); filter: brightness(1); }
         }
         
         .card-body {
-            padding: 30px;
+            padding: 40px;
             text-align: center;
         }
         
         .thank-you {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
-            background: linear-gradient(to right, #3498db, #2ecc71);
+            font-weight: 700;
+            background: linear-gradient(to right, #c471ed, #f64f59);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: colorChange 5s infinite alternate;
+            animation: colorShift 8s infinite alternate;
+            text-shadow: 0 0 30px rgba(196, 113, 237, 0.3);
         }
         
-        @keyframes colorChange {
+        @keyframes colorShift {
             0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .message {
-            font-size: 1.2rem;
-            line-height: 1.6;
+            font-size: 1.3rem;
+            line-height: 1.7;
             margin-bottom: 30px;
+            color: #e0e0e0;
         }
         
         .highlight {
-            color: #2ecc71;
-            font-weight: 500;
+            color: #00ffcc;
+            font-weight: 600;
+            position: relative;
+            padding: 0 5px;
+        }
+        
+        .highlight::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 30%;
+            background-color: rgba(0, 255, 204, 0.2);
+            bottom: 0;
+            left: 0;
+            z-index: -1;
+            border-radius: 2px;
         }
         
         .note {
             background-color: rgba(46, 204, 113, 0.15);
             border-left: 4px solid #2ecc71;
-            padding: 15px;
-            margin: 20px 0;
+            padding: 20px;
+            margin: 25px 0;
             text-align: left;
-            border-radius: 4px;
+            border-radius: 6px;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.1);
         }
         
         .warning {
             background-color: rgba(231, 76, 60, 0.15);
             border-left: 4px solid #e74c3c;
-            padding: 15px;
-            margin: 20px 0;
+            padding: 20px;
+            margin: 25px 0;
             text-align: left;
-            border-radius: 4px;
+            border-radius: 6px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.1);
         }
         
         .action-buttons {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 20px;
+            margin-top: 40px;
         }
         
         .btn {
-            padding: 12px 25px;
+            padding: 14px 28px;
             border: none;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            min-width: 180px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            left: 0;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
             color: white;
         }
         
         .btn-secondary {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            background: linear-gradient(135deg, #9733EE, #DA22FF);
             color: white;
         }
         
         .btn-accent {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            background: linear-gradient(135deg, #11998e, #38ef7d);
             color: white;
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         
         .btn:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
         
         .student-details {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
             text-align: left;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .student-details:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
         }
         
         .student-details h3 {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            color: #3498db;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            color: #00bfff;
+            font-size: 1.5rem;
+            font-weight: 600;
         }
         
         .detail-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
         }
         
         .detail-label {
             font-weight: 500;
-            color: #95a5a6;
+            color: #a0aec0;
         }
         
         .detail-value {
-            font-weight: 400;
-            color: #ecf0f1;
+            font-weight: 500;
+            color: #f8f9fa;
         }
         
         .confetti {
             position: fixed;
-            width: 10px;
-            height: 10px;
+            top: -20px;
+            width: 15px;
+            height: 15px;
             background-color: #f0f;
-            animation: confetti-fall 5s ease-in-out infinite;
-            z-index: -1;
+            animation: confetti-fall 5s ease-in-out forwards;
+            z-index: 100;
+            opacity: 0.9;
+            pointer-events: none;
         }
         
         @keyframes confetti-fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            80% { opacity: 1; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
         
         .social-share {
-            margin-top: 20px;
-            padding-top: 20px;
+            margin-top: 30px;
+            padding: 25px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(to right, rgba(25, 25, 50, 0.3), rgba(40, 40, 80, 0.3));
+            border-radius: 12px;
         }
         
         .social-share h4 {
             margin-bottom: 15px;
-            color: #bdc3c7;
+            color: #e0e0e0;
+            font-size: 1.2rem;
         }
         
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 20px;
+            margin-top: 15px;
         }
         
         .social-icon {
-            width: 40px;
-            height: 40px;
+            text-decoration: none;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
             color: white;
-            transition: all 0.3s ease;
-            font-size: 20px;
+            transition: all 0.4s ease;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .social-icon:hover {
-            transform: translateY(-5px);
+            text-decoration: none;
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
         
         .countdown {
-            margin-top: 30px;
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
+            margin: 40px 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(10, 10, 40, 0.6));
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
         }
         
         .countdown h4 {
-            margin-bottom: 10px;
-            color: #f39c12;
+            margin-bottom: 15px;
+            color: #ffc107;
+            font-size: 1.3rem;
+            font-weight: 600;
         }
         
         .countdown-timer {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
         }
         
         .time-unit {
@@ -296,41 +378,102 @@ $conn->close();
         }
         
         .time-value {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: bold;
-            color: #e74c3c;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            min-width: 60px;
+            color: #ffffff;
+            background: linear-gradient(145deg, #192841, #1e3a8a);
+            border-radius: 12px;
+            min-width: 80px;
             text-align: center;
-            padding: 5px 0;
+            padding: 10px 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .time-value::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
         }
         
         .time-label {
-            font-size: 0.8rem;
-            margin-top: 5px;
-            color: #bdc3c7;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            color: #d0d0d0;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        
+        .inspiration-quote {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+            position: relative;
+            font-style: italic;
+        }
+        
+        .inspiration-quote::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            color: rgba(255, 255, 255, 0.1);
+            font-family: Georgia, serif;
+        }
+        
+        .celebration-badge {
+            position: relative;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: #333;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
+        }
+        
+        .success-emoji {
+            font-size: 2.5rem;
+            margin: 10px 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
         
         @media (max-width: 768px) {
             .thank-you {
-                font-size: 1.8rem;
+                font-size: 2rem;
+            }
+            
+            .success-container {
+                padding: 0 15px;
             }
             
             .action-buttons {
                 flex-direction: column;
                 align-items: center;
-                gap: 10px;
+                gap: 15px;
             }
             
             .btn {
                 width: 100%;
-                max-width: 250px;
+                max-width: 280px;
             }
             
             .detail-row {
                 flex-direction: column;
-                margin-bottom: 15px;
+                margin-bottom: 20px;
             }
             
             .detail-value {
@@ -340,6 +483,16 @@ $conn->close();
             
             .countdown-timer {
                 flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .time-value {
+                min-width: 60px;
+                font-size: 1.8rem;
+            }
+            
+            .card-body {
+                padding: 30px 20px;
             }
         }
         
@@ -352,6 +505,38 @@ $conn->close();
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Party elements animation */
+        .party-element {
+            position: fixed;
+            top: -50px;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            z-index: 1000;
+            pointer-events: none;
+            animation: party-fall 8s ease-in-out forwards;
+        }
+        
+        @keyframes party-fall {
+            0% { 
+                transform: translateY(0) rotate(0deg); 
+                opacity: 1; 
+            }
+            80% { opacity: 0.8; }
+            100% { 
+                transform: translateY(100vh) rotate(720deg); 
+                opacity: 0; 
+            }
+        }
+        
+        /* Glass separator */
+        .glass-separator {
+            height: 4px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body>
@@ -360,20 +545,21 @@ $conn->close();
     <div class="success-container">
         <div class="success-card animate-in">
             <div class="card-header">
-                <img src="../../images/majisticlogo.png" alt="maJIStic Logo" class="logo">
-                <h2>maJIStic 2k25</h2>
+                <img src="https://i.ibb.co/4nhRJqyk/majistic2k25-white.png" alt="maJIStic Logo" class="logo">
             </div>
             
             <div class="card-body">
                 <h1 class="thank-you">Thank You for Registering!</h1>
                 
                 <p class="message">
-                    Congratulations! Your spot for <span class="highlight">maJIStic 2k25</span> has been successfully reserved! We're thrilled to have you join us for this incredible event filled with technology, innovation, and creativity.
+                    Congratulations! Your spot for <span class="highlight">maJIStic 2k25</span> has been successfully reserved!
                 </p>
+                
+                <div class="celebration-badge">We're thrilled to have you join us for this incredible cultural fest of JISCE.</div>
                 
                 <?php if ($student_data): ?>
                 <div class="student-details">
-                    <h3>Registration Details</h3>
+                    <h3>Your Registration Details</h3>
                     <div class="detail-row">
                         <span class="detail-label">Name:</span>
                         <span class="detail-value"><?php echo htmlspecialchars($student_data['student_name']); ?></span>
@@ -386,7 +572,6 @@ $conn->close();
                         <span class="detail-label">Department:</span>
                         <span class="detail-value"><?php echo htmlspecialchars($student_data['department']); ?></span>
                     </div>
-                    <!-- Roll Number display removed -->
                     <div class="detail-row">
                         <span class="detail-label">Registration Date:</span>
                         <span class="detail-value"><?php echo htmlspecialchars($student_data['registration_date']); ?></span>
@@ -394,16 +579,24 @@ $conn->close();
                 </div>
                 <?php endif; ?>
                 
+                <div class="inspiration-quote">
+                    "The future belongs to those who believe in the beauty of their dreams. Your journey with maJIStic 2k25 starts now!"
+                </div>
+                
+                <div class="glass-separator"></div>
+                
                 <div class="note">
-                    <p><strong>Important Note:</strong> You'll be notified soon about the payment details for your event ticket. Keep an eye on your email inbox and our social media channels for updates!</p>
+                    <p><strong>Important Note:</strong> You'll be notified soon about the payment process for your event ticket. Keep an eye on your email inbox and our social media pages for updates!</p>
                 </div>
                 
                 <div class="warning">
                     <p><strong>Remember:</strong> Your college ID will be mandatory for check-in on the event day. Please ensure you bring it along!</p>
                 </div>
                 
+                <div class="glass-separator"></div>
+                
                 <div class="countdown">
-                    <h4>Event Countdown</h4>
+                    <h4>Countdown to maJIStic 2k25</h4>
                     <div class="countdown-timer" id="countdown">
                         <div class="time-unit">
                             <div class="time-value" id="days">00</div>
@@ -461,18 +654,45 @@ $conn->close();
     <?php include '../../includes/footer.php'; ?>
     
     <script>
-        // Create confetti elements
-        function createConfetti() {
-            const colors = ['#f39c12', '#2ecc71', '#3498db', '#e74c3c', '#9b59b6', '#1abc9c'];
+        // Create celebration elements
+        function createCelebrationElements() {
+            const partyIcons = ['🎉', '🎊', '✨', '⭐', '🥳', '🎈', '🎆', '🎇', '🌟', '💫'];
+            const colors = ['#f39c12', '#2ecc71', '#3498db', '#e74c3c', '#9b59b6', '#1abc9c', '#ff758c', '#ff7eb3', '#00f2fe', '#8a2be2'];
             
-            for (let i = 0; i < 50; i++) {
+            // Create confetti elements
+            for (let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
                 confetti.style.animationDelay = Math.random() * 5 + 's';
-                confetti.style.animationDuration = Math.random() * 3 + 3 + 's';
+                confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
                 document.body.appendChild(confetti);
+                
+                // Remove confetti after animation completes
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+            
+            // Create emoji party elements
+            for (let i = 0; i < 20; i++) {
+                const party = document.createElement('div');
+                party.classList.add('party-element');
+                party.textContent = partyIcons[Math.floor(Math.random() * partyIcons.length)];
+                party.style.left = Math.random() * 100 + 'vw';
+                party.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                party.style.animationDelay = (Math.random() * 2) + 's';
+                party.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(party);
+                
+                // Remove party element after animation completes
+                setTimeout(() => {
+                    party.remove();
+                }, 5000);
             }
         }
         
@@ -507,10 +727,21 @@ $conn->close();
         
         // When DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            createConfetti();
+            createCelebrationElements();
             addAnimations();
             updateCountdown();
             setInterval(updateCountdown, 1000);
+            
+            // Add pulse effect to student details on hover
+            const studentDetails = document.querySelector('.student-details');
+            if (studentDetails) {
+                studentDetails.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                studentDetails.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+            }
         });
     </script>
 </body>

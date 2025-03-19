@@ -13,10 +13,27 @@ include 'backend.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaJIStic 2K25 Admin Panel</title>
+    <title>Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional inline styles to increase width of container */
+        .container {
+            width: 100%;
+            max-width: 100%;
+            padding: 20px;
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        /* Ensure modal has proper width */
+        .modal-content {
+            width: 90%;
+            max-width: 1200px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">

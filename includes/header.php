@@ -3,7 +3,7 @@
         <div class="site-branding">
             <a href="#"><img src="https://i.postimg.cc/TwP5Rrcj/jis.png" alt="Logo"></a>
             <div class="majisticheadlogo">
-                <a href="#"><img src="/../images/majisticlogo.png" alt="Logo"></a>
+                <a href="#"><img src="https://i.ibb.co/s9pJ72SV/majisticlogo.png" alt="Logo"></a>
             </div>
             <!-- <a href="#"><img src="../images/jislogo.png" alt="Logo"></a> -->
         </div>

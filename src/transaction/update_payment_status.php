@@ -30,6 +30,40 @@ if (file_exists('../mail/alumni_mailer.php')) {
     error_log("Warning: alumni_mailer.php not found");
 }
 
+// Get real client IP address function
+function getClientIP() {
+    // Check for Cloudflare
+    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+        return $_SERVER["HTTP_CF_CONNECTING_IP"];
+    }
+    
+    // Check for shared internet/ISP IP
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    }
+    
+    // Check for IPs passing through proxies
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // HTTP_X_FORWARDED_FOR can contain multiple IPs separated by commas
+        $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        foreach ($ipList as $ip) {
+            if (filter_var(trim($ip), FILTER_VALIDATE_IP)) {
+                return trim($ip);
+            }
+        }
+    }
+    
+    // Check for AWS ELB
+    if (!empty($_SERVER['HTTP_X_FORWARDED_AWS_ELB'])) {
+        return $_SERVER['HTTP_X_FORWARDED_AWS_ELB'];
+    }
+    
+    // If above methods fail, use REMOTE_ADDR
+    return $_SERVER['REMOTE_ADDR'];
+}
+
+$client_ip = getClientIP();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the payment information from the POST data
     $jis_id = isset($_POST['jis_id']) ? $_POST['jis_id'] : '';
@@ -39,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $is_alumni = isset($_POST['alumni']) && $_POST['alumni'] == '1';
     
     // Debug received data
-    error_log("Received payment data: jis_id=$jis_id, payment_id=$payment_id, status=$payment_status, amount=$amount, alumni=$is_alumni");
+    error_log("Received payment data: jis_id=$jis_id, payment_id=$payment_id, status=$payment_status, amount=$amount, alumni=$is_alumni, IP=$client_ip");
     
     // Validate the data
     if (empty($jis_id) || empty($payment_id) || empty($payment_status)) {
@@ -60,6 +94,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Set timezone to IST before creating date
         date_default_timezone_set('Asia/Kolkata');
         $payment_date = date('Y-m-d H:i:s');
+        
+        // Record the transaction in payment_attempts table first (for audit purposes)
+        $registration_type = $is_alumni ? 'alumni' : 'inhouse';
+        $payment_processor = 'Razorpay';  // Default to Razorpay for now
+        $status = 'completed';  // Since this is a successful payment update
+        
+        try {
+            $attempt_sql = "INSERT INTO payment_attempts (
+                registration_id, 
+                registration_type,
+                status,
+                payment_id,
+                amount,
+                attempt_time,
+                ip_address,
+                payment_processor
+            ) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)";
+            
+            $attempt_stmt = $conn->prepare($attempt_sql);
+            $attempt_stmt->bind_param("ssssdss", $jis_id, $registration_type, $status, $payment_id, $amount, $client_ip, $payment_processor);
+            $attempt_stmt->execute();
+        } catch (Exception $e) {
+            // Log but continue since this is just for tracking
+            error_log("Warning: Could not record payment attempt in update: " . $e->getMessage());
+        }
         
         if ($is_alumni) {
             // ALUMNI PAYMENT PROCESSING
@@ -115,17 +174,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             error_log("Updated alumni rows: " . $stmt->affected_rows);
             
             if ($stmt->affected_rows > 0) {
-                // Record successful payment in payment_attempts table for tracking
-                try {
-                    $payment_attempt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, amount, attempt_time, ip_address, is_alumni) VALUES (?, 'completed', ?, ?, NOW(), ?, 1)");
-                    $ip = $_SERVER['REMOTE_ADDR'];
-                    $payment_attempt->bind_param("ssds", $jis_id, $payment_id, $amount, $ip);
-                    $payment_attempt->execute();
-                } catch (Exception $e) {
-                    error_log("Warning: Could not record successful alumni payment attempt: " . $e->getMessage());
-                    // Continue since this is not critical
-                }
-                
                 // Payment updated successfully
                 if ($payment_status === 'SUCCESS') {
                     error_log("Alumni payment successful, fetching alumni details for email");
@@ -246,17 +294,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             error_log("Updated rows: " . $stmt->affected_rows);
             
             if ($stmt->affected_rows > 0) {
-                // Record successful payment in payment_attempts table for tracking
-                try {
-                    $payment_attempt = $conn->prepare("INSERT INTO payment_attempts (registration_id, status, payment_id, amount, attempt_time, ip_address, is_alumni) VALUES (?, 'completed', ?, ?, NOW(), ?, 0)");
-                    $ip = $_SERVER['REMOTE_ADDR'];
-                    $payment_attempt->bind_param("ssds", $jis_id, $payment_id, $amount, $ip);
-                    $payment_attempt->execute();
-                } catch (Exception $e) {
-                    error_log("Warning: Could not record successful payment attempt: " . $e->getMessage());
-                    // Continue since this is not critical
-                }
-                
                 // Payment updated successfully
                 if ($payment_status === 'SUCCESS') {
                     error_log("Payment successful, fetching student details for email");

@@ -1,5 +1,11 @@
 <?php
 include 'src/main/registration_handler.php';
+// Include payment configuration
+if(file_exists('src/config/payment_config.php')) {
+    include 'src/config/payment_config.php';
+} else {
+    define('PAYMENT_ENABLED', true); // Default to enabled if config doesn't exist
+}
 ?>
 
 <!DOCTYPE html>
@@ -98,8 +104,11 @@ include 'src/main/registration_handler.php';
         <img src="images/majisticlogo.png" alt="maJIStic Logo">
         <h2>Registration Successful!</h2>
         <p>Congratulations! Your registration has been completed.</p>
-        <p>Redirecting to confirmation page...</p>
+        <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
         <p>Redirecting to Payment page...</p>
+        <?php else: ?>
+        <p>Redirecting to confirmation page...</p>
+        <?php endif; ?>
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -113,8 +122,11 @@ include 'src/main/registration_handler.php';
             
             // Redirect after the animation completes
             setTimeout(function() {
-                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'; // Payment redirect commented out
-                //window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>'; // Redirect to success page
+                <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
+                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'; // Payment redirect
+                <?php else: ?>
+                window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>'; // Redirect to success page
+                <?php endif; ?>
             }, 3500); // Just after the progress bar completes
         });
     </script>
@@ -192,18 +204,18 @@ include 'src/main/registration_handler.php';
                             <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
-                            <label for="inhouse_competition">Do you want to take part in inhouse competitions?</label>
+                            <label for="inhouse_competition">Do you want to take part in event? (optional)</label>
                         </div>
                         <div class="form-group radio-group">
                             <label><input type="radio" id="inhouse_yes" name="inhouse_competition" value="Yes" required> Yes</label>
                             <label><input type="radio" id="inhouse_no" name="inhouse_competition" value="No" required> No</label>
                         </div>
                         <div class="form-group hidden" id="competition_group">
-                            <label for="competition">Select Competition:</label>
+                            <label for="competition">Select Event:</label>
                             <select id="competition" name="competition">
-                                <option value="">--Select Competition--</option>
-                                <option value="Jam Room (Band Events)">Jam Room (Band Events)</option>
-                                <option value="Taal Se Taal Mila (Dance Events)">Taal Se Taal Mila (Dance Events)</option>
+                                <option value="">--Select Event--</option>
+                                <option value="Jam Room (Band)">Jam Room (Band)</option>
+                                <option value="Taal Se Taal Mila (Dance)">Taal Se Taal Mila (Dance)</option>
                                 <option value="Fashion Fiesta (Fashion Show)">Fashion Fiesta (Fashion Show)</option>
                                 <option value="Actomania (Drama)">Actomania (Drama)</option>
                                 <option value="The Poetry Slam (Recitation)">The Poetry Slam (Recitation)</option>
