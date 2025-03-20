@@ -8,6 +8,7 @@ try {
     // Set common collections
     $registrations = $db->registrations;
     $alumni_registrations = $db->alumni_registrations;
+    $department_coordinators = $db->department_coordinators; // Add this new collection
     
     // Set timezone
     date_default_timezone_set('Asia/Kolkata');

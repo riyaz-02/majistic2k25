@@ -19,10 +19,10 @@ $department_filter = isset($_GET['department']) ? $_GET['department'] : '';
 $passout_year_filter = isset($_GET['passout_year']) ? $_GET['passout_year'] : '';
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'inhouse';
 
-// Set up pagination
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$items_per_page = 10;
-$skip = ($page - 1) * $items_per_page;
+// Remove pagination - show all entries
+$items_per_page = 1000000; // Use a very large number to essentially show all records
+$page = 1;
+$skip = 0;
 
 // Build filters for MongoDB queries
 $inhouse_filter = [];
@@ -37,12 +37,15 @@ if ($payment_status_filter) $alumni_filter['payment_status'] = ['$regex' => $pay
 if ($passout_year_filter) $alumni_filter['passout_year'] = $passout_year_filter;
 if ($department_filter) $alumni_filter['department'] = ['$regex' => $department_filter, '$options' => 'i'];
 
-// MongoDB options for pagination and sorting
+// MongoDB options for sorting by registration date descending
 $options = [
-    'skip' => $skip,
-    'limit' => $items_per_page,
     'sort' => ['registration_date' => -1]
 ];
+
+// Show all entries without pagination
+$items_per_page = 1000000; // Setting a very high number to show all entries
+$page = 1;
+$skip = 0;
 
 // Load data for both tabs regardless of current tab
 $inhouse_data = [];
@@ -71,9 +74,9 @@ foreach ($cursor as $doc) {
 // Set result based on current tab
 $result = $tab == 'inhouse' ? $inhouse_data : $alumni_data;
 
-// Calculate total pages for both tabs
-$inhouse_total_pages = ceil($registrations->countDocuments($inhouse_filter) / $items_per_page);
-$alumni_total_pages = ceil($alumni_registrations->countDocuments($alumni_filter) / $items_per_page);
+// Set total pages to 1 since we're showing all records
+$inhouse_total_pages = 1;
+$alumni_total_pages = 1;
 
 // Get distinct values for dropdowns in a format compatible with the template
 $inhouse_competitions = [];

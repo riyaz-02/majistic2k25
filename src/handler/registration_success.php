@@ -555,6 +555,101 @@ if (!empty($jis_id)) {
             margin: 30px 0;
             border-radius: 2px;
         }
+
+        .coordinator-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid #3498db;
+        }
+        
+        .coordinator-card:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .coordinator-card h3 {
+            color: #3498db;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .coordinator-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .coordinator-info p {
+            margin: 8px 0;
+            color: #f8f9fa;
+        }
+        
+        .coordinator-label {
+            color: #a0aec0;
+            font-weight: 500;
+            display: inline-block;
+            width: 100px;
+        }
+        
+        .coordinator-value {
+            font-weight: 600;
+            color: #ffc107;
+        }
+        
+        .coordinator-contact {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .coordinator-contact a {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 50px;
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .coordinator-contact a:hover {
+            background: rgba(52, 152, 219, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .coordinator-contact i {
+            margin-right: 5px;
+        }
+        
+        .coordinator-loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #a0aec0;
+        }
+        
+        .default-coordinator {
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .default-coordinator:first-of-type {
+            border-top: none;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -593,6 +688,17 @@ if (!empty($jis_id)) {
                     <div class="detail-row">
                         <span class="detail-label">Registration Date:</span>
                         <span class="detail-value"><?php echo htmlspecialchars($student_data['registration_date']); ?></span>
+                    </div>
+                </div>
+
+                <!-- New Coordinator Contact Card -->
+                <div class="coordinator-card" id="coordinatorCard">
+                    <h3>Ticket Payment Information</h3>
+                    <p>For payment of the Ticket Price, Please contact:</p>
+                    <div id="coordinatorDetails">
+                        <div class="coordinator-loading">
+                            <i class="fas fa-spinner fa-spin"></i> Loading coordinator details...
+                        </div>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -680,11 +786,8 @@ if (!empty($jis_id)) {
             </div>
         </div>
     </div>
-
-    <?php include '../../includes/footer.php'; ?>
     
     <script>
-        // Create celebration elements
         function createCelebrationElements() {
             const partyIcons = ['🎉', '🎊', '✨', '⭐', '🥳', '🎈', '🎆', '🎇', '🌟', '💫'];
             const colors = ['#f39c12', '#2ecc71', '#3498db', '#e74c3c', '#9b59b6', '#1abc9c', '#ff758c', '#ff7eb3', '#00f2fe', '#8a2be2'];
@@ -772,7 +875,96 @@ if (!empty($jis_id)) {
                     this.style.transform = 'translateY(-5px)';
                 });
             }
+            
+            // Fetch coordinator details for the student's department
+            fetchCoordinatorInfo();
         });
+        
+        function fetchCoordinatorInfo() {
+            // Get student department
+            <?php if ($student_data && isset($student_data['department'])): ?>
+            const studentDept = "<?php echo addslashes($student_data['department']); ?>";
+            
+            // Always fetch coordinator details based on the user's department
+            fetch('../../src/api/get_coordinators.php?department=' + encodeURIComponent(studentDept))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.data.length > 0) {
+                        displayCoordinatorInfo(data.data);
+                    } else {
+                        displayGenericCoordinatorInfo();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching coordinator data:', error);
+                    displayGenericCoordinatorInfo();
+                });
+            <?php else: ?>
+            displayGenericCoordinatorInfo();
+            <?php endif; ?>
+        }
+        
+        function displayCoordinatorInfo(coordinators) {
+            const coordinatorDetailsDiv = document.getElementById('coordinatorDetails');
+            
+            let html = '';
+            coordinators.forEach(coordinator => {
+                // Add time information - if not available, use default time
+                const availableTime = coordinator.available_time || '10:00 AM - 5:00 PM (Monday-Friday)';
+                
+                html += `<div class="coordinator-info animate-in">
+                    <p><span class="coordinator-label">Name:</span> <span class="coordinator-value">${coordinator.name}</span></p>
+                    <p><span class="coordinator-label">Department:</span> <span class="coordinator-value">${coordinator.department}</span></p>
+                    <p><span class="coordinator-label">Contact:</span> <span class="coordinator-value">${coordinator.contact}</span></p>
+                    <p><span class="coordinator-label">Time:</span> <span class="coordinator-value">${availableTime}</span></p>
+                    <div class="coordinator-contact">
+                        <a href="tel:${coordinator.contact}"><i class="fas fa-phone"></i> Call ${coordinator.contact}</a>
+                        <a href="https://wa.me/91${coordinator.contact}" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp ${coordinator.contact}</a>
+                    </div>
+                </div>`;
+            });
+            
+            coordinatorDetailsDiv.innerHTML = html;
+        }
+        
+        function displayGenericCoordinatorInfo() {
+            const coordinatorDetailsDiv = document.getElementById('coordinatorDetails');
+            
+            coordinatorDetailsDiv.innerHTML = `<div class="coordinator-info animate-in default-coordinator">
+                <h4>Department Coordinator Not Found</h4>
+                <p>Please contact any of the following coordinators for payment:</p>
+                
+                <div class="default-coordinator">
+                    <p><span class="coordinator-label">Name:</span> <span class="coordinator-value">Priyanshu Nayan</span></p>
+                    <p><span class="coordinator-label">Contact:</span> <span class="coordinator-value">7004706722</span></p>
+                    <p><span class="coordinator-label">Time:</span> <span class="coordinator-value">10:00 AM - 5:00 PM (Monday-Friday)</span></p>
+                    <div class="coordinator-contact">
+                        <a href="tel:7004706722"><i class="fas fa-phone"></i> Call 7004706722</a>
+                        <a href="https://wa.me/917004706722" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp 7004706722</a>
+                    </div>
+                </div>
+                
+                <div class="default-coordinator">
+                    <p><span class="coordinator-label">Name:</span> <span class="coordinator-value">Dr. Proloy Ghosh</span></p>
+                    <p><span class="coordinator-label">Contact:</span> <span class="coordinator-value">7980532913</span></p>
+                    <p><span class="coordinator-label">Time:</span> <span class="coordinator-value">10:00 AM - 5:00 PM (Monday-Friday)</span></p>
+                    <div class="coordinator-contact">
+                        <a href="tel:7980532913"><i class="fas fa-phone"></i> Call 7980532913</a>
+                        <a href="https://wa.me/917980532913" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp 7980532913</a>
+                    </div>
+                </div>
+                
+                <div class="default-coordinator">
+                    <p><span class="coordinator-label">Name:</span> <span class="coordinator-value">Dr. Madhura Chakraborty</span></p>
+                    <p><span class="coordinator-label">Contact:</span> <span class="coordinator-value">7980979789</span></p>
+                    <p><span class="coordinator-label">Time:</span> <span class="coordinator-value">10:00 AM - 5:00 PM (Monday-Friday)</span></p>
+                    <div class="coordinator-contact">
+                        <a href="tel:7980979789"><i class="fas fa-phone"></i> Call 7980979789</a>
+                        <a href="https://wa.me/917980979789" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp 7980979789</a>
+                    </div>
+                </div>
+            </div>`;
+        }
     </script>
 </body>
 </html>

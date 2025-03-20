@@ -8,8 +8,14 @@ require_once __DIR__ . '/../includes/db_config.php';
 
 // If already logged in, redirect
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-    if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'website manager') {
-        header('Location: management.php');
+    if (isset($_SESSION['admin_role'])) {
+        if ($_SESSION['admin_role'] === 'website manager') {
+            header('Location: management.php');
+        } elseif ($_SESSION['admin_role'] === 'Manage Website') {
+            header('Location: manage/index.php');
+        } else {
+            header('Location: adm/madm.php');
+        }
     } else {
         header('Location: adm/madm.php');
     }
@@ -19,7 +25,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 $error = '';
 $success = '';
 $departments = ['CSE', 'BME', 'ECE', 'EE', 'CE', 'ME', 'MCA', 'MBA', 'BBA'];
-$roles = ['Admin', 'Core Team Member', 'Coordinator'];
+$roles = ['Admin', 'Core Team Member', 'Coordinator', 'Manage Website'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data

@@ -126,6 +126,9 @@ function generateAlumniEmailTemplate($data) {
     // Logo URL - get from config or use default
     $logoUrl = defined('EMAIL_LOGO_URL') ? EMAIL_LOGO_URL : 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
     
+    // Base URL for links - get from config or use default
+    $baseUrl = defined('EMAIL_BASE_URL') ? EMAIL_BASE_URL : 'https://jiscollege.ac.in/majistic';
+    
     // HTML Template with alumni-specific details
     $html = <<<HTML
 <!DOCTYPE html>
@@ -296,6 +299,10 @@ function generateAlumniEmailTemplate($data) {
             
             <p>Please keep this email for your records. You may be required to show this confirmation at the alumni meet during maJIStic 2025.</p>
             
+            <p style='text-align: center; margin: 25px 0;'>
+                <a href="{$baseUrl}/check_status.php?jis_id={$data['jis_id']}" class="button" style="background-color: #3498db; color: white !important; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold; font-size: 16px;">Check Status</a>
+            </p>
+            
             <p>We look forward to welcoming you back at maJIStic 2025!</p>
             
             <p>Warm Regards,<br>maJIStic Team</p>
@@ -391,6 +398,12 @@ function generateAlumniRegistrationTemplate($data) {
     
     // Logo URL - get from config or use default
     $logoUrl = defined('EMAIL_LOGO_URL') ? EMAIL_LOGO_URL : 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
+    
+    // Get coordinator information
+    $coordinator_info = getAlumniCoordinatorInfo($data['department']);
+    
+    // Base URL for links - get from config or use default
+    $baseUrl = defined('EMAIL_BASE_URL') ? EMAIL_BASE_URL : 'https://jiscollege.ac.in/majistic';
     
     // HTML Template
     $html = <<<HTML
@@ -490,6 +503,20 @@ function generateAlumniRegistrationTemplate($data) {
             font-size: 12px;
             margin-bottom: 10px;
         }
+        .coordinator-info {
+            background-color: #e8f4fd;
+            border: 1px solid #cce5ff;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #0c5460;
+        }
+        .coordinator-info h4 {
+            margin-top: 0;
+            color: #0c5460;
+            border-bottom: 1px solid #bee5eb;
+            padding-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -546,14 +573,23 @@ function generateAlumniRegistrationTemplate($data) {
                 </table>
             </div>
             
-            <p>Your alumni registration is almost complete! To confirm your spot at maJIStic 2025, please complete the payment process by clicking the button below:</p>
+            <p>Your registration is almost complete! To confirm your spot at maJIStic 2025, please make the payment to your department coordinator in person.</p>
             
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="{$payment_link}" class="button">Complete Payment</a>
+            <div style="background-color: #e7f3ff; border: 1px solid #3498db; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <h4 style="color: #3498db; margin-top: 0;">Payment Instructions</h4>
+                <p><strong>1.</strong> Contact your department coordinator listed below</p>
+                <p><strong>2.</strong> Make the payment in person</p>
+                <p><strong>3.</strong> Collect your receipt as proof of payment</p>
+                <p><strong>Amount:</strong> Please confirm the registration fee with your department coordinator</p>
+            </div>
+            
+            <div class="coordinator-info">
+                <h4>Department Coordinator</h4>
+                {$coordinator_info}
             </div>
             
             <div class="payment-note">
-                <p><strong>Note:</strong> If you've already completed the payment, please disregard this message. You will receive a separate payment confirmation email.</p>
+                <p><strong>Note:</strong> If you've already completed the payment to your department coordinator, please disregard this message. You will receive a separate payment confirmation email once your payment is processed.</p>
             </div>
             
             <p>If you have any questions or need further assistance, please don't hesitate to contact our alumni support team.</p>
@@ -562,6 +598,10 @@ function generateAlumniRegistrationTemplate($data) {
                 <strong>IMPORTANT:</strong> Please bring your College ID or any Government ID for verification on the event day.
             </p>
             <p>We look forward to welcoming you back at maJIStic 2025!</p>
+            
+            <p style='text-align: center; margin: 25px 0;'>
+                <a href="{$baseUrl}/check_status.php?jis_id={$data['jis_id']}" class="button" style="background-color: #3498db; color: white !important; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold; font-size: 16px;">Check Status</a>
+            </p>
             
             <p>Warm Regards,<br>maJIStic Team</p>
 
@@ -582,5 +622,67 @@ function generateAlumniRegistrationTemplate($data) {
 HTML;
 
     return $html;
+}
+
+/**
+ * Function to get alumni coordinator information based on department
+ * 
+ * @param string $department The alumni's department
+ * @return string HTML content for coordinator information
+ */
+function getAlumniCoordinatorInfo($department) {
+    global $department_coordinators;
+    
+    // Initialize default coordinator info with multiple contacts
+    $default_info = "<h4>Alumni Coordinator Contacts</h4>";
+    $default_info .= "<p><strong>Primary Contact:</strong></p>";
+    $default_info .= "<p><strong>Name:</strong> Priyanshu Nayan</p>";
+    $default_info .= "<p><strong>Contact:</strong> 7004706722</p>";
+    $default_info .= "<p><strong>Available:</strong> 10:00 AM - 5:00 PM (Monday-Friday)</p>";
+    
+    $default_info .= "<p style='margin-top:15px'><strong>Alternative Contacts:</strong></p>";
+    $default_info .= "<p><strong>Name:</strong> Dr. Proloy Ghosh</p>";
+    $default_info .= "<p><strong>Contact:</strong> 7980532913</p>";
+    
+    $default_info .= "<p style='margin-top:10px'><strong>Name:</strong> Dr. Madhura Chakraborty</p>";
+    $default_info .= "<p><strong>Contact:</strong> 7980979789</p>";
+    
+    // Try to find a coordinator for the specific department
+    if (isset($department_coordinators) && !empty($department)) {
+        try {
+            // Create a department filter
+            $filter = ['department' => ['$regex' => $department, '$options' => 'i']];
+            
+            // Find the coordinator
+            $coordinator = $department_coordinators->findOne($filter);
+            
+            if ($coordinator) {
+                $available_time = isset($coordinator['available_time']) ? 
+                    $coordinator['available_time'] : 
+                    '9:00 AM - 5:00 PM (Monday-Friday)';
+                
+                $coordinator_info = "<h4>Department Alumni Coordinator</h4>";
+                $coordinator_info .= "<p><strong>Name:</strong> " . htmlspecialchars($coordinator['name']) . "</p>";
+                $coordinator_info .= "<p><strong>Department:</strong> " . htmlspecialchars($coordinator['department']) . "</p>";
+                $coordinator_info .= "<p><strong>Contact:</strong> " . htmlspecialchars($coordinator['contact']) . "</p>";
+                $coordinator_info .= "<p><strong>Available:</strong> " . htmlspecialchars($available_time) . "</p>";
+                
+                // Also provide the default contacts as alternatives
+                $coordinator_info .= "<p style='margin-top:15px'><strong>Alternative Contacts (if unavailable):</strong></p>";
+                $coordinator_info .= "<p><strong>Name:</strong> Priyanshu Nayan (7004706722)</p>";
+                $coordinator_info .= "<p><strong>Name:</strong> Dr. Proloy Ghosh (7980532913)</p>";
+                $coordinator_info .= "<p><strong>Name:</strong> Dr. Madhura Chakraborty (7980979789)</p>";
+                
+                $coordinator_info .= "<p style='margin-top:15px'>For alumni-specific inquiries, please also contact our alumni team at <strong>majistic.alumni@gmail.com</strong></p>";
+                
+                return $coordinator_info;
+            }
+        } catch (Exception $e) {
+            error_log("Error fetching coordinator for alumni email: " . $e->getMessage());
+        }
+    }
+    
+    // Return default coordinator info if no specific coordinator is found
+    return $default_info;
 }
 ?>

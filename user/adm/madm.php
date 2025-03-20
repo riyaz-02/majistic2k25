@@ -17,155 +17,6 @@ include 'backend.php';
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Additional inline styles to increase width of container */
-        .container {
-            width: 100%;
-            max-width: 100%;
-            padding: 20px;
-        }
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-        }
-        /* Ensure modal has proper width */
-        .modal-content {
-            width: 90%;
-            max-width: 1200px;
-        }
-        /* Add these styles to your existing styles */
-        .tab-content {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .tab-content.active {
-            display: block;
-            opacity: 1;
-        }
-        
-        .filters-container {
-            margin-bottom: 20px;
-        }
-        
-        .filters-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .search-box {
-            flex: 1;
-            position: relative;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 10px 35px 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        
-        .search-box i {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
-        }
-        
-        .btn-reset {
-            padding: 10px 20px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-reset:hover {
-            background: #c0392b;
-        }
-
-        /* Responsive filters improvements */
-        .filters {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .filter-group {
-            margin-bottom: 0;
-        }
-        
-        .filters-actions {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .search-box {
-            flex: 1;
-            min-width: 200px;
-            position: relative;
-        }
-        
-        /* Responsive buttons */
-        .btn-filter, .btn-reset {
-            padding: 10px 15px;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .filters-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .search-box {
-                order: -1;
-                width: 100%;
-            }
-            
-            .btn-filter, .btn-reset {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .filter-group select,
-            .filter-group input {
-                width: 100%;
-                box-sizing: border-box;
-            }
-        }
-        
-        /* Medium screens */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .filters {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            }
-        }
-        
-        /* Very small screens */
-        @media (max-width: 480px) {
-            .filters {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -268,9 +119,41 @@ include 'backend.php';
             <!-- Table -->
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Inhouse Registrations</h2>
-                <button class="btn btn-download" onclick="downloadCSV('inhouse')">
-                    <i class="fas fa-download"></i> Download CSV
-                </button>
+                <div class="table-actions">
+                    <div class="column-control">
+                        <button class="btn btn-columns" id="column-control-inhouse">
+                            <i class="fas fa-columns"></i> Columns
+                        </button>
+                        <div class="column-dropdown" id="column-dropdown-inhouse">
+                            <!-- Toggle all option -->
+                            <div class="column-checkbox toggle-all">
+                                <input type="checkbox" id="toggle-all-inhouse">
+                                <label for="toggle-all-inhouse"><strong>Toggle All Optional</strong></label>
+                            </div>
+                            <div class="column-divider"></div>
+                            <!-- Optional columns that can be toggled -->
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-gender-inhouse">
+                                <label for="col-gender-inhouse">Gender</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-department-inhouse" checked>
+                                <label for="col-department-inhouse">Department</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-competition-inhouse">
+                                <label for="col-competition-inhouse">Competition</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-regdate-inhouse">
+                                <label for="col-regdate-inhouse">Registration Date</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-download" onclick="downloadCSV('inhouse')">
+                        <i class="fas fa-download"></i> Download CSV
+                    </button>
+                </div>
             </div>
             
             <div class="table-container">
@@ -283,8 +166,8 @@ include 'backend.php';
                             <th>Gender</th>
                             <th>Department</th>
                             <th>Competition</th>
-                            <th>Payment Status</th>
                             <th>Registration Date</th>
+                            <th>Payment Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -293,6 +176,9 @@ include 'backend.php';
                         $sl_no = ($page - 1) * $items_per_page + 1;
                         if (!empty($result) && $tab == 'inhouse') {
                             foreach ($result as $row):
+                                // Convert registration date to IST if it exists
+                                $registration_date = isset($row['registration_date']) ? 
+                                    date('d-m-Y h:i A', strtotime($row['registration_date'])) : 'N/A';
                         ?>
                         <tr>
                             <td><?php echo $sl_no++; ?></td>
@@ -301,61 +187,35 @@ include 'backend.php';
                             <td><?php echo $row['gender'] ?? ''; ?></td>
                             <td><?php echo $row['department'] ?? ''; ?></td>
                             <td><?php echo $row['competition_name'] ?? ''; ?></td>
+                            <td><?php echo $registration_date; ?></td>
                             <td>
                                 <span class="status-badge <?php echo ($row['payment_status'] ?? '') == 'Paid' ? 'paid' : 'not-paid'; ?>">
                                     <?php echo $row['payment_status'] ?? 'Not Paid'; ?>
                                 </span>
                             </td>
-                            <td><?php echo isset($row['registration_date']) ? date('d M Y', strtotime($row['registration_date'])) : ''; ?></td>
                             <td>
                                 <button class="btn-view" onclick="viewDetails('inhouse', '<?php echo $row['jis_id']; ?>')">
-                                    <i class="fas fa-eye"></i> View
+                                    <i class="fas fa-eye"></i>
                                 </button>
+                                <?php if (($row['payment_status'] ?? '') != 'Paid'): ?>
+                                <button class="btn-payment" onclick="openPaymentModal('inhouse', '<?php echo $row['jis_id']; ?>', '<?php echo addslashes($row['student_name'] ?? ''); ?>')">
+                                    <i class="fas fa-money-bill-wave"></i> Payment
+                                </button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php 
                             endforeach;
                         } else {
-                            echo '<tr><td colspan="9" style="text-align: center;">No registrations found</td></tr>';
+                            echo '<tr><td colspan="9" style="text-align: center;">No registrations found</td></tr>';            
                         }
                         ?>
                     </tbody>
                 </table>
             </div>
             
-            <!-- Pagination for inhouse -->
-            <?php if ($inhouse_total_pages > 0): ?>
-            <div class="pagination">
-                <?php if ($page > 1): ?>
-                <a href="?tab=inhouse&page=1<?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-double-left"></i>
-                </a>
-                <a href="?tab=inhouse&page=<?php echo $page-1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-left"></i>
-                </a>
-                <?php endif; ?>
-                
-                <?php
-                $start_page = max(1, $page - 2);
-                $end_page = min($inhouse_total_pages, $page + 2);
-                
-                for ($i = $start_page; $i <= $end_page; $i++):
-                ?>
-                <a href="?tab=inhouse&page=<?php echo $i; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn <?php echo ($page == $i) ? 'active' : ''; ?>">
-                    <?php echo $i; ?>
-                </a>
-                <?php endfor; ?>
-                
-                <?php if ($page < $inhouse_total_pages): ?>
-                <a href="?tab=inhouse&page=<?php echo $page+1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-right"></i>
-                </a>
-                <a href="?tab=inhouse&page=<?php echo $inhouse_total_pages; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $competition_filter ? '&competition='.$competition_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-double-right"></i>
-                </a>
-                <?php endif; ?>
-            </div>
-            <?php endif; ?>
+            <!-- Remove pagination for inhouse -->
+            <?php /* Remove the inhouse pagination code */ ?>
         </div>
 
         <!-- Alumni Content -->
@@ -435,9 +295,49 @@ include 'backend.php';
             <!-- Table -->
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Alumni Registrations</h2>
-                <button class="btn btn-download" onclick="downloadCSV('alumni')">
-                    <i class="fas fa-download"></i> Download CSV
-                </button>
+                <div class="table-actions">
+                    <div class="column-control">
+                        <button class="btn btn-columns" id="column-control-alumni">
+                            <i class="fas fa-columns"></i> Columns
+                        </button>
+                        <div class="column-dropdown" id="column-dropdown-alumni">
+                            <!-- Toggle all option -->
+                            <div class="column-checkbox toggle-all">
+                                <input type="checkbox" id="toggle-all-alumni">
+                                <label for="toggle-all-alumni"><strong>Toggle All Optional</strong></label>
+                            </div>
+                            <div class="column-divider"></div>
+                            <!-- Optional columns that can be toggled -->
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-gender-alumni">
+                                <label for="col-gender-alumni">Gender</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-email-alumni" checked>
+                                <label for="col-email-alumni">Email</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-mobile-alumni" checked>
+                                <label for="col-mobile-alumni">Mobile</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-department-alumni" checked>
+                                <label for="col-department-alumni">Department</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-passoutyear-alumni" checked>
+                                <label for="col-passoutyear-alumni">Passout Year</label>
+                            </div>
+                            <div class="column-checkbox">
+                                <input type="checkbox" id="col-regdate-alumni">
+                                <label for="col-regdate-alumni">Registration Date</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-download" onclick="downloadCSV('alumni')">
+                        <i class="fas fa-download"></i> Download CSV
+                    </button>
+                </div>
             </div>
             
             <div class="table-container">
@@ -452,9 +352,8 @@ include 'backend.php';
                             <th>Mobile</th>
                             <th>Department</th>
                             <th>Passout Year</th>
-                            <th>Current Organization</th>
-                            <th>Payment Status</th>
                             <th>Registration Date</th>
+                            <th>Payment Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -463,6 +362,9 @@ include 'backend.php';
                         $sl_no = ($page - 1) * $items_per_page + 1;
                         if (!empty($result) && $tab == 'alumni') {
                             foreach ($result as $row):
+                                // Convert registration date to IST if it exists
+                                $registration_date = isset($row['registration_date']) ? 
+                                    date('d-m-Y h:i A', strtotime($row['registration_date'])) : 'N/A';
                         ?>
                         <tr>
                             <td><?php echo $sl_no++; ?></td>
@@ -473,63 +375,37 @@ include 'backend.php';
                             <td><?php echo $row['mobile'] ?? ''; ?></td>
                             <td><?php echo $row['department'] ?? ''; ?></td>
                             <td><?php echo $row['passout_year'] ?? ''; ?></td>
-                            <td><?php echo $row['current_organization'] ?? ''; ?></td>
+                            <td><?php echo $registration_date; ?></td>
                             <td>
                                 <span class="status-badge <?php echo ($row['payment_status'] ?? '') == 'Paid' ? 'paid' : 'not-paid'; ?>">
                                     <?php echo $row['payment_status'] ?? 'Not Paid'; ?>
                                 </span>
                             </td>
-                            <td><?php echo isset($row['registration_date']) ? date('d M Y', strtotime($row['registration_date'])) : ''; ?></td>
                             <td>
                                 <button class="btn-view" onclick="viewDetails('alumni', '<?php echo $row['jis_id']; ?>')">
-                                    <i class="fas fa-eye"></i> View
+                                    <i class="fas fa-eye"></i>
                                 </button>
+                                <?php if (($row['payment_status'] ?? '') != 'Paid'): ?>
+                                <button class="btn-payment" onclick="openPaymentModal('alumni', '<?php echo $row['jis_id']; ?>', '<?php echo addslashes($row['alumni_name'] ?? ''); ?>')">
+                                    <i class="fas fa-money-bill-wave"></i> Payment
+                                </button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php 
                             endforeach;
                         } else {
-                            echo '<tr><td colspan="12" style="text-align: center;">No registrations found</td></tr>';
+                            echo '<tr><td colspan="11" style="text-align: center;">No registrations found</td></tr>';
                         }
                         ?>
                     </tbody>
                 </table>
             </div>
             
-            <!-- Pagination for alumni -->
-            <?php if ($alumni_total_pages > 0): ?>
-            <div class="pagination">
-                <?php if ($page > 1): ?>
-                <a href="?tab=alumni&page=1<?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-double-left"></i>
-                </a>
-                <a href="?tab=alumni&page=<?php echo $page-1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-left"></i>
-                </a>
-                <?php endif; ?>
-                
-                <?php
-                $start_page = max(1, $page - 2);
-                $end_page = min($alumni_total_pages, $page + 2);
-                
-                for ($i = $start_page; $i <= $end_page; $i++):
-                ?>
-                <a href="?tab=alumni&page=<?php echo $i; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn <?php echo ($page == $i) ? 'active' : ''; ?>">
-                    <?php echo $i; ?>
-                </a>
-                <?php endfor; ?>
-                
-                <?php if ($page < $alumni_total_pages): ?>
-                <a href="?tab=alumni&page=<?php echo $page+1; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-right"></i>
-                </a>
-                <a href="?tab=alumni&page=<?php echo $alumni_total_pages; ?><?php echo $gender_filter ? '&gender='.$gender_filter : ''; ?><?php echo $payment_status_filter ? '&payment_status='.$payment_status_filter : ''; ?><?php echo $passout_year_filter ? '&passout_year='.$passout_year_filter : ''; ?><?php echo $department_filter ? '&department='.$department_filter : ''; ?>" class="pagination-btn">
-                    <i class="fas fa-angle-double-right"></i>
-                </a>
-                <?php endif; ?>
-            </div>
-            <?php endif; ?>
+            <!-- Remove pagination for alumni -->
+            <?php /* Remove the alumni pagination code */ ?>
         </div>
+
     </div>
 
     <!-- Modal for viewing registration details -->
@@ -545,6 +421,53 @@ include 'backend.php';
                 </div>
                 <div class="registration-details">
                     <!-- Registration details will be populated here via AJAX -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Process Payment</h2>
+                <span class="close" onclick="closePaymentModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="payment-details">
+                    <div class="payment-field">
+                        <label>JIS ID:</label>
+                        <div id="payment-jis-id"></div>
+                    </div>
+                    <div class="payment-field">
+                        <label>Name:</label>
+                        <div id="payment-name"></div>
+                    </div>
+                    <div class="payment-amount">
+                        Amount: ₹<span id="payment-amount">500</span>
+                    </div>
+                    <div class="payment-field">
+                        <label for="receipt-number">Receipt Number:</label>
+                        <input type="text" id="receipt-number" placeholder="Enter receipt number" required>
+                    </div>
+                    <div class="payment-message">
+                        <p>This payment will be marked as paid after confirmation. The amount should be collected in cash.</p>
+                    </div>
+                </div>
+                <div class="payment-buttons">
+                    <button class="btn-cancel-payment" onclick="closePaymentModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn-confirm-payment" onclick="confirmPayment()">
+                        <i class="fas fa-check"></i> Confirm Payment
+                    </button>
+                </div>
+                
+                <div id="payment-success" class="payment-success">
+                    <i class="fas fa-check-circle"></i> Payment processed successfully!
+                </div>
+                <div id="payment-error" class="payment-error">
+                    <i class="fas fa-exclamation-circle"></i> <span id="payment-error-message"></span>
                 </div>
             </div>
         </div>
@@ -640,7 +563,6 @@ include 'backend.php';
             const searchInput = document.getElementById(`search-${tab}`);
             const tbody = document.querySelector(`#${tab} .table-container tbody`);
             const rows = tbody.getElementsByTagName('tr');
-            
             searchInput.addEventListener('keyup', function() {
                 const searchTerm = this.value.toLowerCase();
                 
@@ -695,7 +617,6 @@ include 'backend.php';
             // Show modal
             modal.style.display = "block";
             document.body.classList.add('modal-open');
-            
             // Show loading state
             document.querySelector('.modal-loading').style.display = "block";
             document.querySelector('.registration-details').innerHTML = "";
@@ -703,7 +624,7 @@ include 'backend.php';
             // Debug information
             console.log(`Fetching details for ${type} with ID: ${id}`);
             
-            // Fetch registration details via AJAX
+            // Fetch registration details via AJAX with error handling
             fetch(`get_registration_details.php?type=${type}&id=${id}`)
                 .then(response => {
                     if (!response.ok) {
@@ -754,8 +675,8 @@ include 'backend.php';
                 closeModal();
             }
         }
-        
-        // Function to display inhouse registration details
+
+        // Function to display inhouse registration details with IST timezone adjustment
         function displayInhouseDetails(data) {
             const registration = data.registration;
             
@@ -784,14 +705,33 @@ include 'backend.php';
                     <h3>Registration Information</h3>
                     <div class="detail-grid">
                         <div class="detail-item"><span>Payment Status:</span> <span class="status-badge ${registration.payment_status === 'Paid' ? 'paid' : 'not-paid'}">${registration.payment_status || 'Not Paid'}</span></div>
-                        <div class="detail-item"><span>Registration Date:</span> ${registration.registration_date ? new Date(registration.registration_date).toLocaleString() : 'N/A'}</div>
+                        <div class="detail-item"><span>Registration Date:</span> ${registration.registration_date ? formatDateToIST(registration.registration_date) : 'N/A'}</div>
                     </div>
                 </div>`;
+                
+            // Add payment details if paid
+            if (registration.payment_status === 'Paid') {
+                // Format payment date correctly from MongoDB timestamp
+                let paymentDate = 'N/A';
+                if (registration.payment_timestamp) {
+                    // Format in IST timezone
+                    paymentDate = formatDateToIST(registration.payment_timestamp);
+                }
+                
+                html += `
+                <div class="detail-section payment-info">
+                    <h3>Payment Information</h3>
+                    <div class="payment-field-modal"><span>Amount Paid:</span> ₹${registration.payment_amount || '500'}</div>
+                    <div class="payment-field-modal"><span>Receipt Number:</span> ${registration.receipt_number || 'N/A'}</div>
+                    <div class="payment-field-modal"><span>Payment Date:</span> ${paymentDate}</div>
+                    <div class="payment-field-modal"><span>Payment Updated By:</span> ${registration.payment_updated_by || 'N/A'}</div>
+                </div>`;
+            }
             
             document.querySelector('.registration-details').innerHTML = html;
         }
-        
-        // Function to display alumni registration details
+
+        // Function to display alumni registration details with IST timezone adjustment
         function displayAlumniDetails(data) {
             const registration = data.registration;
             
@@ -814,11 +754,62 @@ include 'backend.php';
                     <h3>Registration Information</h3>
                     <div class="detail-grid">
                         <div class="detail-item"><span>Payment Status:</span> <span class="status-badge ${registration.payment_status === 'Paid' ? 'paid' : 'not-paid'}">${registration.payment_status || 'Not Paid'}</span></div>
-                        <div class="detail-item"><span>Registration Date:</span> ${registration.registration_date ? new Date(registration.registration_date).toLocaleString() : 'N/A'}</div>
+                        <div class="detail-item"><span>Registration Date:</span> ${registration.registration_date ? formatDateToIST(registration.registration_date) : 'N/A'}</div>
                     </div>
                 </div>`;
+                
+            // Add payment details if paid
+            if (registration.payment_status === 'Paid') {
+                // Format payment date correctly from MongoDB timestamp
+                let paymentDate = 'N/A';
+                if (registration.payment_timestamp) {
+                    // Format in IST timezone
+                    paymentDate = formatDateToIST(registration.payment_timestamp);
+                }
+                
+                html += `
+                <div class="detail-section payment-info">
+                    <h3>Payment Information</h3>
+                    <div class="payment-field-modal"><span>Amount Paid:</span> ₹${registration.payment_amount || '1000'}</div>
+                    <div class="payment-field-modal"><span>Receipt Number:</span> ${registration.receipt_number || 'N/A'}</div>
+                    <div class="payment-field-modal"><span>Payment Date:</span> ${paymentDate}</div>
+                    <div class="payment-field-modal"><span>Payment Updated By:</span> ${registration.payment_updated_by || 'N/A'}</div>
+                </div>`;
+            }
             
             document.querySelector('.registration-details').innerHTML = html;
+        }
+
+        // Helper function to format dates to IST timezone
+        function formatDateToIST(dateString) {
+            try {
+                // Check if it's MongoDB format with $date property
+                if (typeof dateString === 'object' && dateString.$date) {
+                    dateString = dateString.$date;
+                }
+                
+                const date = new Date(dateString);
+                
+                // Check if date is valid
+                if (isNaN(date.getTime())) {
+                    return 'Invalid Date';
+                }
+                
+                // Format to IST (UTC+5:30)
+                return new Date(date.getTime()).toLocaleString('en-IN', {
+                    timeZone: 'Asia/Kolkata',
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: true
+                });
+            } catch (e) {
+                console.error('Error formatting date:', e);
+                return 'Date Error';
+            }
         }
 
         function updateTableData(tabId) {
@@ -826,9 +817,21 @@ include 'backend.php';
             const data = tabId === 'inhouse' ? <?php echo json_encode($inhouse_data); ?> : <?php echo json_encode($alumni_data); ?>;
             const tbody = document.querySelector(`#${tabId} .table-container tbody`);
             let html = '';
-
+            
             if (data && data.length > 0) {
                 data.forEach((row, index) => {
+                    // Format registration date
+                    const registrationDate = row.registration_date ? 
+                        new Date(row.registration_date).toLocaleString('en-IN', {
+                            timeZone: 'Asia/Kolkata',
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        }) : 'N/A';
+                    
                     if (tabId === 'inhouse') {
                         html += `
                             <tr>
@@ -838,16 +841,21 @@ include 'backend.php';
                                 <td>${row.gender || ''}</td>
                                 <td>${row.department || ''}</td>
                                 <td>${row.competition_name || ''}</td>
+                                <td>${registrationDate}</td>
                                 <td>
                                     <span class="status-badge ${(row.payment_status || '') === 'Paid' ? 'paid' : 'not-paid'}">
                                         ${row.payment_status || 'Not Paid'}
                                     </span>
                                 </td>
-                                <td>${row.registration_date ? new Date(row.registration_date).toLocaleDateString() : ''}</td>
                                 <td>
                                     <button class="btn-view" onclick="viewDetails('${tabId}', '${row.jis_id}')">
-                                        <i class="fas fa-eye"></i> View
+                                        <i class="fas fa-eye"></i>
                                     </button>
+                                    ${(row.payment_status || '') !== 'Paid' ? `
+                                    <button class="btn-payment" onclick="openPaymentModal('${tabId}', '${row.jis_id}', '${row.student_name ? row.student_name.replace(/'/g, "\\'") : ''}')">
+                                        <i class="fas fa-money-bill-wave"></i> Payment
+                                    </button>
+                                    ` : ''}
                                 </td>
                             </tr>
                         `;
@@ -862,24 +870,28 @@ include 'backend.php';
                                 <td>${row.mobile || ''}</td>
                                 <td>${row.department || ''}</td>
                                 <td>${row.passout_year || ''}</td>
-                                <td>${row.current_organization || ''}</td>
+                                <td>${registrationDate}</td>
                                 <td>
                                     <span class="status-badge ${(row.payment_status || '') === 'Paid' ? 'paid' : 'not-paid'}">
                                         ${row.payment_status || 'Not Paid'}
                                     </span>
                                 </td>
-                                <td>${row.registration_date ? new Date(row.registration_date).toLocaleDateString() : ''}</td>
                                 <td>
                                     <button class="btn-view" onclick="viewDetails('${tabId}', '${row.jis_id}')">
-                                        <i class="fas fa-eye"></i> View
+                                        <i class="fas fa-eye"></i>
                                     </button>
+                                    ${(row.payment_status || '') !== 'Paid' ? `
+                                    <button class="btn-payment" onclick="openPaymentModal('${tabId}', '${row.jis_id}', '${row.alumni_name ? row.alumni_name.replace(/'/g, "\\'") : ''}')">
+                                        <i class="fas fa-money-bill-wave"></i> Payment
+                                    </button>
+                                    ` : ''}
                                 </td>
                             </tr>
                         `;
                     }
                 });
             } else {
-                html = `<tr><td colspan="${tabId === 'inhouse' ? '9' : '12'}" style="text-align: center;">No registrations found</td></tr>`;
+                html = `<tr><td colspan="${tabId === 'inhouse' ? '9' : '11'}" style="text-align: center;">No registrations found</td></tr>`;
             }
             
             tbody.innerHTML = html;
@@ -909,6 +921,275 @@ include 'backend.php';
         // Initialize table data for current tab
         const currentTab = '<?php echo $tab; ?>';
         updateTableData(currentTab);
+
+        // Payment Modal functionality
+        const paymentModal = document.getElementById('paymentModal');
+        let currentPaymentType = '';
+        let currentPaymentJisId = '';
+
+        function openPaymentModal(type, jisId, name) {
+            // Set current payment details
+            currentPaymentType = type;
+            currentPaymentJisId = jisId;
+            
+            // Update modal content
+            document.getElementById('payment-jis-id').textContent = jisId;
+            document.getElementById('payment-name').textContent = name;
+            document.getElementById('receipt-number').value = '';
+            
+            // Set amount based on type
+            const amount = type === 'alumni' ? 1000 : 500;
+            document.getElementById('payment-amount').textContent = amount;
+            
+            // Hide any previous messages
+            document.getElementById('payment-success').style.display = 'none';
+            document.getElementById('payment-error').style.display = 'none';
+            
+            // Show modal
+            paymentModal.style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
+        
+        function closePaymentModal() {
+            paymentModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+
+        function confirmPayment() {
+            const receiptNumber = document.getElementById('receipt-number').value.trim();
+            if (!receiptNumber) {
+                document.getElementById('payment-error-message').textContent = 'Please enter a receipt number';
+                document.getElementById('payment-error').style.display = 'block';
+                return;
+            }
+            
+            // Disable buttons during processing
+            const confirmBtn = document.querySelector('.btn-confirm-payment');
+            const cancelBtn = document.querySelector('.btn-cancel-payment');
+            confirmBtn.disabled = true;
+            cancelBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            // Hide any previous messages
+            document.getElementById('payment-success').style.display = 'none';
+            document.getElementById('payment-error').style.display = 'none';
+            
+            // Get amount based on type
+            const amount = currentPaymentType === 'alumni' ? 1000 : 500;
+            
+            // Send AJAX request to process payment
+            fetch('process_payment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: currentPaymentType,
+                    jis_id: currentPaymentJisId,
+                    receipt_number: receiptNumber,
+                    amount: amount
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Re-enable buttons
+                confirmBtn.disabled = false;
+                cancelBtn.disabled = false;
+                confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Payment';
+                
+                if (data.success) {
+                    // Show success message
+                    document.getElementById('payment-success').style.display = 'block';
+                    
+                    // Auto close modal after delay and refresh page
+                    setTimeout(() => {
+                        closePaymentModal();
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    // Show error message
+                    document.getElementById('payment-error-message').textContent = data.error || 'An error occurred while processing payment';
+                    document.getElementById('payment-error').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                // Re-enable buttons
+                confirmBtn.disabled = false;
+                cancelBtn.disabled = false;
+                confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Payment';
+                
+                // Show error message
+                document.getElementById('payment-error-message').textContent = 'An error occurred while processing payment';
+                document.getElementById('payment-error').style.display = 'block';
+                console.error('Error:', error);
+            });
+        }
+
+        // Close payment modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            } else if (event.target === paymentModal) {
+                closePaymentModal();
+            }
+        }
+
+        // Column visibility control
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize column control for inhouse table
+            initColumnControl('inhouse');
+            
+            // Initialize column control for alumni table
+            initColumnControl('alumni');
+            
+            // Apply initial column visibility
+            applyInitialColumnVisibility();
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.column-control')) {
+                    document.querySelectorAll('.column-dropdown').forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            });
+        });
+        
+        function applyInitialColumnVisibility() {
+            const inhouseTable = document.querySelector('#inhouse table');
+            const alumniTable = document.querySelector('#alumni table');
+            
+            // Hide inhouse columns initially
+            toggleColumnVisibility(inhouseTable, 3, false); // Gender
+            toggleColumnVisibility(inhouseTable, 5, false); // Competition
+            toggleColumnVisibility(inhouseTable, 6, false); // Registration Date
+            
+            // Hide alumni columns initially
+            toggleColumnVisibility(alumniTable, 3, false); // Gender
+            toggleColumnVisibility(alumniTable, 8, false); // Registration Date
+            
+            // Update toggle all checkboxes
+            updateToggleAllCheckbox('inhouse');
+            updateToggleAllCheckbox('alumni');
+        }
+        
+        function initColumnControl(tabId) {
+            const controlBtn = document.getElementById(`column-control-${tabId}`);
+            const dropdown = document.getElementById(`column-dropdown-${tabId}`);
+            const table = document.querySelector(`#${tabId} table`);
+            const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]:not(#toggle-all-' + tabId + ')');
+            const toggleAllCheckbox = document.getElementById(`toggle-all-${tabId}`);
+            
+            // Toggle dropdown
+            controlBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+            
+            // Setup toggle all functionality
+            toggleAllCheckbox.addEventListener('change', function() {
+                const isChecked = this.checked;
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                    
+                    // Apply the visibility change
+                    const columnIndex = getColumnIndex(checkbox.id, tabId);
+                    if (columnIndex !== -1) {
+                        toggleColumnVisibility(table, columnIndex, isChecked);
+                        sessionStorage.setItem(checkbox.id, isChecked);
+                    }
+                });
+            });
+            
+            // Handle checkbox changes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const columnIndex = getColumnIndex(checkbox.id, tabId);
+                    if (columnIndex !== -1) {
+                        toggleColumnVisibility(table, columnIndex, this.checked);
+                        
+                        // Store the column visibility preference in session storage
+                        sessionStorage.setItem(checkbox.id, this.checked);
+                    }
+                    
+                    // Update toggle all checkbox state
+                    updateToggleAllCheckbox(tabId);
+                });
+                
+                // Initialize checkbox from saved state (only if previously saved)
+                const savedState = sessionStorage.getItem(checkbox.id);
+                if (savedState !== null) {
+                    const isChecked = savedState === 'true';
+                    checkbox.checked = isChecked;
+                    
+                    // Apply the visibility setting (will be overridden by applyInitialColumnVisibility for first load)
+                    const columnIndex = getColumnIndex(checkbox.id, tabId);
+                    if (columnIndex !== -1) {
+                        toggleColumnVisibility(table, columnIndex, isChecked);
+                    }
+                }
+            });
+            
+            // Initialize toggle all checkbox state
+            updateToggleAllCheckbox(tabId);
+        }
+        
+        function updateToggleAllCheckbox(tabId) {
+            const dropdown = document.getElementById(`column-dropdown-${tabId}`);
+            const toggleAllCheckbox = document.getElementById(`toggle-all-${tabId}`);
+            const optionalCheckboxes = Array.from(dropdown.querySelectorAll('input[type="checkbox"]:not(#toggle-all-' + tabId + ')'));
+            
+            // Check if all optional checkboxes are checked
+            const allChecked = optionalCheckboxes.every(checkbox => checkbox.checked);
+            toggleAllCheckbox.checked = allChecked;
+        }
+        
+        function getColumnIndex(checkboxId, tabId) {
+            // Get the column type from the checkbox ID
+            const parts = checkboxId.split('-');
+            const columnType = parts[1];
+            
+            // Fixed column indices for each table based on their HTML structure
+            const columnMaps = {
+                'inhouse': {
+                    'gender': 3,
+                    'department': 4,
+                    'competition': 5,
+                    'regdate': 6
+                },
+                'alumni': {
+                    'gender': 3,
+                    'email': 4,
+                    'mobile': 5,
+                    'department': 6,
+                    'passoutyear': 7,
+                    'regdate': 8
+                }
+            };
+            
+            return columnMaps[tabId] && columnMaps[tabId][columnType] !== undefined 
+                ? columnMaps[tabId][columnType] 
+                : -1;
+        }
+        
+        function toggleColumnVisibility(table, columnIndex, isVisible) {
+            // Get all headers and rows
+            const headers = table.querySelectorAll('th');
+            const rows = table.querySelectorAll('tbody tr');
+            
+            // Toggle header visibility
+            if (headers[columnIndex]) {
+                headers[columnIndex].style.display = isVisible ? '' : 'none';
+            }
+            
+            // Toggle cell visibility in each row
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells[columnIndex]) {
+                    cells[columnIndex].style.display = isVisible ? '' : 'none';
+                }
+            });
+        }
     </script>
 </body>
 </html>

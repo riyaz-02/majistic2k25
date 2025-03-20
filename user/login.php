@@ -8,8 +8,14 @@ require_once __DIR__ . '/../includes/db_config.php';
 
 // If already logged in, redirect to admin panel
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-    if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'website manager') {
-        header('Location: management.php');
+    if (isset($_SESSION['admin_role'])) {
+        if ($_SESSION['admin_role'] === 'website manager') {
+            header('Location: management.php');
+        } elseif ($_SESSION['admin_role'] === 'Manage Website') {
+            header('Location: manage/index.php');
+        } else {
+            header('Location: adm/madm.php');
+        }
     } else {
         header('Location: adm/madm.php');
     }
@@ -45,7 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['admin_username'] = $user['username'];
             $_SESSION['admin_role'] = $user['role'];
             
-            header('Location: ' . ($user['role'] === 'website manager' ? 'management.php' : 'madm.php'));
+            // Redirect based on role
+            if ($user['role'] === 'website manager') {
+                header('Location: management.php');
+            } elseif ($user['role'] === 'Manage Website') {
+                header('Location: manage/index.php');
+            } else {
+                header('Location: adm/madm.php');
+            }
             exit;
         }
     }
@@ -56,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Get available roles from MongoDB
 $roles = $db->admin_users->distinct('role');
 if (empty($roles)) {
-    $roles = ['admin', 'website manager', 'verifier', 'HOD', 'faculty coordinator', 'student'];
+    $roles = ['admin', 'website manager', 'verifier', 'HOD', 'faculty coordinator', 'student', 'Manage Website'];
 }
 ?>
 

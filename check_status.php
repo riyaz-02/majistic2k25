@@ -5,61 +5,105 @@ $message = '';
 $student_data = null;
 $registration_type = '';
 $payment_status = false; // Default to false, will update if payment found
+$coordinator_info = null;
+$ticket_generated = false;
+$checkin_day1 = false;
+$checkin_day2 = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jis_id = isset($_POST['jis_id']) ? $_POST['jis_id'] : '';
     $student_name = isset($_POST['student_name']) ? $_POST['student_name'] : '';
     
     if (!empty($jis_id) && !empty($student_name)) {
-        // Check regular registrations table
-        $stmt = $conn->prepare("SELECT student_name, department, email, mobile, registration_date, inhouse_competition, competition_name, payment_status FROM registrations WHERE jis_id = ?");
-        $stmt->bind_param("s", $jis_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            $student_data = $result->fetch_assoc();
-            $registration_type = 'student';
+        try {
+            // Check regular registrations collection
+            $registration = $registrations->findOne(['jis_id' => $jis_id]);
             
-            // Check if name matches
-            if (strtolower(trim($student_data['student_name'])) != strtolower(trim($student_name))) {
-                $message = 'The provided name does not match with the registration. Please check your information.';
-                $student_data = null;
-            } else {
-                // Check payment status
-                $payment_status = ($student_data['payment_status'] == 'Paid');
-            }
-        } else {
-            // If not found in registrations table, check alumni table
-            $stmt->close();
-            // Fix: Changed 'name' to 'alumni_name' and added 'passout_year' instead of 'batch'
-            $stmt = $conn->prepare("SELECT alumni_name as student_name, department, email, mobile, passout_year, registration_date, payment_status FROM alumni_registrations WHERE jis_id = ?");
-            $stmt->bind_param("s", $jis_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            if ($result->num_rows > 0) {
-                $student_data = $result->fetch_assoc();
-                $registration_type = 'alumni';
+            if ($registration) {
+                $student_data = formatDocument((array)$registration);
+                $registration_type = 'student';
                 
-                // Check if name matches
+                // Check if name matches (case-insensitive)
                 if (strtolower(trim($student_data['student_name'])) != strtolower(trim($student_name))) {
                     $message = 'The provided name does not match with the registration. Please check your information.';
                     $student_data = null;
                 } else {
                     // Check payment status
                     $payment_status = ($student_data['payment_status'] == 'Paid');
+                    
+                    // Check ticket generation status
+                    $ticket_generated = isset($student_data['ticket']) && $student_data['ticket'] == 'generated';
+                    
+                    // Check check-in status
+                    $checkin_day1 = isset($student_data['checkin_1']) && $student_data['checkin_1'] === true;
+                    $checkin_day2 = isset($student_data['checkin_2']) && $student_data['checkin_2'] === true;
+                    
+                    // If payment is not complete, get department coordinator info
+                    if (!$payment_status && isset($student_data['department'])) {
+                        $coordinator = $department_coordinators->findOne([
+                            'department' => ['$regex' => $student_data['department'], '$options' => 'i']
+                        ]);
+                        
+                        if ($coordinator) {
+                            $coordinator_info = formatDocument((array)$coordinator);
+                        }
+                    }
                 }
             } else {
-                $message = 'No registration found for the provided JIS ID.';
+                // If not found in registrations collection, check alumni collection
+                $registration = $alumni_registrations->findOne(['jis_id' => $jis_id]);
+                
+                if ($registration) {
+                    $student_data = formatDocument((array)$registration);
+                    $registration_type = 'alumni';
+                    
+                    // Check if name matches (case-insensitive)
+                    if (strtolower(trim($student_data['alumni_name'])) != strtolower(trim($student_name))) {
+                        $message = 'The provided name does not match with the registration. Please check your information.';
+                        $student_data = null;
+                    } else {
+                        // Change the key name for consistency in display
+                        $student_data['student_name'] = $student_data['alumni_name'];
+                        
+                        // Check payment status
+                        $payment_status = ($student_data['payment_status'] == 'Paid');
+                        
+                        // Check ticket generation status
+                        $ticket_generated = isset($student_data['ticket']) && $student_data['ticket'] == 'generated';
+                        
+                        // Check check-in status
+                        $checkin_day1 = isset($student_data['checkin_1']) && $student_data['checkin_1'] === true;
+                        $checkin_day2 = isset($student_data['checkin_2']) && $student_data['checkin_2'] === true;
+                        
+                        // If payment is not complete, get department coordinator info
+                        if (!$payment_status && isset($student_data['department'])) {
+                            $coordinator = $department_coordinators->findOne([
+                                'department' => ['$regex' => $student_data['department'], '$options' => 'i']
+                            ]);
+                            
+                            if ($coordinator) {
+                                $coordinator_info = formatDocument((array)$coordinator);
+                            }
+                        }
+                    }
+                } else {
+                    $message = 'No registration found for the provided JIS ID.';
+                }
             }
-        }
-        
-        if (isset($stmt)) {
-            $stmt->close();
+        } catch (Exception $e) {
+            $message = 'An error occurred while retrieving your information. Please try again later.';
+            error_log("Error in check_status.php: " . $e->getMessage());
         }
     } else {
         $message = 'Please enter your Name and JIS ID.';
+    }
+}
+
+// Format registration date if available
+if (isset($student_data['registration_date'])) {
+    if ($student_data['registration_date'] instanceof MongoDB\BSON\UTCDateTime) {
+        $registration_date = $student_data['registration_date']->toDateTime();
+        $student_data['registration_date'] = $registration_date->format('d M Y, h:i A');
     }
 }
 
@@ -68,8 +112,6 @@ $event_date = new DateTime('2025-04-11');
 $current_date = new DateTime();
 $interval = $current_date->diff($event_date);
 $days_remaining = $interval->format('%a');
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -82,693 +124,7 @@ $conn->close();
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
     <?php include 'includes/links.php'; ?>
     <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            background-image: url('images/pageback.png');
-            background-size: cover;
-            background-attachment: fixed;
-            min-height: 100vh;
-            font-family: 'Roboto', sans-serif;
-            color: #ffffff;
-        }
-        
-        .status-container {
-            max-width: 1200px; /* Increased from 1000px */
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        
-        .status-card {
-            background-color: rgba(0, 0, 0, 0.75);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 30px;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #3498db, #9b59b6, #8e44ad);
-            background-size: 300% 300%;
-            animation: gradientBG 10s ease infinite;
-            padding: 35px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .card-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('images/pattern.png');
-            opacity: 0.1;
-            z-index: 0;
-        }
-        
-        .logo {
-            width: 140px; /* Increased from 120px */
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-        }
-        
-        /* Updated countdown styling for header placement */
-        .countdown-container {
-            max-width: 600px; /* Increased from 500px */
-            margin: 20px auto 0;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 16px;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .countdown-title {
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        
-        .countdown {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-        
-        .countdown-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .countdown-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: white;
-            background: linear-gradient(145deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
-            border-radius: 8px;
-            min-width: 70px;
-            padding: 12px;
-            text-align: center;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .countdown-label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-top: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-        
-        .card-body {
-            padding: 40px;
-            text-align: center;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0));
-        }
-
-        .page-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: white;
-            margin: 20px 0 25px;
-            text-shadow: 0 3px 10px rgba(0,0,0,0.5);
-            letter-spacing: 1px;
-        }
-        
-        .form-container {
-            background-color: rgba(255, 255, 255, 0.08);
-            padding: 30px;
-            border-radius: 15px;
-            margin: 0 auto 30px;
-            max-width: 700px; /* Decreased width */
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-            text-align: left;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            color: #e0e0e0;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background-color: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 15px rgba(52, 152, 219, 0.4), inset 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .btn {
-            padding: 14px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            letter-spacing: 0.5px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg,rgb(168, 15, 240),rgb(105, 2, 119));
-            color: white;
-        }
-        
-        .btn-payment {
-            background: linear-gradient(135deg, #f1c40f, #e67e22);
-            color: white;
-        }
-        
-        .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(-2px);
-        }
-        
-        /* Results container styling */
-        .results-container {
-            animation: fadeIn 0.8s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .student-details {
-            background-color: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-            text-align: left;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .student-details h3 {
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-            color: #3498db;
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 16px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .detail-label {
-            font-weight: 600;
-            color: #bdc3c7;
-            flex: 1;
-        }
-        
-        .detail-value {
-            font-weight: 400;
-            color: #ecf0f1;
-            flex: 2;
-            text-align: right;
-        }
-        
-        .message-box {
-            padding: 18px;
-            margin: 25px 0;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 500;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        .message-box.error {
-            background-color: rgba(231, 76, 60, 0.2);
-            border-left: 4px solid #e74c3c;
-            color: #e74c3c;
-        }
-        
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centers buttons vertically within the div */
-            align-items: center;     /* Centers buttons horizontally within the div */
-            gap: 15px;
-            margin-top: 35px;
-            margin-left: auto;
-            margin-right: auto;
-            /* Optional: Set a width or max-width if you want to constrain the container */
-            width: 100%; /* or a specific value like 300px, depending on your design */
-        }
-
-        .action-buttons .btn {
-            width: 70%;              /* Keeps the button width at 80% of the parent */
-            justify-content: center;      /* Centers the text/content inside the button */
-            /* Remove justify-content here; it’s for flex containers, not buttons */
-        }
-        
-        /* Enhanced timeline styling */
-        .timeline-container {
-            margin: 40px auto;
-            max-width: 100%;
-        }
-        
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            margin: 0 auto;
-            padding: 20px 0;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 35px;
-            width: 6px;
-            background: linear-gradient(to bottom, #3498db, #9b59b6);
-            border-radius: 6px;
-            z-index: 1;
-            box-shadow: 0 0 20px rgba(155, 89, 182, 0.6);
-            animation: glowingLine 3s infinite alternate;
-        }
-        
-        @keyframes glowingLine {
-            from { box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
-            to { box-shadow: 0 0 25px rgba(155, 89, 182, 0.8); }
-        }
-        
-        .step {
-            position: relative;
-            margin: 35px 0;
-            padding-left: 90px;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
-            transform: translateX(-20px);
-            opacity: 0;
-            animation: stepAppear 0.8s forwards;
-            animation-delay: calc(var(--index) * 0.2s);
-        }
-        
-        @keyframes stepAppear {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .step::before {
-            content: '';
-            position: absolute;
-            left: 28px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 0;
-            height: 0;
-            background-color: #fff;
-            border-radius: 50%;
-            z-index: 3;
-            box-shadow: 0 0 15px white;
-            animation: pulse 2s infinite;
-        }
-        
-        .step-icon {
-            position: absolute;
-            left: 13px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(145deg, rgba(0,0,0,0.6), rgba(0,0,0,0.8));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.5s ease;
-            z-index: 2;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .step.active .step-icon {
-            background: linear-gradient(145deg, #3498db, #2980b9);
-            border-color: rgba(255, 255, 255, 0.6);
-            transform: translateY(-50%) scale(1.2);
-            box-shadow: 0 0 25px rgba(52, 152, 219, 0.9);
-        }
-        
-        .step.completed .step-icon {
-            background: linear-gradient(145deg, #2ecc71, #27ae60);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 20px rgba(46, 204, 113, 0.7);
-        }
-        
-        .step-content {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            padding: 25px;
-            width: 100%;
-            transition: all 0.4s ease;
-            border-left: 4px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-        }
-        
-        .step.active .step-content {
-            border-left-color: #3498db;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            background: rgba(52, 152, 219, 0.15);
-            transform: translateX(8px) scale(1.03);
-        }
-        
-        .step.completed .step-content {
-            border-left-color: #2ecc71;
-            background: rgba(46, 204, 113, 0.1);
-        }
-        
-        .step-icon .icon {
-            color: white;
-            font-size: 20px;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
-        }
-        
-        .step-title {
-            font-weight: 700;
-            font-size: 20px;
-            color: #ecf0f1;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-        
-        .step-description {
-            font-size: 15px;
-            color: #bdc3c7;
-            line-height: 1.6;
-        }
-
-        /* Event day message styling */
-        .event-message {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        @media (min-width: 992px) {
-            .event-message {
-                flex-direction: row;
-                gap: 50px;
-                justify-content: space-between;
-            }
-            
-            .event-day-message {
-                flex: 1;
-                margin: 10px 0;
-            }
-        }
-
-        .event-day-message {
-            background: linear-gradient(145deg, rgba(155, 89, 182, 0.8), rgba(107, 123, 201, 0.8));
-            border-radius: 15px;
-            padding: 30px 25px;
-            margin: 20px 0;
-            text-align: center;
-            font-weight: 500;
-            color: white;
-            box-shadow: 0 15px 30px rgba(107, 123, 201, 0.3);
-            animation: pulse 2.5s infinite;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Message container styling */
-        .no-results-message {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            padding: 40px 30px;
-            margin: 30px auto;
-            max-width: 600px;
-            text-align: center;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            animation: fadeIn 0.8s ease;
-        }
-        
-        .no-results-message i {
-            font-size: 60px;
-            color: #e74c3c;
-            margin-bottom: 25px;
-            display: block;
-            animation: wobble 2s infinite;
-        }
-        
-        @keyframes wobble {
-            0%, 100% { transform: translateX(0); }
-            15% { transform: translateX(-15px) rotate(-5deg); }
-            30% { transform: translateX(10px) rotate(3deg); }
-            45% { transform: translateX(-10px) rotate(-3deg); }
-            60% { transform: translateX(5px) rotate(2deg); }
-            75% { transform: translateX(-5px) rotate(-1deg); }
-        }
-        
-        .no-results-message h3 {
-            color: #e74c3c;
-            margin-bottom: 20px;
-            font-size: 28px;
-            font-weight: 700;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        
-        .no-results-message p {
-            color: #ecf0f1;
-            font-size: 17px;
-            line-height: 1.7;
-            margin-bottom: 25px;
-        }
-
-        /* Improved layout */
-        .status-layout {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 40px;
-            margin-top: 30px;
-        }
-        
-        .details-column {
-            flex: 1;
-            min-width: 360px;
-        }
-        
-        .timeline-column {
-            flex: 1.2;
-            min-width: 400px;
-        }
-        
-        .timeline-box {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            padding: 35px 25px;
-            height: 100%;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .timeline-box h3 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #3498db;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 15px;
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-        .note {
-            border-radius: 15px !important;
-            padding: 25px !important;
-            margin: 25px 0 !important;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-        }
-
-        @media (max-width: 768px) {
-            .card-body {
-                padding: 30px 20px;
-            }
-            
-            .detail-row {
-                flex-direction: column;
-                margin-bottom: 15px;
-            }
-            
-            .detail-value {
-                margin-top: 8px;
-                word-break: break-all;
-                text-align: left;
-            }
-            
-            .timeline::before {
-                left: 25px;
-            }
-            
-            .step-icon {
-                left: 8px;
-                width: 40px;
-                height: 40px;
-            }
-            
-            .step {
-                padding-left: 70px;
-            }
-            
-            .step::before {
-                left: 23px;
-                width: 0;
-                height: 0;
-            }
-            
-            .countdown {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .countdown-item {
-                margin-bottom: 15px;
-            }
-            
-            .status-layout {
-                flex-direction: column;
-                gap: 30px;
-            }
-            
-            .timeline-box {
-                padding: 25px 15px;
-            }
-
-            .page-title {
-                font-size: 26px;
-            }
-            
-            .countdown-value {
-                font-size: 24px;
-                min-width: 60px;
-                padding: 10px;
-            }
-            
-            .step-content {
-                padding: 20px;
-            }
-            
-            .step-title {
-                font-size: 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .card-body {
-                padding: 20px 15px;
-            }
-            
-            .form-container {
-                padding: 20px 15px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .btn {
-                width: 80%;
-                margin: 0 auto;
-                justify-content: center;
-                padding: 12px 20px;
-            }
-            
-            .countdown-container {
-                padding: 10px;
-            }
-            
-            .countdown-value {
-                font-size: 20px;
-                min-width: 50px;
-                padding: 8px;
-            }
-            
-            .countdown-title {
-                font-size: 14px;
-            }
-            
-            .logo {
-                width: 100px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/check_status.css">
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
@@ -895,16 +251,35 @@ $conn->close();
 
                                 <?php if (!$payment_status): ?>
                                     <div class="note" style="background-color: rgba(241, 196, 15, 0.15); border-left: 4px solid #f1c40f; padding: 15px; margin: 20px 0; text-align: left; border-radius: 4px;">
-                                        <p><strong>Important:</strong> Please complete your payment to confirm your participation in maJIStic 2k25.</p>
+                                        <p><strong>Important:</strong> Please complete your payment with your department coordinator to confirm your participation in maJIStic 2k25.</p>
+                                        
+                                        <?php if ($coordinator_info): ?>
+                                        <div style="margin-top: 20px; background-color: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 8px;">
+                                            <h4 style="color: #f1c40f; margin-top: 0; margin-bottom: 10px;">Your Department Coordinator</h4>
+                                            <p><strong>Name:</strong> <?php echo htmlspecialchars($coordinator_info['name']); ?></p>
+                                            <p><strong>Department:</strong> <?php echo htmlspecialchars($coordinator_info['department']); ?></p>
+                                            <p><strong>Contact:</strong> <?php echo htmlspecialchars($coordinator_info['contact']); ?></p>
+                                            <?php if (isset($coordinator_info['available_time'])): ?>
+                                            <p><strong>Available:</strong> <?php echo htmlspecialchars($coordinator_info['available_time']); ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php else: ?>
                                         <div style="text-align: center; margin-top: 15px;">
                                             <a href="src/transaction/payment.php?jis_id=<?php echo urlencode($jis_id); ?>" class="btn btn-payment">
                                                 <i class="fas fa-credit-card"></i> Complete Payment
                                             </a>
                                         </div>
+                                        <?php endif; ?>
                                     </div>
                                 <?php else: ?>
                                     <div class="note" style="background-color: rgba(46, 204, 113, 0.15); border-left: 4px solid #2ecc71; padding: 15px; margin: 20px 0; text-align: left; border-radius: 4px;">
-                                        <p><strong>Thank you!</strong> Your payment has been completed. Your event ticket will be generated soon.</p>
+                                        <p><strong>Thank you!</strong> Your payment has been completed. 
+                                        <?php if ($ticket_generated): ?>
+                                            Your event ticket has been generated and sent to your email.
+                                        <?php else: ?>
+                                            Your event ticket will be generated soon.
+                                        <?php endif; ?>
+                                        </p>
                                     </div>
                                 <?php endif; ?>
 
@@ -918,6 +293,106 @@ $conn->close();
                                     <a href="check_status.php" class="btn" style="background: linear-gradient(135deg,rgb(96, 93, 97),rgb(46, 34, 51)); color: white;">
                                         <i class="fas fa-search"></i> New Search
                                     </a>
+                                </div>
+                                
+                                <!-- Support Team Section - Moved here from below -->
+                                <div class="support-container">
+                                    <div class="contact-section">
+                                        <h2 class="contact-section-title">Need Help?</h2>
+                                        
+                                        <div class="contact-tabs">
+                                            <button class="contact-tab active" data-target="tech-team">Tech Team</button>
+                                            <button class="contact-tab" data-target="support-team">Support Team</button>
+                                        </div>
+                                        
+                                        <div class="contact-panel active" id="tech-team">
+                                            <p class="contact-description">
+                                                In case of any technical issues, feel free to contact our Tech Team
+                                            </p>
+                                            <div class="contact-cards">
+                                                <div class="contact-card">
+                                                    <div class="icon">
+                                                        <i class="fas fa-user-cog"></i>
+                                                    </div>
+                                                    <div class="info">
+                                                        <h4>Priyanshu Nayan</h4>
+                                                        <a href="tel:+917004706722">+91 7004706722</a>
+                                                    </div>
+                                                </div>
+                                                <div class="contact-card">
+                                                    <div class="icon">
+                                                        <i class="fas fa-user-cog"></i>
+                                                    </div>
+                                                    <div class="info">
+                                                        <h4>Sk Riyaz</h4>
+                                                        <a href="tel:+917029621489">+91 7029621489</a>
+                                                    </div>
+                                                </div>
+                                                <div class="contact-card">
+                                                    <div class="icon">
+                                                        <i class="fas fa-user-cog"></i>
+                                                    </div>
+                                                    <div class="info">
+                                                        <h4>Ronit Pal</h4>
+                                                        <a href="tel:+917501005155">+91 7501005155</a>
+                                                    </div>
+                                                </div>
+                                                <div class="contact-card">
+                                                    <div class="icon">
+                                                        <i class="fas fa-user-cog"></i>
+                                                    </div>
+                                                    <div class="info">
+                                                        <h4>Mohit Kumar</h4>
+                                                        <a href="tel:+918016804158">+91 8016804158</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="contact-panel" id="support-team">
+                                            <p class="contact-description">
+                                                For events related support, contact our Support Team
+                                            </p>
+                                            <div class="contact-cards">
+                                                <div class="contact-card">
+                                                    <div class="icon">
+                                                        <i class="fas fa-headset"></i>
+                                                    </div>
+                                                    <div class="info">
+                                                        <h4>Dr. Madhura Chakraborty</h4>
+                                                        <a href="tel:+917980979789">+91 7980979789</a>
+                                                    </div>
+                                                </div>
+                                                <div class="contact-card">
+                                                    <div class="icon">
+                                                        <i class="fas fa-headset"></i>
+                                                    </div>
+                                                    <div class="info">
+                                                        <h4>Dr. Proloy Ghosh</h4>
+                                                        <a href="tel:+917980532913">+91 7980532913</a>
+                                                    </div>
+                                                </div>
+                                                <div class="contact-card">
+                                                    <div class="icon">
+                                                        <i class="fas fa-headset"></i>
+                                                    </div>
+                                                    <div class="info">
+                                                        <h4>Anamitra Mondal</h4>
+                                                        <a href="tel:+916289654490">+91 6289654490</a>
+                                                    </div>
+                                                </div>
+                                                <div class="contact-card">
+                                                    <div class="icon">
+                                                        <i class="fas fa-envelope"></i>
+                                                    </div>
+                                                    <div class="info">
+                                                        <h4>Email Support</h4>
+                                                        <a href="mailto:majistic@jiscollege.ac.in">majistic@jiscollege.ac.in</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -941,67 +416,98 @@ $conn->close();
                                                     <i class="icon fas <?php echo $payment_status ? 'fa-check' : 'fa-credit-card'; ?>"></i>
                                                 </div>
                                                 <div class="step-content">
-                                                    <div class="step-title"><?php echo $payment_status ? 'Payment Complete' : 'Payment Pending'; ?></div>
-                                                    <div class="step-description"><?php echo $payment_status ? 'You\'ve successfully paid for your tickets. Thanks for your support! Your participation is confirmed.' : 'Complete your payment to secure your spot at the event. Don\'t miss out on this exciting opportunity!'; ?></div>
+                                                    <div class="step-title">Payment Status</div>
+                                                    <div class="step-description">
+                                                        <?php if ($payment_status): ?>
+                                                            Your payment has been received and processed successfully. You're all set for the event!
+                                                        <?php else: ?>
+                                                            Your payment is pending. Please complete your payment to confirm your participation.
+                                                            <?php if ($coordinator_info): ?>
+                                                                Contact your department coordinator for payment assistance.
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
-                                            <div class="step" style="--index: 3;">
+                                            <div class="step <?php echo $ticket_generated ? 'completed' : ($payment_status ? 'active' : ''); ?>" style="--index: 3;">
                                                 <div class="step-icon">
-                                                    <i class="icon fas fa-ticket-alt"></i>
+                                                    <i class="icon fas <?php echo $ticket_generated ? 'fa-check' : 'fa-ticket-alt'; ?>"></i>
                                                 </div>
                                                 <div class="step-content">
                                                     <div class="step-title">Ticket Generation</div>
-                                                    <div class="step-description">Your digital tickets will be generated soon. You'll receive them via email with all the details you need for entry to the event.</div>
+                                                    <div class="step-description">
+                                                        <?php if ($ticket_generated): ?>
+                                                            Your event ticket has been generated and emailed to your registered email address. Please keep it handy during the event. In case of any issues, contact our support team.
+                                                        <?php elseif ($payment_status): ?>
+                                                            Your payment has been confirmed. Your ticket will be generated 3 days before the event and emailed to you. Please keep checking your inbox and spam folders.
+                                                        <?php else: ?>
+                                                            Your ticket will be generated after payment confirmation and sent to your email 3 days before the event.
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
-                                            <div class="step" style="--index: 4;">
+                                            <div class="step <?php echo $checkin_day1 ? 'completed' : ($ticket_generated ? 'active' : ''); ?>" style="--index: 4;">
                                                 <div class="step-icon">
-                                                    <i class="icon fas fa-calendar-day"></i>
+                                                    <i class="icon fas <?php echo $checkin_day1 ? 'fa-check' : 'fa-calendar-check'; ?>"></i>
                                                 </div>
                                                 <div class="step-content">
-                                                    <div class="step-title">Event Day 1 - April 11, 2025</div>
-                                                    <div class="step-description">Join us for exciting performances! The first day is packed with overwelming events and entertainment.</div>
+                                                    <div class="step-title">Day 1 Check-in</div>
+                                                    <div class="step-description">
+                                                        <?php if ($checkin_day1): ?>
+                                                            You've successfully checked in for Day 1 of maJIStic 2k25. The excitement has begun! Get ready for a day full of innovation, creativity, and incredible performances!
+                                                        <?php elseif ($ticket_generated): ?>
+                                                            Get ready for an electrifying Day 1! Bring your ticket to check in at the registration desk and prepare to be amazed by spectacular performances.!
+                                                        <?php else: ?>
+                                                            Day 1 promises to be an unforgettable experience with opening ceremonies, and thrilling events. Don't miss out!
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
-                                            <div class="step" style="--index: 5;">
+                                            <div class="step <?php echo $checkin_day2 ? 'completed' : ($checkin_day1 ? 'active' : ''); ?>" style="--index: 5;">
                                                 <div class="step-icon">
-                                                    <i class="icon fas fa-calendar-check"></i>
+                                                    <i class="icon fas <?php echo $checkin_day2 ? 'fa-check' : 'fa-calendar-check'; ?>"></i>
                                                 </div>
                                                 <div class="step-content">
-                                                    <div class="step-title">Event Day 2 - April 12, 2025</div>
-                                                    <div class="step-description">Experience the final day with stellar performances, and closing celebrations! Don't miss the culmination of maJIStic 2k25.</div>
+                                                    <div class="step-title">Day 2 Check-in</div>
+                                                    <div class="step-description">
+                                                        <?php if ($checkin_day2): ?>
+                                                            You've successfully checked in for Day 2 of maJIStic 2k25! The grand day is here - prepare for mind-blowing cultural extravaganzas, and celebration of the evening!
+                                                        <?php elseif ($checkin_day1): ?>
+                                                            Day 2 is where the magic culminates! Don't forget to check in again for the grand day featuring cultural showcases, and the grand proshows!
+                                                        <?php else: ?>
+                                                            The grand maJIStic Day 2 will feature electrifying proshows, cultural performances, and unforgettable moments. Be part of this celebration of the evening!
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-                            </div>
-                            <div class="event-message" style="margin-top: 10px;">
-                                <?php if ($payment_status): ?>
+
+                                <!-- Event Day Information
+                                <div class="event-message">
                                     <div class="event-day-message">
-                                        <i class="fas fa-ticket-alt"></i>
-                                        <h4>Ticket Status</h4>
-                                        <p>Your event tickets will be generated soon! Stay tuned for updates in your email inbox and on our website.</p>
+                                        <h4 style="margin-top: 0; margin-bottom: 15px; font-size: 20px;">Day 1: April 11, 2025</h4>
+                                        <p style="margin: 0;">Opening ceremony, cultural perfomences and electryfing enjoyments</p>
                                     </div>
-                                    
                                     <div class="event-day-message">
-                                        <i class="fas fa-star"></i>
-                                        <h4>Event Day Experience</h4>
-                                        <p>Get ready for an unforgettable experience at maJIStic 2k25! Exciting performances, tech exhibitions, networking sessions, and amazing memories await you!</p>
+                                        <h4 style="margin-top: 0; margin-bottom: 15px; font-size: 20px;">Day 2: April 12, 2025</h4>
+                                        <p style="margin: 0;">Cultural events, grand proshows, evening enjoyment and closing ceremony</p>
                                     </div>
-                                <?php endif; ?>
+                                </div> -->
                             </div>
                         </div>
+                        
+                        <!-- Removed support container from here -->
                     </div>
                 <?php endif; ?>
             </div>
         </div>
     </div>
-
+    
     <?php include 'includes/footer.php'; ?>
     
     <script>
@@ -1081,6 +587,27 @@ $conn->close();
                 if (header) {
                     header.style.backgroundPosition = `0% ${scrollPosition * 0.05}%`;
                 }
+            });
+            
+            // Support team tabs
+            const contactTabs = document.querySelectorAll('.contact-tab');
+            const contactPanels = document.querySelectorAll('.contact-panel');
+            
+            contactTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const target = this.getAttribute('data-target');
+                    
+                    // Remove active class from all tabs and panels
+                    contactTabs.forEach(t => t.classList.remove('active'));
+                    contactPanels.forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and its panel
+                    this.classList.add('active');
+                    const panel = document.getElementById(target);
+                    if(panel) {
+                        panel.classList.add('active');
+                    }
+                });
             });
         });
     </script>
