@@ -1,31 +1,90 @@
 <?php
-//Database connection parameters
-$servername = "localhost";
-$username = "root"; // Replace with your MySQL username
-$password = ""; // Replace with your MySQL password
-$dbname = "majistic2k25";
+// MongoDB Atlas Connection Settings
+require_once __DIR__ . '/../vendor/autoload.php';
 
-
-// Database connection parameters
-// $servername = "localhost";
-// $username = "u901957751_majistic2k25"; // Replace with your MySQL username
-// $password = "maJIStic@2k25"; // Replace with your MySQL password
-// $dbname = "u901957751_majistic2k25";
-
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    // MongoDB Atlas connection string - Replace with your actual connection details
+    $connectionString = "mongodb+srv://ronitpal2003:kfBWE6uZKAKBnPsB@majistic.rqsmf.mongodb.net/?retryWrites=true&w=majority&appName=maJIStic";
+    
+    $client = new MongoDB\Client($connectionString);
+    
+    // Select database
+    $db = $client->selectDatabase('majistic2k25');
+    
+    // Define collections as global variables for easy access
+    $registrations = $db->registrations;
+    $alumni_registrations = $db->alumni_registrations;
+    
+    // Set timezone for consistent date handling
+    date_default_timezone_set('Asia/Kolkata');
+    
+    // Log successful connection
+    error_log("MongoDB Atlas connection established successfully");
+} catch (MongoDB\Driver\Exception\ConnectionTimeoutException $e) {
+    die("Connection timeout: " . $e->getMessage());
+} catch (MongoDB\Driver\Exception\AuthenticationException $e) {
+    die("Authentication failed: " . $e->getMessage());
+} catch (Exception $e) {
+    die("MongoDB connection failed: " . $e->getMessage());
 }
 
-// Set character set to utf8mb4
-$conn->set_charset("utf8mb4");
+/**
+ * Helper function to generate a unique ID for MongoDB documents
+ * @return string A unique identifier
+ */
+function generateUniqueId() {
+    return (string) new MongoDB\BSON\ObjectId();
+}
 
-// Optional: Configure MySQL settings
-$conn->query("SET SESSION sql_mode = ''");
-$conn->query("SET SESSION time_zone = '+05:30'"); // Indian time zone
+/**
+ * Helper function to format MongoDB document for output
+ * @param array $document The MongoDB document
+ * @return array Formatted document
+ */
+function formatDocument($document) {
+    if (isset($document['_id']) && $document['_id'] instanceof MongoDB\BSON\ObjectId) {
+        $document['_id'] = (string) $document['_id'];
+    }
+    return $document;
+}
+
+/**
+ * Helper function to count documents in a collection with a filter
+ * @param MongoDB\Collection $collection The MongoDB collection
+ * @param array $filter Filter criteria
+ * @return int Count of matching documents
+ */
+function countDocuments($collection, $filter = []) {
+    return $collection->countDocuments($filter);
+}
+
+/**
+ * Helper function to paginate MongoDB results
+ * @param MongoDB\Collection $collection The MongoDB collection
+ * @param array $filter Filter criteria
+ * @param array $options Options for sorting, limit, etc.
+ * @return array Array of documents
+ */
+function paginateResults($collection, $filter = [], $options = []) {
+    $cursor = $collection->find($filter, $options);
+    $results = [];
+    foreach ($cursor as $document) {
+        $results[] = formatDocument((array)$document);
+    }
+    return $results;
+}
+
+/**
+ * Helper function to find a single document
+ * @param MongoDB\Collection $collection The MongoDB collection
+ * @param array $filter Filter criteria
+ * @return array|null The document or null if not found
+ */
+function findDocument($collection, $filter = []) {
+    $document = $collection->findOne($filter);
+    if ($document) {
+        return formatDocument((array)$document);
+    }
+    return null;
+}
 ?>

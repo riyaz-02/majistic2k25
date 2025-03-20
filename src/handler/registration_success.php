@@ -4,22 +4,40 @@ include '../../includes/db_config.php';
 // Initialize variables
 $jis_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : '';
 $student_data = null;
+$is_alumni = isset($_GET['alumni']) && $_GET['alumni'] == '1';
 
 // If JIS ID is provided, fetch student details
 if (!empty($jis_id)) {
-    $stmt = $conn->prepare("SELECT student_name, department, email, mobile, registration_date FROM registrations WHERE jis_id = ?");
-    $stmt->bind_param("s", $jis_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        $student_data = $result->fetch_assoc();
+    try {
+        if ($is_alumni) {
+            $student_doc = $alumni_registrations->findOne(['jis_id' => $jis_id]);
+            if ($student_doc) {
+                // Convert MongoDB document to array and format fields consistently with old MySQL output
+                $student_data = [
+                    'student_name' => $student_doc['alumni_name'],
+                    'department' => $student_doc['department'],
+                    'email' => $student_doc['email'],
+                    'mobile' => $student_doc['mobile'],
+                    'registration_date' => $student_doc['registration_date']
+                ];
+            }
+        } else {
+            $student_doc = $registrations->findOne(['jis_id' => $jis_id]);
+            if ($student_doc) {
+                // Convert MongoDB document to array and format fields
+                $student_data = [
+                    'student_name' => $student_doc['student_name'],
+                    'department' => $student_doc['department'],
+                    'email' => $student_doc['email'],
+                    'mobile' => $student_doc['mobile'],
+                    'registration_date' => $student_doc['registration_date']
+                ];
+            }
+        }
+    } catch (Exception $e) {
+        error_log("MongoDB query error: " . $e->getMessage());
     }
-    
-    $stmt->close();
 }
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -524,7 +542,7 @@ $conn->close();
                 opacity: 1; 
             }
             80% { opacity: 0.8; }
-            100% { 
+             100% { 
                 transform: translateY(100vh) rotate(720deg); 
                 opacity: 0; 
             }
@@ -586,11 +604,23 @@ $conn->close();
                 <div class="glass-separator"></div>
                 
                 <div class="note">
-                    <p><strong>Important Note:</strong> You'll be notified soon about the payment process for your event ticket. Keep an eye on your email inbox and our social media pages for updates!</p>
+                    <p><strong>Important Note:</strong> 
+                    <?php if ($is_alumni): ?>
+                        Please contact the alumni coordinator or pay the registration fee at the registration desk on the event day.
+                    <?php else: ?>
+                        Please contact your department coordinator to pay the registration fee and secure your spot.
+                    <?php endif; ?>
+                    </p>
                 </div>
                 
                 <div class="warning">
-                    <p><strong>Remember:</strong> Your college ID will be mandatory for check-in on the event day. Please ensure you bring it along!</p>
+                    <p><strong>Remember:</strong> 
+                    <?php if ($is_alumni): ?>
+                        Please bring your Alumni ID or any Government ID for verification on the event day.
+                    <?php else: ?>
+                        Your college ID will be mandatory for check-in on the event day. Please ensure you bring it along!
+                    <?php endif; ?>
+                    </p>
                 </div>
                 
                 <div class="glass-separator"></div>
