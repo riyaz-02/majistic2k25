@@ -1,7 +1,6 @@
 <?php
-include 'src/main/registration_handler.php';
 // Include payment configuration
-if(file_exists('src/config/payment_config.php')) {
+if (file_exists('src/config/payment_config.php')) {
     include 'src/config/payment_config.php';
 } else {
     define('PAYMENT_ENABLED', true); // Default to enabled if config doesn't exist
@@ -83,203 +82,283 @@ if(file_exists('src/config/payment_config.php')) {
             50% { transform: scale(1.05); opacity: 1; }
             100% { transform: scale(0.95); opacity: 0.7; }
         }
+
+        /* Container for background content */
+        .content-container {
+            transition: filter 0.3s ease; /* Smooth blur transition */
+        }
+
+        /* Blur only the background when modal is open */
+        .content-container.blur {
+            filter: blur(5px);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background:rgba(54, 51, 55, 0.6); /* Purple background */
+            color: white; /* White text for contrast */
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: left;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .rules-list {
+            list-style-type: decimal;
+            padding-left: 25px;
+            margin: 0 0 20px 0;
+        }
+
+        .rules-list li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+            word-spacing: normal;
+            text-align: left;
+        }
+
+        /* Prevent scrolling when modal is open */
+        body.modal-open {
+            overflow: hidden;
+        }
     </style>
 </head>
 <body class="<?php echo $registration_success ? 'registration-success' : ''; ?>">
-    <?php include 'includes/header.php'; ?>
-    
-    <?php if (!empty($message) && !$registration_success): ?>
-        <div class="message-box <?php echo $registration_success ? 'success' : 'error'; ?>" id="messageBox"><?php echo $message; ?></div>
-        <script>
-            document.getElementById('messageBox').style.display = 'block';
-            setTimeout(function() {
-                document.getElementById('messageBox').style.display = 'none';
-            }, 6000);
-        </script>
-    <?php endif; ?>
-    
-    <!-- Success preloader - shown only when registration is successful -->
-    <?php if ($registration_success): ?>
-    <div class="success-preloader" id="successPreloader">
-        <img src="images/majisticlogo.png" alt="maJIStic Logo">
-        <h2>Registration Successful!</h2>
-        <p>Congratulations! Your registration has been completed.</p>
-        <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
-        <p>Redirecting to Payment page...</p>
-        <?php else: ?>
-        <p>Redirecting to confirmation page...</p>
+    <!-- Wrap all content except modals in a container -->
+    <div class="content-container">
+        <?php include 'includes/header.php'; ?>
+        
+        <?php if (!empty($message) && !$registration_success): ?>
+            <div class="message-box <?php echo $registration_success ? 'success' : 'error'; ?>" id="messageBox"><?php echo $message; ?></div>
+            <script>
+                document.getElementById('messageBox').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('messageBox').style.display = 'none';
+                }, 6000);
+            </script>
         <?php endif; ?>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
+        
+        <!-- Success preloader - shown only when registration is successful -->
+        <?php if ($registration_success): ?>
+        <div class="success-preloader" id="successPreloader">
+            <img src="images/majisticlogo.png" alt="maJIStic Logo">
+            <h2>Registration Successful!</h2>
+            <p>Congratulations! Your registration has been completed.</p>
+            <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
+            <p>Redirecting to Payment page...</p>
+            <?php else: ?>
+            <p>Redirecting to confirmation page...</p>
+            <?php endif; ?>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
         </div>
-    </div>
-    <script>
-        // Start the progress bar animation immediately
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                document.getElementById('progressFill').style.width = '100%';
-            }, 100);
-            
-            // Redirect after the animation completes
-            setTimeout(function() {
-                <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
-                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Payment redirect
-                <?php else: ?>
-                window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Redirect to success page
-                <?php endif; ?>
-            }, 3500); // Just after the progress bar completes
-        });
-    </script>
-    <?php endif; ?>
-    
-    <section class="registration-container">
-        <div class="registration-heading">
-            <h1>Alumni Registration</h1>
+        <script>
+            // Start the progress bar animation immediately
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    document.getElementById('progressFill').style.width = '100%';
+                }, 100);
+                
+                // Redirect after the animation completes
+                setTimeout(function() {
+                    <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
+                    window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Payment redirect
+                    <?php else: ?>
+                    window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>&alumni=1'; // Redirect to success page
+                    <?php endif; ?>
+                }, 3500); // Just after the progress bar completes
+            });
+        </script>
+        <?php endif; ?>
+        
+        <section class="registration-container">
+            <div class="registration-heading">
+                <h1>Alumni Registration</h1>
+            </div>
+            <div class="info-card">
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Please ensure that all your details are correct before submitting.</li>
+                    <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <strong>Rs. 1000</strong> for Alumni</li>
+                    <li><i class="fas fa-id-card"></i> <a href="#" id="rulesLink">Rules and Regulations</a></li>
+                    <li><i class="fas fa-phone-alt"></i> For queries, contact <strong>maJIStic support</strong></li>
+                    <li><i class="fas fa-shopping-bag"></i> For Merchandise, visit <a href="merchandise.php"><strong>Merchandise page</strong></a></li>
+                </ul>
+            </div>
+            <div class="content-wrapper">
+                <div class="banner-container">
+                    <img id="bannerImage" src="https://i.ibb.co/VWLkTX5j/banner1.png" alt="Event Banner">
+                </div>
+                <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
+                    <img class="majisticheadlogo" src="images/majistic2k25_white.png" alt="maJIStic Logo">
+                    <?php if (!$registration_success): ?>
+                        <form id="registrationForm" method="POST" action="registration_alumni.php" onsubmit="return validateForm()">
+                            <input type="hidden" name="registration_type" value="alumni">
+                            <div class="form-group">
+                                <label for="student_name">Full Name:</label>
+                                <input type="text" id="student_name" name="student_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender:</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">--Select Gender--</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Prefer not say</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="jis_id">JIS ID:</label>
+                                <input type="text" id="jis_id" name="jis_id" pattern="JIS/\d{4}/\d{4}" placeholder="JIS/20XX/0000" required>                        
+                            </div>
+                            <div class="form-group">
+                                <label for="passout_year">Passout Year:</label>
+                                <select id="passout_year" name="passout_year" required>
+                                    <option value="">--Select Passout Year--</option>
+                                    <?php
+                                        for ($year = 2024; $year >= 2001; $year--) {
+                                            echo "<option value=\"$year\">$year</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department:</label>
+                                <select id="department" name="department" required>
+                                    <option value="">--Select Department--</option>
+                                    <option value="CSE">CSE</option>
+                                    <option value="CSE AI-ML">CSE AI-ML</option>
+                                    <option value="CST">CST</option>
+                                    <option value="IT">IT</option>
+                                    <option value="ECE">ECE</option>
+                                    <option value="EE">EE</option>
+                                    <option value="BME">BME</option>
+                                    <option value="CE">CE</option>
+                                    <option value="ME">ME</option>
+                                    <option value="AGE">AGE</option>
+                                    <option value="BBA">BBA</option>
+                                    <option value="MBA">MBA</option>
+                                    <option value="BCA">BCA</option>
+                                    <option value="MCA">MCA</option>
+                                    <option value="Diploma ME">Diploma ME</option>
+                                    <option value="Diploma CE">Diploma CE</option>
+                                    <option value="Diploma EE">Diploma EE</option>
+                                    <option value="B. Pharmacy">Pharmacy</option>                            
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="mobile">Mobile Number:</label>
+                                <input type="tel" id="mobile" name="mobile" pattern="\d{10}" placeholder="10-digit Mobile Number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email ID:</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="current_organization">Current Organization/Company (Optional):</label>
+                                <input type="text" id="current_organization" name="current_organization">
+                            </div>
+                            <button type="button" id="registerButton">
+                                <span>Register</span>
+                                <span>Reconnect with JIS!</span>
+                            </button>
+                            <!-- <p class="mt-2">
+                                <a href="#" id="rulesLink">Rules and Regulations</a>
+                            </p> -->
+                        </form>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Scroll indicator for mobile -->
+        <div class="scroll-indicator">
+            <i class="fas fa-arrow-down"></i> Scroll for registration form
         </div>
-        <div class="info-card">
-            <ul>
-                <li><i class="fas fa-check-circle"></i> Please ensure that all your details are correct before submitting.</li>
-                <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <strong>Rs. 1000</strong> for Alumni</li>
-                <li><i class="fas fa-id-card"></i> Please bring your Alumni ID or any Government ID for verification on the event day.</li>
-                <li><i class="fas fa-phone-alt"></i> For queries, contact <strong>maJIStic support</strong></li>
-                <li><i class="fas fa-shopping-bag"></i> For Merchandise, visit <a href="merchandise.php"><strong>Merchandise page</strong></a></li>
+        
+        <!-- Contact Box -->
+        <div class="tech-team-contact">
+            <div class="contact-header">
+                <i class="fas fa-headset"></i>
+                <h3>In case of any discrepancy, feel free to contact maJIStic Alumni Support Team</h3>
+            </div>
+            <div class="contact-cards">
+                <div class="contact-card">
+                    <div class="contact-card-inner">
+                        <div class="contact-info">
+                            <h4>Priyanshu Nayan</h4>
+                            <p>+91 7004706722</p>
+                        </div>
+                        <a href="https://wa.me/917004706722" target="_blank" class="whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-inner">
+                        <div class="contact-info">
+                            <h4>Sk Riyaz</h4>
+                            <p>+91 7029621489</p>
+                        </div>
+                        <a href="https://wa.me/917029621489" target="_blank" class="whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-inner">
+                        <div class="contact-info">
+                            <h4>Alumni Relations</h4>
+                            <p>+91 9830384902</p>
+                        </div>
+                        <a href="https://wa.me/919830384902" target="_blank" class="whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <?php include 'includes/footer.php'; ?>
+    </div> <!-- End of content-container -->
+
+    <!-- Modals outside content-container -->
+    <!-- Rules and Regulations Modal -->
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <h2>Rules and Regulations</h2>
+            <ul class="rules-list">
+                <li>Payment will be accepted after registration.</li>
+                <li>You will receive a confirmation email upon successful registration.</li>
+                <li>Only cash payments are accepted.</li>
+                <li>Please bring your Alumni ID or any Government ID for verification on the event day.</li>
             </ul>
-        </div>
-        <div class="content-wrapper">
-            <div class="banner-container">
-                <img id="bannerImage" src="https://i.ibb.co/VWLkTX5j/banner1.png" alt="Event Banner">
-            </div>
-            <div class="form-container" style="background: rgba(0, 0, 0, 0.5); padding: 20px; text-align: left; border-radius: 10px; border: 1px solid #888;">
-                <img class="majisticheadlogo" src="images/majistic2k25_white.png" alt="maJIStic Logo">
-                <?php if (!$registration_success): ?>
-                    <form id="registrationForm" method="POST" action="registration_alumni.php" onsubmit="return validateForm()">
-                        <input type="hidden" name="registration_type" value="alumni">
-                        <div class="form-group">
-                            <label for="student_name">Full Name:</label>
-                            <input type="text" id="student_name" name="student_name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">Gender:</label>
-                            <select id="gender" name="gender" required>
-                                <option value="">--Select Gender--</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Prefer not say</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="jis_id">JIS ID:</label>
-                            <input type="text" id="jis_id" name="jis_id" pattern="JIS/\d{4}/\d{4}" placeholder="JIS/20XX/0000" required>                        
-                        </div>
-                        <div class="form-group">
-                            <label for="passout_year">Passout Year:</label>
-                            <select id="passout_year" name="passout_year" required>
-                                <option value="">--Select Passout Year--</option>
-                                <?php
-                                    for ($year = 2024; $year >= 2001; $year--) {
-                                        echo "<option value=\"$year\">$year</option>";
-                                    }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="department">Department:</label>
-                            <select id="department" name="department" required>
-                                <option value="">--Select Department--</option>
-                                <option value="CSE">CSE</option>
-                                <option value="CSE AI-ML">CSE AI-ML</option>
-                                <option value="CST">CST</option>
-                                <option value="IT">IT</option>
-                                <option value="ECE">ECE</option>
-                                <option value="EE">EE</option>
-                                <option value="BME">BME</option>
-                                <option value="CE">CE</option>
-                                <option value="ME">ME</option>
-                                <option value="AGE">AGE</option>
-                                <option value="BBA">BBA</option>
-                                <option value="MBA">MBA</option>
-                                <option value="BCA">BCA</option>
-                                <option value="MCA">MCA</option>
-                                <option value="Diploma ME">Diploma ME</option>
-                                <option value="Diploma CE">Diploma CE</option>
-                                <option value="Diploma EE">Diploma EE</option>
-                                <option value="B. Pharmacy">Pharmacy</option>                            
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="mobile">Mobile Number:</label>
-                            <input type="tel" id="mobile" name="mobile" pattern="\d{10}" placeholder="10-digit Mobile Number" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email ID:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="current_organization">Current Organization/Company (Optional):</label>
-                            <input type="text" id="current_organization" name="current_organization">
-                        </div>
-                        <button type="button" id="registerButton">
-                            <span>Register</span>
-                            <span>Reconnect with JIS!</span>
-                        </button>
-                        <p class="mt-2">Already registered but payment pending? <a href="#" id="paymentLink">Pay Now</a></p>
-                        
-                    </form>
-                <?php endif; ?>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Scroll indicator for mobile -->
-    <div class="scroll-indicator">
-        <i class="fas fa-arrow-down"></i> Scroll for registration form
-    </div>
-    
-    <!-- Contact Box -->
-    <div class="tech-team-contact">
-        <div class="contact-header">
-            <i class="fas fa-headset"></i>
-            <h3>In case of any discrepancy, feel free to contact maJIStic Alumni Support Team</h3>
-        </div>
-        <div class="contact-cards">
-            <div class="contact-card">
-                <div class="contact-card-inner">
-                    <div class="contact-info">
-                        <h4>Priyanshu Nayan</h4>
-                        <p>+91 7004706722</p>
-                    </div>
-                    <a href="https://wa.me/917004706722" target="_blank" class="whatsapp-btn">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="contact-card">
-                <div class="contact-card-inner">
-                    <div class="contact-info">
-                        <h4>Sk Riyaz</h4>
-                        <p>+91 7029621489</p>
-                    </div>
-                    <a href="https://wa.me/917029621489" target="_blank" class="whatsapp-btn">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="contact-card">
-                <div class="contact-card-inner">
-                    <div class="contact-info">
-                        <h4>Alumni Relations</h4>
-                        <p>+91 9830384902</p>
-                    </div>
-                    <a href="https://wa.me/919830384902" target="_blank" class="whatsapp-btn">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                </div>
-            </div>
+            <button type="button" id="closeRulesModal" style="background-color: Red; width: 80px; display: block; margin: 0 auto;">Close</button>
         </div>
     </div>
-    
-    <?php include 'includes/footer.php'; ?>
-    
+
     <!-- Confirmation Modal -->
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
@@ -288,24 +367,6 @@ if(file_exists('src/config/payment_config.php')) {
                 <button id="confirmButton">Confirm</button>
                 <button id="cancelButton">Cancel</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Payment Modal -->
-    <div id="paymentModal" class="modal">
-        <div class="modal-content">
-            <h2>Enter Your Details</h2>
-            <form id="paymentForm">
-                <div class="form-group">
-                    <label for="modal_jis_id">JIS ID:</label>
-                    <input type="text" id="modal_jis_id" name="modal_jis_id" required>
-                    <input type="hidden" name="alumni" value="1">
-                </div>
-                <div class="modal-buttons">
-                    <button type="submit">Submit</button>
-                    <button type="button" onclick="closeModal('paymentModal')">Cancel</button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -321,18 +382,10 @@ if(file_exists('src/config/payment_config.php')) {
     <div id="popupMessageBox" class="message-box hidden"></div>
 
     <script>
-        function showPaymentMessage(message, isSuccess) {
-            const messageBox = document.getElementById('popupMessageBox');
-            messageBox.textContent = message;
-            messageBox.className = 'message-box ' + (isSuccess ? 'success' : 'error');
-            messageBox.style.display = 'block';
-            setTimeout(() => {
-                messageBox.style.display = 'none';
-            }, 10000); // Hide after 10 seconds
-        }
-
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
+            document.body.classList.remove('modal-open');
+            document.querySelector('.content-container').classList.remove('blur');
         }
 
         var modal = document.getElementById('confirmationModal');
@@ -344,6 +397,8 @@ if(file_exists('src/config/payment_config.php')) {
         registerButton.onclick = function() {
             if (validateForm()) {
                 modal.style.display = 'block';
+                document.body.classList.add('modal-open');
+                document.querySelector('.content-container').classList.add('blur');
             }
         }
 
@@ -354,43 +409,41 @@ if(file_exists('src/config/payment_config.php')) {
 
         cancelButton.onclick = function() {
             modal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            document.querySelector('.content-container').classList.remove('blur');
         }
 
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = 'none';
-            } else if (event.target == paymentModal) {
-                paymentModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                document.querySelector('.content-container').classList.remove('blur');
             }
         }
 
-        var paymentModal = document.getElementById('paymentModal');
-        var paymentLink = document.getElementById('paymentLink');
-        var paymentForm = document.getElementById('paymentForm');
-
-        paymentLink.onclick = function() {
-            paymentModal.style.display = 'block';
-        }
-
-        paymentForm.onsubmit = function(event) {
+        // Rules and Regulations modal logic
+        document.getElementById('rulesLink').addEventListener('click', function(event) {
             event.preventDefault();
-            var jis_id = document.getElementById('modal_jis_id').value;
-            
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "src/transaction/check_payment_status.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.status === 'pending') {
-                        window.location.href = 'src/transaction/payment.php?jis_id=' + jis_id + '&alumni=1';
-                    } else {
-                        showPaymentMessage(response.message, response.status === 'success');
-                    }
-                }
-            };
-            xhr.send("jis_id=" + jis_id + "&alumni=1");
-        }
+            var rulesModal = document.getElementById('rulesModal');
+            rulesModal.style.display = 'block';
+            document.body.classList.add('modal-open');
+            document.querySelector('.content-container').classList.add('blur');
+        });
+
+        document.getElementById('closeRulesModal').addEventListener('click', function() {
+            document.getElementById('rulesModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+            document.querySelector('.content-container').classList.remove('blur');
+        });
+
+        window.addEventListener('click', function(event) {
+            const rulesModal = document.getElementById('rulesModal');
+            if (event.target === rulesModal) {
+                rulesModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                document.querySelector('.content-container').classList.remove('blur');
+            }
+        });
 
         // Function to validate form
         function validateForm() {
