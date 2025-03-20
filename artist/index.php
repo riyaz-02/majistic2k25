@@ -24,8 +24,9 @@
                         <div class="artist-banner">
                             <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
                                 <div class="artist-overlay">
-                                    <h2 class="artist-name">DJ Night</h2>
-                                    <p class="artist-type">Get Ready for a Night of Electrifying Beats!</p>
+                                    <h2 class="artist-name">A Night OF NON STOP DANCE</h2>
+                                    <!-- <p class="artist-type">Get Ready for a Night of Electrifying Beats!</p> -->
+                                    <p class="artist-type">Are you Ready!</p>
                                 </div>
                             </div>
                         </div>
@@ -45,8 +46,11 @@
                                     <span>JISCE Main Ground</span>
                                 </div>
                             </div>
-                            <p class="artist-event-description">
+                            <!-- <p class="artist-event-description">
                                 "The bass is about to drop, and the crowd is about to go wild! A renowned DJ is taking over Majistic 2K25, bringing high-energy electronic beats, pulsating rhythms, and a night of non-stop dancing. Brace yourself for an unforgettable audio-visual spectacle, where music and madness collide!"
+                            </p> -->
+                            <p class="artist-event-description">
+                            The energy is building, and the excitement is off the charts! Majistic 2K25 at our college cultural fest is about to light up with an incredible performance that will keep you on your feet all night long. Expect heart-pounding beats, mesmerizing vibes, and a breathtaking show that blends sound and visuals into pure magic. Get ready for an epic evening of celebration and thrill that you won’t forget!
                             </p>
                             <button class="artist-register-btn" onclick="registerForEvent('Neon Beats Night')">Register Now</button>
                         </div>
@@ -54,7 +58,7 @@
                 </div>
                 
                 <!-- Artist 2 -->
-                <div class="swiper-slide">
+                <!-- <div class="swiper-slide">
                     <div class="artist-container">
                         <div class="artist-banner">
                             <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
@@ -86,10 +90,10 @@
                             <button class="artist-register-btn" onclick="registerForEvent('Rock Revolution')">Register Now</button>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
                 <!-- Artist 3 -->
-                <div class="swiper-slide">
+                <!-- <div class="swiper-slide">
                     <div class="artist-container">
                         <div class="artist-banner">
                             <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
@@ -121,7 +125,7 @@
                             <button class="artist-register-btn" onclick="registerForEvent('Melodies Under Moonlight')">Register Now</button>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             
             <!-- Add Navigation -->
