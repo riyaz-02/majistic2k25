@@ -464,6 +464,7 @@
                 ],
                 'Patrons' => [
                     ['name' => 'Mr. Simarpreet Singh', 'role' => 'Director, JIS Group', 'image' => 'https://i.postimg.cc/13dmQ9FQ/Mr-Simarpreet-Singh.jpg', 'social' => ['twitter' => 'https://x.com/jisgroupindia/status/1721090277031776658', 'facebook' => 'https://www.facebook.com/JISGroupEducationalInitiatives', 'instagram' => 'https://www.instagram.com/simarpreet4199/', 'linkedin' => 'https://in.linkedin.com/in/simarpreet-singh-66aa2733']],
+                    ['name' => 'Jaspreet Kaur', 'role' => 'Director, JIS Group', 'image' => 'https://i.postimg.cc/YqwZTXhp/Jaspreet-kaur.jpg', 'social' => ['twitter' => 'https://en.wikipedia.org/wiki/Jaspreet_Kaur', 'facebook' => 'https://www.facebook.com/JISGroupEducationalInitiatives', 'instagram' => 'https://www.instagram.com/jisgroup_official/p/C4XP_key6qa/?hl=en&img_index=1', 'linkedin' => 'https://www.linkedin.com/in/jaspreet-kaur-b121292/']],
                     ['name' => 'Dr. Partha Sarkar', 'role' => 'Principal, JIS College of Engineering', 'image' => 'https://i.postimg.cc/jqGmM9Pk/principal.jpg', 'social' => ['twitter' => 'https://x.com/JisCollege/status/1851573882840633570', 'facebook' => 'https://www.facebook.com/OfficialJISCE', 'instagram' => 'https://www.instagram.com/jiscollege/#', 'linkedin' => 'https://in.linkedin.com/in/dr-partha-sarkar-26580018']],
                 ],
                 'Advisors' => [
