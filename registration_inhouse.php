@@ -104,11 +104,7 @@ if(file_exists('src/config/payment_config.php')) {
         <img src="images/majisticlogo.png" alt="maJIStic Logo">
         <h2>Registration Successful!</h2>
         <p>Congratulations! Your registration has been completed.</p>
-        <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
-        <p>Redirecting to Payment page...</p>
-        <?php else: ?>
         <p>Redirecting to confirmation page...</p>
-        <?php endif; ?>
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -122,11 +118,7 @@ if(file_exists('src/config/payment_config.php')) {
             
             // Redirect after the animation completes
             setTimeout(function() {
-                <?php if (defined('PAYMENT_ENABLED') && PAYMENT_ENABLED): ?>
-                window.location.href = 'src/transaction/payment.php?jis_id=<?php echo $jis_id; ?>'; // Payment redirect
-                <?php else: ?>
                 window.location.href = 'src/handler/registration_success.php?jis_id=<?php echo $jis_id; ?>'; // Redirect to success page
-                <?php endif; ?>
             }, 3500); // Just after the progress bar completes
         });
     </script>
@@ -140,6 +132,7 @@ if(file_exists('src/config/payment_config.php')) {
             <ul>
                 <li><i class="fas fa-check-circle"></i> Please ensure that all your details are correct before submitting.</li>
                 <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <del>Rs. 600</del> <strong>Rs. 500</strong> [Early Bird]</li>
+                <li><i class="fas fa-money-bill-wave"></i> <strong>Payment must be made to your department coordinator.</strong></li>
                 <li><i class="fas fa-id-card"></i> College ID is mandatory while checking in on the event day.</li>
                 <li><i class="fas fa-phone-alt"></i> For queries, contact <strong>maJIStic support</strong></li>
                 <li><i class="fas fa-shopping-bag"></i> For Merchandise, visit <a href="merchandise.php"><strong>Merchandise page</strong></a></li>

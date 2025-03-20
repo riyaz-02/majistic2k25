@@ -94,7 +94,7 @@ function sendRegistrationConfirmationEmail($data) {
                         "JIS ID: {$data['jis_id']}\n" .
                         "Department: {$data['department']}\n" .
                         "Registration Date: {$data['registration_date']}\n\n" .
-                        "Please proceed to complete your payment.\n\n" .
+                        "Please pay the registration fee to your department coordinator.\n\n" .
                         "Regards,\nmaJIStic Team";
         
         $mail->send();
@@ -122,9 +122,6 @@ function generateRegistrationEmailTemplate($data) {
         $formatted_date = date('d M Y, h:i A'); // Use current time if not provided
     }
     $jis_id=$data['jis_id'];
-    
-    // Generate payment link - always use the same URL
-    $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']);
     
     // Logo URL - get from config or use default
     $logoUrl = defined('EMAIL_LOGO_URL') ? EMAIL_LOGO_URL : 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
@@ -273,21 +270,13 @@ HTML;
                         <td>Registration Date</td>
                         <td>{$formatted_date}</td>
                     </tr>
-                    <tr>
-                        <td>Payment Status</td>
-                        <td><strong style="color: #f59e0b;">PENDING</strong></td>
-                    </tr>
                 </table>
             </div>
             
-            <p>Your registration is almost complete! To confirm your spot at maJIStic 2025, please complete the payment process by clicking the button below:</p>
-            
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="{$payment_link}" class="button">Complete Payment</a>
-            </div>
+            <p>Your registration is now complete! To confirm your spot at maJIStic 2025, please make the payment to your department coordinator.</p>
             
             <div class="payment-note">
-                <p><strong>Note:</strong> If you've already completed the payment, please disregard this message. You will receive a separate payment confirmation email.</p>
+                <p><strong>Note:</strong> Please pay the registration fee to your department coordinator as soon as possible to secure your spot.</p>
             </div>
             
             <p>If you have any questions or need further assistance, please don't hesitate to contact our support team.</p>
