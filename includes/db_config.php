@@ -1,29 +1,16 @@
-<?php
-// MongoDB Atlas Connection Settings
+<?php 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-    // MongoDB Atlas connection string - Replace with your actual connection details
-    $connectionString = "mongodb+srv://ronitpal2003:kfBWE6uZKAKBnPsB@majistic.rqsmf.mongodb.net/?retryWrites=true&w=majority&appName=maJIStic";
-    
-    $client = new MongoDB\Client($connectionString);
-    
-    // Select database
+    $client = new MongoDB\Client("mongodb+srv://majisticcoreadmin:IvkY2pYZBIwAbEZ5@majisticjisce.fxomy.mongodb.net/?retryWrites=true&w=majority&appName=majisticjisce");
     $db = $client->selectDatabase('majistic2k25');
     
-    // Define collections as global variables for easy access
+    // Set common collections
     $registrations = $db->registrations;
     $alumni_registrations = $db->alumni_registrations;
     
-    // Set timezone for consistent date handling
+    // Set timezone
     date_default_timezone_set('Asia/Kolkata');
-    
-    // Log successful connection
-    error_log("MongoDB Atlas connection established successfully");
-} catch (MongoDB\Driver\Exception\ConnectionTimeoutException $e) {
-    die("Connection timeout: " . $e->getMessage());
-} catch (MongoDB\Driver\Exception\AuthenticationException $e) {
-    die("Authentication failed: " . $e->getMessage());
 } catch (Exception $e) {
     die("MongoDB connection failed: " . $e->getMessage());
 }
