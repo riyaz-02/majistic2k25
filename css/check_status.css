@@ -1,11 +1,4 @@
-body {
-            background-image: url('images/pageback.png');
-            background-size: cover;
-            background-attachment: fixed;
-            min-height: 100vh;
-            font-family: 'Roboto', sans-serif;
-            color: #ffffff;
-        }
+
         
         .status-container {
             max-width: 1200px; /* Increased from 1000px */

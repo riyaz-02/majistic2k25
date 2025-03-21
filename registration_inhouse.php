@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL & ~E_DEPRECATED); // Suppress deprecation notices
+
 include 'src/main/registration_handler.php';
 // Include payment configuration
 if (file_exists('src/config/payment_config.php')) {

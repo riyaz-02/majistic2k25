@@ -34,9 +34,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Check ticket generation status
                     $ticket_generated = isset($student_data['ticket']) && $student_data['ticket'] == 'generated';
                     
-                    // Check check-in status
-                    $checkin_day1 = isset($student_data['checkin_1']) && $student_data['checkin_1'] === true;
-                    $checkin_day2 = isset($student_data['checkin_2']) && $student_data['checkin_2'] === true;
+                    // Check check-in status - handle various formats
+                    $checkin_day1 = false;
+                    $checkin_day2 = false;
+                    
+                    // Check for day 1
+                    if (isset($student_data['checkin_1'])) {
+                        $checkin_day1 = ($student_data['checkin_1'] === true || 
+                                        $student_data['checkin_1'] === 'checkedin' || 
+                                        $student_data['checkin_1'] == '1' ||
+                                        $student_data['checkin_1'] == 'yes');
+                    }
+                    
+                    // Check for day 2
+                    if (isset($student_data['checkin_2'])) {
+                        $checkin_day2 = ($student_data['checkin_2'] === true || 
+                                        $student_data['checkin_2'] === 'checkedin' || 
+                                        $student_data['checkin_2'] == '1' ||
+                                        $student_data['checkin_2'] == 'yes');
+                    }
                     
                     // If payment is not complete, get department coordinator info
                     if (!$payment_status && isset($student_data['department'])) {
@@ -71,9 +87,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         // Check ticket generation status
                         $ticket_generated = isset($student_data['ticket']) && $student_data['ticket'] == 'generated';
                         
-                        // Check check-in status
-                        $checkin_day1 = isset($student_data['checkin_1']) && $student_data['checkin_1'] === true;
-                        $checkin_day2 = isset($student_data['checkin_2']) && $student_data['checkin_2'] === true;
+                        // Check check-in status - handle various formats
+                        $checkin_day1 = false;
+                        $checkin_day2 = false;
+                        
+                        // Check for day 1
+                        if (isset($student_data['checkin_1'])) {
+                            $checkin_day1 = ($student_data['checkin_1'] === true || 
+                                            $student_data['checkin_1'] === 'checkedin' || 
+                                            $student_data['checkin_1'] == '1' ||
+                                            $student_data['checkin_1'] == 'yes');
+                        }
+                        
+                        // Check for day 2
+                        if (isset($student_data['checkin_2'])) {
+                            $checkin_day2 = ($student_data['checkin_2'] === true || 
+                                            $student_data['checkin_2'] === 'checkedin' || 
+                                            $student_data['checkin_2'] == '1' ||
+                                            $student_data['checkin_2'] == 'yes');
+                        }
                         
                         // If payment is not complete, get department coordinator info
                         if (!$payment_status && isset($student_data['department'])) {
@@ -125,6 +157,16 @@ $days_remaining = $interval->format('%a');
     <?php include 'includes/links.php'; ?>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/check_status.css">
+    <style>
+        body {
+            background-image: url('images/pageback.png');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
@@ -264,10 +306,18 @@ $days_remaining = $interval->format('%a');
                                             <?php endif; ?>
                                         </div>
                                         <?php else: ?>
-                                        <div style="text-align: center; margin-top: 15px;">
-                                            <a href="src/transaction/payment.php?jis_id=<?php echo urlencode($jis_id); ?>" class="btn btn-payment">
-                                                <i class="fas fa-credit-card"></i> Complete Payment
-                                            </a>
+                                        <div style="margin-top: 20px; background-color: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 8px;">
+                                            <h4 style="color: #f1c40f; margin-top: 0; margin-bottom: 10px;">Payment Coordinators</h4>
+                                            <p><strong>Name:</strong> Priyanshu Nayam</p>
+                                            <p><strong>Contact:</strong> 7004706722</p>
+                                            
+                                            <p style="margin-top:15px"><strong>Name:</strong> Dr. Proloy Ghosh</p>
+                                            <p><strong>Contact:</strong> 7980532913</p>
+                                            
+                                            <p style="margin-top:15px"><strong>Name:</strong> Dr. Madhura Chakraborty</p>
+                                            <p><strong>Contact:</strong> 7980979789</p>
+                                            
+                                            <p style="margin-top: 15px;"><strong>Note:</strong> Cash payment only. Please contact any of the coordinators above to complete your payment.</p>
                                         </div>
                                         <?php endif; ?>
                                     </div>
