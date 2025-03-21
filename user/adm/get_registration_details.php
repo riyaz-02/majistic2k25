@@ -1,7 +1,7 @@
 <?php
 // Turn on error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
+error_reporting(E_ALL & ~E_DEPRECATED); // Suppress deprecation notices
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

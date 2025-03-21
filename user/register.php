@@ -13,6 +13,8 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             header('Location: management.php');
         } elseif ($_SESSION['admin_role'] === 'Manage Website') {
             header('Location: manage/index.php');
+        } elseif ($_SESSION['admin_role'] === 'Controller') {
+            header('Location: control/index.php');
         } else {
             header('Location: adm/madm.php');
         }
@@ -25,7 +27,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 $error = '';
 $success = '';
 $departments = ['CSE', 'BME', 'ECE', 'EE', 'CE', 'ME', 'MCA', 'MBA', 'BBA'];
-$roles = ['Admin', 'Core Team Member', 'Coordinator', 'Manage Website'];
+$roles = ['Admin', 'Core Team Member', 'Coordinator', 'Manage Website', 'Controller'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data

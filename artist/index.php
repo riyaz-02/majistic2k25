@@ -25,7 +25,7 @@
                             <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
                                 <div class="artist-overlay">
                                     <h2 class="artist-name">A Night OF NON STOP DANCE</h2>
-                                    <p class="artist-type">Get Ready for twi days of Electrifying Beats!</p>
+                                    <p class="artist-type">Get Ready for two days of Electrifying Beats!</p>
                                 </div>
                             </div>
                         </div>
