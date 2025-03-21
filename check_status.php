@@ -575,27 +575,7 @@ $days_remaining = $interval->format('%a');
                 }, 100);
             }
             
-            // Format JIS ID input
-            const jisIdInput = document.getElementById('jis_id');
-            if (jisIdInput) {
-                jisIdInput.addEventListener('input', function(e) {
-                    let value = e.target.value.toUpperCase();
-                    
-                    // Auto format with slashes
-                    if (value.length > 0 && value.indexOf('JIS/') !== 0 && !value.startsWith('JIS')) {
-                        value = 'JIS/' + value;
-                    } else if (value.length > 0 && value === 'JIS') {
-                        value = 'JIS/';
-                    }
-                    
-                    // Add second slash automatically
-                    if (value.length === 8 && value.charAt(7) !== '/') {
-                        value = value + '/';
-                    }
-                    
-                    e.target.value = value;
-                });
-            }
+            // JIS ID formatting code removed
             
             // Countdown timer
             const eventDate = new Date("April 11, 2025 00:00:00").getTime();

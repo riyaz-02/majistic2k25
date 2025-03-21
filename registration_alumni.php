@@ -126,27 +126,25 @@ if (file_exists('src/config/payment_config.php')) {
             text-align: left;
         }
 
-        .modal-content h2 {
-            margin-bottom: 15px;
-            font-size: 1.5rem;
+        /* Center text in confirmation modal */
+        #confirmationModal .modal-content p {
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
-        .rules-list {
-            list-style-type: decimal;
-            padding-left: 25px;
-            margin: 0 0 20px 0;
+        /* Style for modal buttons container */
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .rules-list li {
-            margin-bottom: 8px;
-            line-height: 1.4;
-            word-spacing: normal;
-            text-align: left;
-        }
-
-        /* Prevent scrolling when modal is open */
-        body.modal-open {
-            overflow: hidden;
+        /* Style for modal buttons */
+        .modal-buttons button {
+            min-width: 100px;
+            padding: 8px 15px;
         }
     </style>
 </head>
@@ -408,6 +406,9 @@ if (file_exists('src/config/payment_config.php')) {
         }
 
         confirmButton.onclick = function() {
+            modal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            document.querySelector('.content-container').classList.remove('blur');
             loadingSpinner.style.display = 'block'; // Show loading spinner
             document.getElementById('registrationForm').submit();
         }

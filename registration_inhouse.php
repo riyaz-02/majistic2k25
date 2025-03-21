@@ -124,6 +124,27 @@ if (file_exists('src/config/payment_config.php')) {
             text-align: left; /* Align text to the left for better readability */
         }
 
+        /* Center text in confirmation modal */
+        #confirmationModal .modal-content p {
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Style for modal buttons container */
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Style for modal buttons */
+        .modal-buttons button {
+            min-width: 100px;
+            padding: 8px 15px;
+        }
+        
         .modal-content h2 {
             margin-bottom: 15px; /* Space below the heading */
             font-size: 1.5rem; /* Slightly smaller for better proportion */
@@ -426,6 +447,9 @@ if (file_exists('src/config/payment_config.php')) {
         }
 
         confirmButton.onclick = function() {
+            modal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            document.querySelector('.content-container').classList.remove('blur');
             loadingSpinner.style.display = 'block';
             document.getElementById('registrationForm').submit();
         }

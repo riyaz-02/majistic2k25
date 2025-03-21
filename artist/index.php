@@ -25,8 +25,7 @@
                             <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
                                 <div class="artist-overlay">
                                     <h2 class="artist-name">A Night OF NON STOP DANCE</h2>
-                                    <!-- <p class="artist-type">Get Ready for a Night of Electrifying Beats!</p> -->
-                                    <p class="artist-type">Are you Ready!</p>
+                                    <p class="artist-type">Get Ready for twi days of Electrifying Beats!</p>
                                 </div>
                             </div>
                         </div>
@@ -35,11 +34,11 @@
                             <div class="artist-event-info">
                                 <div class="artist-info-item artist-date-info">
                                     <i class="fas fa-calendar-alt"></i>
-                                    <span>11th April, 2025</span>
+                                    <span>11th, 12th April, 2025</span>
                                 </div>
                                 <div class="artist-info-item artist-time-info">
                                     <i class="fas fa-clock"></i>
-                                    <span>6:00 PM - 10:00 PM</span>
+                                    <span>10:00 AM - 8:00 PM</span>
                                 </div>
                                 <div class="artist-info-item artist-location-info">
                                     <i class="fas fa-map-marker-alt"></i>
