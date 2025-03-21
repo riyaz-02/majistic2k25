@@ -88,10 +88,8 @@
                 <div class="modal-body">
                     <h6>Contact Person Details</h6>
                     <ul class="contact-list">
-                        <li><strong>Name:</strong> Priyanshu Nayan</li>
-                        <li><strong>Phone:</strong> +91 7004706722</li>
-                        <li><strong>Email:</strong> priyanshu.nayan@example.com</li>
-                        <li><strong>Department:</strong> CSE</li>
+                        <li><strong>Name:</strong> Arnab Das</li>
+                        <li><strong>Phone:</strong> +91 9749536449</li>
                     </ul>
                     <p>Please contact the above person to complete your purchase of the maJIStic 2k25 T-Shirt.</p>
                 </div>
