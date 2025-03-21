@@ -12,10 +12,35 @@
             background-repeat: repeat-y !important;
             background-size: 100% !important;
             background-position: top center !important;
-            background-attachment: initial !important;
+            background-attachment: fixed !important; /* Changed from initial to fixed */
+            min-height: 100vh; /* Ensure minimum height covers viewport */
+            width: 100%; /* Ensure full width */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
             color: white;
             margin: 0;
         }
+
+        /* Add this to ensure background works on all device sizes */
+        html {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Media query for responsive layout */
+        @media (max-width: 768px) {
+            body {
+                background-size: cover !important;
+            }
+        }
+        
+        /* Additional responsiveness for smaller screens */
+        @media (max-width: 576px) {
+            body {
+                background-size: cover !important;
+            }
+        }
+        
         .content-container {
             max-width: 800px;
             margin: 0 auto;

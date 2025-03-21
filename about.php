@@ -19,9 +19,19 @@
             background-repeat: repeat-y !important;
             background-size: 100% !important;
             background-position: top center !important;
-            background-attachment: initial !important;
+            background-attachment: fixed !important; /* Changed from initial to fixed */
+            min-height: 100vh; /* Ensure minimum height covers viewport */
+            width: 100%; /* Ensure full width */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
             font-size: 1.05rem;
             /* Increased base font size */
+        }
+
+        /* Add this to ensure background works on all device sizes */
+        html {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         .content-container {
