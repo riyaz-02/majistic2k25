@@ -393,9 +393,6 @@ function generateAlumniRegistrationTemplate($data) {
         $formatted_date = date('d M Y, h:i A'); // Use current time if not provided
     }
     
-    // Generate payment link
-    $payment_link = "https://skriyaz.com/majistic/src/transaction/payment.php?jis_id=" . urlencode($data['jis_id']) . "&alumni=1";
-    
     // Logo URL - get from config or use default
     $logoUrl = defined('EMAIL_LOGO_URL') ? EMAIL_LOGO_URL : 'https://cdn.emailacademy.com/user/fecdcd5176d5ee6a27e1962040645abfa28cce551d682738efd2fc3e158c65e3/majisticlogo2025_03_18_22_18_20.png';
     
@@ -405,7 +402,7 @@ function generateAlumniRegistrationTemplate($data) {
     // Base URL for links - get from config or use default
     $baseUrl = defined('EMAIL_BASE_URL') ? EMAIL_BASE_URL : 'https://jiscollege.ac.in/majistic';
     
-    // HTML Template
+    // HTML Template - Redesigned to be more concise and attractive
     $html = <<<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -416,48 +413,49 @@ function generateAlumniRegistrationTemplate($data) {
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            line-height: 1.6;
+            line-height: 1.5;
             color: #333333;
             max-width: 600px;
             margin: 0 auto;
             padding: 0;
         }
         .email-container {
-            border: 1px solid #dddddd;
-            border-radius: 5px;
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .header {
-            background-color: #000000;
-            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #303030 100%);
+            padding: 25px 20px;
             text-align: center;
         }
         .header img {
-            max-width: 250px;
+            max-width: 220px;
             height: auto;
         }
         .content {
-            padding: 30px;
+            padding: 30px 25px;
             background-color: #ffffff;
         }
         .registration-info {
-            background-color: #f7f7f7;
-            border: 1px solid #eeeeee;
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px 0;
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
         }
         .registration-info table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 14px;
         }
         .registration-info td {
-            padding: 8px 0;
-            border-bottom: 1px solid #eeeeee;
+            padding: 6px 0;
         }
         .registration-info td:first-child {
             font-weight: bold;
             width: 40%;
+            color: #444;
         }
         .footer {
             background-color: #f0f0f0;
@@ -466,56 +464,70 @@ function generateAlumniRegistrationTemplate($data) {
             font-size: 12px;
             color: #666666;
         }
-        .social-links {
-            margin-top: 15px;
-        }
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            color: #666666;
-            text-decoration: none;
-        }
         .button {
             display: inline-block;
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
             color: white !important;
             text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 30px;
             font-weight: bold;
-            font-size: 16px;
-        }
-        .payment-note {
-            margin-top: 25px;
-            padding: 15px;
-            background-color: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            color: #92400e;
             font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .button:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         .alumni-badge {
             display: inline-block;
-            background-color: #7c3aed;
+            background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
             color: white;
-            padding: 5px 10px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 10px;
+            font-size: 11px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
-        .coordinator-info {
-            background-color: #e8f4fd;
-            border: 1px solid #cce5ff;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 20px 0;
-            color: #0c5460;
+        .payment-box {
+            background: linear-gradient(to right, #e7f3ff, #f0f8ff);
+            border-left: 4px solid #3498db;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin: 15px 0;
         }
-        .coordinator-info h4 {
+        .payment-box h4 {
+            color: #2980b9;
             margin-top: 0;
-            color: #0c5460;
-            border-bottom: 1px solid #bee5eb;
-            padding-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .alert-box {
+            background-color: #fff5f5;
+            border-left: 4px solid #ff6b6b;
+            padding: 10px;
+            border-radius: 4px;
+            color: #cc0000;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+        .social-links {
+            margin-top: 12px;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: #666666;
+            text-decoration: none;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #eeeeee;
+            margin: 15px 0;
         }
     </style>
 </head>
@@ -527,20 +539,15 @@ function generateAlumniRegistrationTemplate($data) {
         
         <div class="content">
             <span class="alumni-badge">ALUMNI REGISTRATION</span>
-            <h2>Registration Confirmation</h2>
-            <p>Dear {$data['alumni_name']},</p>
-            <p>Thank you for registering for maJIStic 2025 as an alumnus. Your registration has been successfully received and recorded in our system.</p>
+            <h2 style="margin-top:5px;margin-bottom:10px;">Registration Confirmed</h2>
+            <p>Dear <strong>{$data['alumni_name']}</strong>,</p>
+            <p>Thank you for registering for <strong>maJIStic 2025</strong>! Your registration has been successfully recorded.</p>
             
             <div class="registration-info">
-                <h3>Registration Details</h3>
                 <table>
                     <tr>
                         <td>JIS ID</td>
                         <td>{$data['jis_id']}</td>
-                    </tr>
-                    <tr>
-                        <td>Name</td>
-                        <td>{$data['alumni_name']}</td>
                     </tr>
                     <tr>
                         <td>Department</td>
@@ -551,65 +558,38 @@ function generateAlumniRegistrationTemplate($data) {
                         <td>{$data['passout_year']}</td>
                     </tr>
                     <tr>
-                        <td>Email</td>
-                        <td>{$data['email']}</td>
-                    </tr>
-                    <tr>
-                        <td>Mobile</td>
-                        <td>{$data['mobile']}</td>
-                    </tr>
-                    <tr>
-                        <td>Current Organization</td>
-                        <td>{$data['current_organization']}</td>
-                    </tr>
-                    <tr>
-                        <td>Registration Date</td>
-                        <td>{$formatted_date}</td>
-                    </tr>
-                    <tr>
                         <td>Payment Status</td>
                         <td><strong style="color: #f59e0b;">PENDING</strong></td>
                     </tr>
                 </table>
             </div>
             
-            <p>Your registration is almost complete! To confirm your spot at maJIStic 2025, please make the payment to your department coordinator in person.</p>
-            
-            <div style="background-color: #e7f3ff; border: 1px solid #3498db; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                <h4 style="color: #3498db; margin-top: 0;">Payment Instructions</h4>
-                <p><strong>1.</strong> Contact your department coordinator listed below</p>
-                <p><strong>2.</strong> Make the payment in person</p>
-                <p><strong>3.</strong> Collect your receipt as proof of payment</p>
-                <p><strong>Amount:</strong> Please confirm the registration fee with your department coordinator</p>
+            <div class="payment-box">
+                <h4>💳 Payment Instructions</h4>
+                <p style="margin:5px 0;font-size:13px;">
+                   Contact your department coordinator | Make payment in person | <strong>Amount: Rs. 1000</strong>
+                </p>
             </div>
             
-            <div class="coordinator-info">
-                <h4>Department Coordinator</h4>
+            <div style="background:#f2f7ff;border-radius:4px;padding:12px;font-size:13px;line-height:1.4;">
                 {$coordinator_info}
             </div>
             
-            <div class="payment-note">
-                <p><strong>Note:</strong> If you've already completed the payment to your department coordinator, please disregard this message. You will receive a separate payment confirmation email once your payment is processed.</p>
+            <div class="alert-box">
+                <span>🆔 Please bring your College ID or Government ID on the event day for check-in.</span>
+            </div>
+
+            <div style="text-align:center;margin:20px 0 15px;">
+                <a href="{$baseUrl}/check_status.php" class="button">Check Registration Status</a>
             </div>
             
-            <p>If you have any questions or need further assistance, please don't hesitate to contact our alumni support team.</p>
+            <hr>
             
-            <p style='background-color: #ffeeee; border: 1px solid #ff6b6b; padding: 10px; color: #cc0000; font-weight: bold; text-align: center; margin: 15px 0;'>
-                <strong>IMPORTANT:</strong> Please bring your College ID or any Government ID for verification on the event day.
-            </p>
-            <p>We look forward to welcoming you back at maJIStic 2025!</p>
-            
-            <p style='text-align: center; margin: 25px 0;'>
-                <a href="{$baseUrl}/check_status.php?jis_id={$data['jis_id']}" class="button" style="background-color: #3498db; color: white !important; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold; font-size: 16px;">Check Status</a>
-            </p>
-            
-            <p>Warm Regards,<br>maJIStic Team</p>
-
+            <p style="margin-bottom:0;">Warm Regards,<br><strong>maJIStic Team</strong></p>
         </div>
         
         <div class="footer">
-            <p>&copy; {$year} maJIStic 2025. All rights reserved.</p>
-            <p>JIS College of Engineering, Kalyani, Nadia - 741235, West Bengal, India</p>
+            <p>&copy; {$year} maJIStic | JIS College of Engineering</p>
             <div class="social-links">
                 <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank">Facebook</a> |
                 <a href="https://www.instagram.com/majistic_jisce" target="_blank">Instagram</a> |
@@ -633,19 +613,8 @@ HTML;
 function getAlumniCoordinatorInfo($department) {
     global $department_coordinators;
     
-    // Initialize default coordinator info with multiple contacts
-    $default_info = "<h4>Alumni Coordinator Contacts</h4>";
-    $default_info .= "<p><strong>Primary Contact:</strong></p>";
-    $default_info .= "<p><strong>Name:</strong> Priyanshu Nayan</p>";
-    $default_info .= "<p><strong>Contact:</strong> 7004706722</p>";
-    $default_info .= "<p><strong>Available:</strong> 10:00 AM - 5:00 PM (Monday-Friday)</p>";
-    
-    $default_info .= "<p style='margin-top:15px'><strong>Alternative Contacts:</strong></p>";
-    $default_info .= "<p><strong>Name:</strong> Dr. Proloy Ghosh</p>";
-    $default_info .= "<p><strong>Contact:</strong> 7980532913</p>";
-    
-    $default_info .= "<p style='margin-top:10px'><strong>Name:</strong> Dr. Madhura Chakraborty</p>";
-    $default_info .= "<p><strong>Contact:</strong> 7980979789</p>";
+    // Initialize default coordinator info with minimal content
+    $default_info = "<p style='margin:5px 0'><em>Alt. Contacts:</em> Dr. Proloy Ghosh (7980532913)</p>";
     
     // Try to find a coordinator for the specific department
     if (isset($department_coordinators) && !empty($department)) {
@@ -657,23 +626,8 @@ function getAlumniCoordinatorInfo($department) {
             $coordinator = $department_coordinators->findOne($filter);
             
             if ($coordinator) {
-                $available_time = isset($coordinator['available_time']) ? 
-                    $coordinator['available_time'] : 
-                    '9:00 AM - 5:00 PM (Monday-Friday)';
-                
-                $coordinator_info = "<h4>Department Alumni Coordinator</h4>";
-                $coordinator_info .= "<p><strong>Name:</strong> " . htmlspecialchars($coordinator['name']) . "</p>";
-                $coordinator_info .= "<p><strong>Department:</strong> " . htmlspecialchars($coordinator['department']) . "</p>";
-                $coordinator_info .= "<p><strong>Contact:</strong> " . htmlspecialchars($coordinator['contact']) . "</p>";
-                $coordinator_info .= "<p><strong>Available:</strong> " . htmlspecialchars($available_time) . "</p>";
-                
-                // Also provide the default contacts as alternatives
-                $coordinator_info .= "<p style='margin-top:15px'><strong>Alternative Contacts (if unavailable):</strong></p>";
-                $coordinator_info .= "<p><strong>Name:</strong> Priyanshu Nayan (7004706722)</p>";
-                $coordinator_info .= "<p><strong>Name:</strong> Dr. Proloy Ghosh (7980532913)</p>";
-                $coordinator_info .= "<p><strong>Name:</strong> Dr. Madhura Chakraborty (7980979789)</p>";
-                
-                $coordinator_info .= "<p style='margin-top:15px'>For alumni-specific inquiries, please also contact our alumni team at <strong>majistic.alumni@gmail.com</strong></p>";
+                $coordinator_info = "<p style='margin:5px 0'><strong>Name:</strong> " . htmlspecialchars($coordinator['name']) . "</p>";
+                $coordinator_info .= "<p style='margin:5px 0'><strong>Contact:</strong> " . htmlspecialchars($coordinator['contact']) . "</p>";
                 
                 return $coordinator_info;
             }

@@ -151,6 +151,27 @@ foreach ($cursor as $doc) {
         'available_time' => $doc->available_time ?? ''
     ];
 }
+
+// Fetch all admin users
+$admin_users = [];
+try {
+    $cursor = $db->admin_users->find([], ['sort' => ['name' => 1]]);
+    foreach ($cursor as $doc) {
+        $admin_users[] = [
+            'id' => (string)$doc->_id,
+            'name' => $doc->name ?? '',
+            'username' => $doc->username ?? '',
+            'email' => $doc->email ?? '',
+            'mobile' => $doc->mobile ?? '',
+            'role' => $doc->role ?? '',
+            'department' => $doc->department ?? 'N/A',
+            'created_at' => isset($doc->created_at) ? $doc->created_at->toDateTime()->format('Y-m-d H:i:s') : '',
+            'last_login' => isset($doc->last_login) ? $doc->last_login->toDateTime()->format('Y-m-d H:i:s') : 'Never'
+        ];
+    }
+} catch (Exception $e) {
+    $error_message = "Error fetching admin users: " . $e->getMessage();
+}
 ?>
 
 <!DOCTYPE html>
@@ -224,6 +245,12 @@ foreach ($cursor as $doc) {
                                 Department Coordinators
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo $page === 'admin_users' ? 'active' : ''; ?>" href="?page=admin_users">
+                                <i class="bi bi-person-badge me-2"></i>
+                                Admin Users
+                            </a>
+                        </li>
                         <!-- Add other menu items here -->
                     </ul>
                 </div>
@@ -239,6 +266,9 @@ foreach ($cursor as $doc) {
                                 break;
                             case 'coordinators':
                                 echo 'Department Coordinators';
+                                break;
+                            case 'admin_users':
+                                echo 'Admin Users';
                                 break;
                             default:
                                 echo 'Dashboard';
@@ -281,7 +311,7 @@ foreach ($cursor as $doc) {
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Current Logo Preview</label>
-                                <div class="border p-3 text-center">
+                                <div class="border p-3 text-center bg-dark">
                                     <?php if (!empty($logoUrl)): ?>
                                     <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="Current Logo" style="max-height: 100px;">
                                     <?php else: ?>
@@ -478,6 +508,49 @@ foreach ($cursor as $doc) {
                     </div>
                 </div>
 
+                <?php elseif ($page === 'admin_users'): ?>
+                <!-- Admin Users Management Page -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">System Admin Users</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Mobile</th>
+                                        <th>Role</th>
+                                        <th>Department</th>
+                                        <th>Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (empty($admin_users)): ?>
+                                        <tr>
+                                            <td colspan="7" class="text-center">No admin users found.</td>
+                                        </tr>
+                                    <?php else: ?>
+                                        <?php foreach ($admin_users as $user): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($user['name']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['username']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['email']); ?></td>
+                                            <td><?php echo htmlspecialchars($user['mobile']); ?></td>
+                                            <td><span class="badge bg-primary"><?php echo htmlspecialchars($user['role']); ?></span></td>
+                                            <td><?php echo $user['role'] === 'Coordinator' ? htmlspecialchars($user['department']) : 'N/A'; ?></td>
+                                            <td><?php echo htmlspecialchars($user['created_at']); ?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <?php else: ?>
                 <!-- Dashboard Content -->
                 <div class="card">
@@ -507,6 +580,19 @@ foreach ($cursor as $doc) {
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                         <a class="small text-white stretched-link" href="?page=coordinators">View Details</a>
+                                        <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card bg-info text-white mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Admin Users</h5>
+                                        <p class="card-text">View all admin users and their details.</p>
+                                    </div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="?page=admin_users">View Details</a>
                                         <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
                                     </div>
                                 </div>

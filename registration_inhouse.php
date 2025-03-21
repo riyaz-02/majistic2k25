@@ -1,5 +1,5 @@
 <?php
-//include 'src/main/registration_handler.php';
+include 'src/main/registration_handler.php';
 // Include payment configuration
 if (file_exists('src/config/payment_config.php')) {
     include 'src/config/payment_config.php';

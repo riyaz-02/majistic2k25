@@ -144,6 +144,15 @@ function getEmailTemplate($data) {
             border-radius: 4px;
             font-weight: 500;
         }
+        .ticket-notice {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-weight: 500;
+            color: #155724;
+        }
         .check-status-btn {
             background: #3498db;
             color: #ffffff;
@@ -183,8 +192,7 @@ function getEmailTemplate($data) {
 <body>
     <div class="container">
         <div class="header">
-            <img src="$logoUrl" alt="MaJIStic 2K25 Logo" class="logo">
-            <h2>maJIStic 2K25</h2>
+            <img src="$logoUrl" alt="maJIStic 2K25" class="logo">
         </div>
         <div class="content">
             <h1>Payment Confirmation</h1>
@@ -205,16 +213,20 @@ function getEmailTemplate($data) {
                 <p><strong>Important:</strong> Please bring your College ID card for check-in. It is mandatory for entry.</p>
             </div>
             
+            <div class="ticket-notice">
+                <p><strong>Ticket Information:</strong> The event ticket will be emailed to your registered mail address 3 days before the event.</p>
+            </div>
+            
             <p>You can check your registration status by clicking the button below:</p>
             <p style='text-align: center; margin: 20px 0;'>
                 <a href="$baseUrl/check_status.php?jis_id=$jisId" class="check-status-btn">Check Status</a>
             </p>
             
-            <p>If you have any questions or concerns, please don't hesitate to contact us at <a href="mailto:majistic2k25@gmail.com">majistic2k25@gmail.com</a>.</p>
+            <p>If you have any questions or concerns, please don't hesitate to contact us at <a href="mailto:majistic@jiscollege.ac.in">majistic@jiscollege.ac.in</a></p>
             
-            <p>We look forward to seeing you at MaJIStic 2K25!</p>
+            <p>We look forward to seeing you at maJIStic 2K25! 🎉</p>
             
-            <p>Best regards,<br>maJIStic Team<br>JIS College of Engineering</p>
+            <p>Best regards,<br>maJIStic Team
         </div>
         <div class="footer">
             <div class="social-links">

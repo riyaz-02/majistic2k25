@@ -1,4 +1,5 @@
 <?php
+include 'src/main/registration_handler.php';
 // Include payment configuration
 if (file_exists('src/config/payment_config.php')) {
     include 'src/config/payment_config.php';
@@ -330,10 +331,10 @@ if (file_exists('src/config/payment_config.php')) {
                 <div class="contact-card">
                     <div class="contact-card-inner">
                         <div class="contact-info">
-                            <h4>Alumni Relations</h4>
-                            <p>+91 9830384902</p>
+                            <h4>Ronit Pal</h4>
+                            <p>+91 7501005155</p>
                         </div>
-                        <a href="https://wa.me/919830384902" target="_blank" class="whatsapp-btn">
+                        <a href="https://wa.me/917501005155" target="_blank" class="whatsapp-btn">
                             <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>

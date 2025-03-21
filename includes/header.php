@@ -10,12 +10,12 @@
 
         <nav class="site-navigation">
             <ul>
-                <li><a href="/index.php#hero" class="nav-link">HOME</a></li>
-                <li><a href="/index.php#events" class="nav-link">EVENTS</a></li>
-                <li><a href="/merchandise.php" class="nav-link">MERCHANDIES</a></li>
+                <li><a href="/majistic/index.php#hero" class="nav-link">HOME</a></li>
+                <li><a href="/majistic/index.php#events" class="nav-link">EVENTS</a></li>
+                <li><a href="/majistic/merchandise.php" class="nav-link">MERCHANDIES</a></li>
                 <!--<li><a href="index.php#sponsors">SPONSORS</a></li>-->
-                <li><a href="/about.php" class="nav-link">ABOUT</a></li>
-                <li><a href="/contact.php" class="nav-link">CONTACT</a></li> 
+                <li><a href="/majistic/about.php" class="nav-link">ABOUT</a></li>
+                <li><a href="/majistic/contact.php" class="nav-link">CONTACT</a></li> 
             </ul><!-- flex -->
         </nav><!-- .site-navigation -->
 

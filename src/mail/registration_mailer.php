@@ -141,21 +141,23 @@ function generateRegistrationEmailTemplate($data) {
     <title>Registration Confirmation</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
             line-height: 1.6;
             color: #333333;
             max-width: 600px;
             margin: 0 auto;
             padding: 0;
+            background-color: #f9f9f9;
         }
         .email-container {
             border: 1px solid #dddddd;
-            border-radius: 5px;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         .header {
-            background-color: #000000;
-            padding: 20px;
+            background: linear-gradient(135deg, #000000 0%, #242424 100%);
+            padding: 25px;
             text-align: center;
         }
         .header img {
@@ -163,34 +165,49 @@ function generateRegistrationEmailTemplate($data) {
             height: auto;
         }
         .content {
-            padding: 30px;
+            padding: 35px;
             background-color: #ffffff;
         }
+        h2 {
+            color: #2b2d42;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
         .registration-info {
-            background-color: #f7f7f7;
-            border: 1px solid #eeeeee;
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px 0;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .registration-info h3 {
+            color: #3498db;
+            margin-top: 0;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 10px;
         }
         .registration-info table {
             width: 100%;
             border-collapse: collapse;
         }
         .registration-info td {
-            padding: 8px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #eeeeee;
         }
         .registration-info td:first-child {
             font-weight: bold;
             width: 40%;
+            color: #555;
         }
         .footer {
-            background-color: #f0f0f0;
-            padding: 15px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e6e6e6 100%);
+            padding: 20px;
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
             color: #666666;
+            border-top: 3px solid #3498db;
         }
         .social-links {
             margin-top: 15px;
@@ -198,41 +215,77 @@ function generateRegistrationEmailTemplate($data) {
         .social-links a {
             display: inline-block;
             margin: 0 10px;
-            color: #666666;
+            color: #3498db;
             text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: #2980b9;
         }
         .button {
             display: inline-block;
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white !important;
             text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            margin-top: 15px;
+            padding: 14px 28px;
+            border-radius: 50px;
+            margin-top: 20px;
             font-weight: bold;
             font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
         .payment-note {
             margin-top: 25px;
-            padding: 15px;
-            background-color: #fffbeb;
+            padding: 18px;
+            background-color: #fff8e6;
             border-left: 4px solid #f59e0b;
             color: #92400e;
-            font-size: 14px;
+            font-size: 15px;
+            border-radius: 6px;
         }
         .coordinator-info {
             background-color: #e8f4fd;
             border: 1px solid #cce5ff;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 20px 0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
             color: #0c5460;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .coordinator-info h4 {
             margin-top: 0;
             color: #0c5460;
             border-bottom: 1px solid #bee5eb;
             padding-bottom: 10px;
+            font-size: 18px;
+        }
+        .important-notice {
+            background-color: #ffeeee;
+            border: 1px solid #ff6b6b;
+            padding: 15px;
+            color: #cc0000;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .payment-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e63946;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+            border: 1px dashed #e63946;
         }
     </style>
 </head>
@@ -244,7 +297,7 @@ function generateRegistrationEmailTemplate($data) {
         
         <div class="content">
             <h2>Registration Confirmation</h2>
-            <p>Dear {$data['student_name']},</p>
+            <p>Dear <strong>{$data['student_name']}</strong>,</p>
             <p>Thank you for registering for maJIStic 2025. Your registration has been successfully received and recorded in our system.</p>
             
             <div class="registration-info">
@@ -252,7 +305,7 @@ function generateRegistrationEmailTemplate($data) {
                 <table>
                     <tr>
                         <td>JIS ID</td>
-                        <td>{$data['jis_id']}</td>
+                        <td><strong>{$data['jis_id']}</strong></td>
                     </tr>
                     <tr>
                         <td>Name</td>
@@ -289,32 +342,36 @@ HTML;
                         <td>Registration Date</td>
                         <td>{$formatted_date}</td>
                     </tr>
+                    <tr>
+                        <td>Registration Fee</td>
+                        <td><span class="payment-amount">Rs. 500</span></td>
+                    </tr>
                 </table>
             </div>
             
             <p>Your registration is now complete! To confirm your spot at maJIStic 2025, please make the payment to your department coordinator.</p>
             
             <div class="coordinator-info">
-                <h4>Department Coordinator Contact</h4>
                 {$coordinator_info}
             </div>
             
             <div class="payment-note">
-                <p><strong>Note:</strong> Please pay the registration fee to your department coordinator as soon as possible to secure your spot.</p>
+                <p><strong>Note:</strong> Please pay the registration fee of <strong>Rs. 500</strong> to your department coordinator as soon as possible to secure your spot. Payment should be made in cash only.</p>
             </div>
             
             <p>If you have any questions or need further assistance, please don't hesitate to contact our support team.</p>
             
-            <p style='background-color: #ffeeee; border: 1px solid #ff6b6b; padding: 10px; color: #cc0000; font-weight: bold; text-align: center; margin: 15px 0;'>
-                <strong>IMPORTANT:</strong> College ID is MANDATORY for check-in on event day. No entry without ID.
-            </p>
+            <div class="important-notice">
+                <p><strong>IMPORTANT:</strong> College ID is MANDATORY for check-in on event day. No entry without ID.</p>
+            </div>
+            
             <p>We look forward to seeing you at maJIStic 2025!</p>
             
-            <p style='text-align: center; margin: 25px 0;'>
-                <a href="$baseUrl/check_status.php?jis_id={$data['jis_id']}" class="button" style="background-color: #3498db; color: white !important; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold; font-size: 16px;">Check Status</a>
+            <p style='text-align: center; margin: 30px 0;'>
+                <a href="$baseUrl/check_status.php" class="button">Check Registration Status</a>
             </p>
             
-            <p>Warm Regards,<br>maJIStic Team</p>
+            <p>Warm Regards,<br><strong>maJIStic Team</strong></p>
 
         </div>
         
@@ -346,12 +403,10 @@ function getCoordinatorInfo($department) {
     
     // Initialize default coordinator info with multiple contacts
     $default_info = "<h4>Department Coordinator Contact</h4>";
-    $default_info .= "<p><strong>Primary Contact:</strong></p>";
+    $default_info .= "<p><strong>Payment Amount:</strong> <span style='color: #e63946; font-weight: bold;'>Rs. 500</span></p>";
     $default_info .= "<p><strong>Name:</strong> Priyanshu Nayam</p>";
     $default_info .= "<p><strong>Contact:</strong> 7004706722</p>";
-    $default_info .= "<p><strong>Available:</strong> 10:00 AM - 5:00 PM (Monday-Friday)</p>";
     
-    $default_info .= "<p style='margin-top:15px'><strong>Alternative Contacts:</strong></p>";
     $default_info .= "<p><strong>Name:</strong> Dr. Proloy Ghosh</p>";
     $default_info .= "<p><strong>Contact:</strong> 7980532913</p>";
     
@@ -371,19 +426,15 @@ function getCoordinatorInfo($department) {
             if ($coordinator) {
                 $available_time = isset($coordinator['available_time']) ? 
                     $coordinator['available_time'] : 
-                    '9:00 AM - 5:00 PM (Monday-Friday)';
+                    '10:00 AM - 4:00 PM (Monday-Friday)';
                 
                 $coordinator_info = "<h4>Department Coordinator Contact</h4>";
+                $coordinator_info .= "<p><strong>Payment Amount:</strong> <span style='color: #e63946; font-weight: bold;'>Rs. 500</span></p>";
                 $coordinator_info .= "<p><strong>Name:</strong> " . htmlspecialchars($coordinator['name']) . "</p>";
                 $coordinator_info .= "<p><strong>Department:</strong> " . htmlspecialchars($coordinator['department']) . "</p>";
                 $coordinator_info .= "<p><strong>Contact:</strong> " . htmlspecialchars($coordinator['contact']) . "</p>";
                 $coordinator_info .= "<p><strong>Available:</strong> " . htmlspecialchars($available_time) . "</p>";
-                
-                // Also provide the default contacts as alternatives
-                $coordinator_info .= "<p style='margin-top:15px'><strong>Alternative Contacts (if unavailable):</strong></p>";
-                $coordinator_info .= "<p><strong>Name:</strong> Priyanshu Nayan (7004706722)</p>";
-                $coordinator_info .= "<p><strong>Name:</strong> Dr. Proloy Ghosh (7980532913)</p>";
-                
+                                
                 return $coordinator_info;
             }
         } catch (Exception $e) {

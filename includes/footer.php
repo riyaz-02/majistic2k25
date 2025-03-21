@@ -13,10 +13,10 @@
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>Quick Links</h5>
             <a href="#"><i class="fa-solid fa-angle-right"></i> Home</a><br>
-            <a href="../index.php#events"><i class="fa-solid fa-angle-right"></i> Events</a><br>
-            <a href="../merchandise.php"><i class="fa-solid fa-angle-right"></i> Merchandise</a><br>
-            <a href="../about.php"><i class="fa-solid fa-angle-right"></i> About</a><br>
-            <a href="../contact.php"><i class="fa-solid fa-angle-right"></i> Contact Us</a><br>
+            <a href="/majistic/index.php#events"><i class="fa-solid fa-angle-right"></i> Events</a><br>
+            <a href="/majistic/merchandise.php"><i class="fa-solid fa-angle-right"></i> Merchandise</a><br>
+            <a href="/majistic/about.php"><i class="fa-solid fa-angle-right"></i> About</a><br>
+            <a href="/majistic/contact.php"><i class="fa-solid fa-angle-right"></i> Contact Us</a><br>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>Contact maJIStic</h5>
