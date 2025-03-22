@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About & Committee - maJIStic 2k25</title>
+    <title>About - maJIStic 2k25</title>
 
     <!-- Added Google Fonts - Roboto for headings -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -465,99 +465,7 @@
         </div>
 
         <!-- Committee Members Section -->
-        <div class="section-container">
-            <h1 class="section-header">Committee Members</h1>
-            <?php
-            $sections = [
-                'Chief Patron' => [
-                    ['name' => 'Mr. Taranjit Singh', 'role' => 'MD, JIS Group', 'image' => 'https://i.postimg.cc/9M6wFdqc/Mr-Taranjit-Singh.jpg', 'social' => ['twitter' => 'https://x.com/jisgroupindia/status/1811268230041989247', 'facebook' => 'https://www.facebook.com/JISGroupEducationalInitiatives', 'instagram' => 'https://www.instagram.com/jisgroup_official/#', 'linkedin' => 'https://www.linkedin.com/posts/jisgroup_md-jis-group-honoured-sardar-taranjit-activity-7100786565513166848-Tvu4']],
-                ],
-                'Patrons' => [
-                    ['name' => 'Mr. Simarpreet Singh', 'role' => 'Director, JIS Group', 'image' => 'https://i.postimg.cc/13dmQ9FQ/Mr-Simarpreet-Singh.jpg', 'social' => ['twitter' => 'https://x.com/jisgroupindia/status/1721090277031776658', 'facebook' => 'https://www.facebook.com/JISGroupEducationalInitiatives', 'instagram' => 'https://www.instagram.com/simarpreet4199/', 'linkedin' => 'https://in.linkedin.com/in/simarpreet-singh-66aa2733']],
-                    ['name' => 'Jaspreet Kaur', 'role' => 'Director, JIS Group', 'image' => 'https://i.postimg.cc/YqwZTXhp/Jaspreet-kaur.jpg', 'social' => ['twitter' => 'https://en.wikipedia.org/wiki/Jaspreet_Kaur', 'facebook' => 'https://www.facebook.com/JISGroupEducationalInitiatives', 'instagram' => 'https://www.instagram.com/jisgroup_official/p/C4XP_key6qa/?hl=en&img_index=1', 'linkedin' => 'https://www.linkedin.com/in/jaspreet-kaur-b121292/']],
-                    ['name' => 'Dr. Partha Sarkar', 'role' => 'Principal, JIS College of Engineering', 'image' => 'https://i.postimg.cc/jqGmM9Pk/principal.jpg', 'social' => ['twitter' => 'https://x.com/JisCollege/status/1851573882840633570', 'facebook' => 'https://www.facebook.com/OfficialJISCE', 'instagram' => 'https://www.instagram.com/jiscollege/#', 'linkedin' => 'https://in.linkedin.com/in/dr-partha-sarkar-26580018']],
-                ],
-                'Advisors' => [
-                    ['name' => 'Dr. Debashis Sanki', 'role' => 'Dy. Registrar, JIS College of Engineering', 'image' => 'https://i.postimg.cc/6pSvZdDR/Debasish-Sanki.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Mentor' => [
-                    ['name' => 'Dr. Sandip Ghosh', 'role' => 'HOD, ME Dept, JIS College of Engineering', 'image' => 'https://i.ibb.co/MyJfnXN3/Sandip-Ghosh.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Convener' => [
-                    ['name' => 'Dr. Madhura Chakraborty', 'role' => 'Convener,<br>Mob: 7980979789</br>', 'image' => 'https://i.ibb.co/XrNTgT4p/Madhura-chakraborty.webp', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Dr. Proloy Ghosh', 'role' => 'Convener,<br>Mob: 7980532913</br>', 'image' => 'https://i.postimg.cc/FK6XNKkh/Proloy-Ghosh.png', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/profile.php?id=100009306949586', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Sound, Light and Stage Management Team' => [
-                    ['name' => 'Anamitra Mondal', 'role' => 'IT, 4th YR,<br>Mob: 6280654490</br>', 'image' => 'https://i.ibb.co/hbhDVr2/Anamitra-Mondal.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Arnab Das', 'role' => 'IT, 4th YR,<br>Mob:9749536449</br>', 'image' => 'https://i.postimg.cc/52yqc9B4/Arnab-Das.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/share/1FKGdg6mY3/?mibextid=wwXIfr', 'instagram' => 'https://www.instagram.com/no_ex1stence?igsh=MXZzMnRzbzBvcnRvZA%3D%3D&utm_source=qr', 'linkedin' => '#']],
-                    ['name' => 'Alok Thakur', 'role' => 'ECE, 3rd YR', 'image' => 'https://i.postimg.cc/kMWTw5cL/Alok-Thakur.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Sponsorship & Marketing Team' => [
-                    ['name' => 'Snehal Bhowmick', 'role' => 'ECE, 4th YR,<br>Mob: 9674558906</br>', 'image' => 'https://i.ibb.co/5gRJP9wG/Snehal-da.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Gaurav Kumar Mehta', 'role' => 'CSE, 3rd YR', 'image' => 'https://i.postimg.cc/NFx7t5CM/Gaurav-Kumar-Mehta.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Priyadeep Mitra', 'role' => 'CSE, 3rd YR', 'image' => 'https://i.postimg.cc/JnNj3sLq/Priyadeep-Mitra.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-            
-                ],
-                'Website Development Team' => [
-                    ['name' => 'Priyanshu Nayan', 'role' => 'CSE, 3rd YR,<br>Mob: 7004706722</br>', 'image' => 'https://i.postimg.cc/bvdKqkhC/Priyanshu-Nayan.jpg', 'social' => ['twitter' => 'https://x.com/priyanshunayan9', 'facebook' => 'https://www.facebook.com/priyanshu.nayan.17/', 'instagram' => 'https://www.instagram.com/priyanshunayan/', 'linkedin' => 'https://www.linkedin.com/in/priyanshu-nayan/']],
-                    ['name' => 'Sk Riyaz', 'role' => 'CSE, 3rd YR,<br>Mob: 7029621489</br>', 'image' => 'https://i.ibb.co/zg57yyk/riyaz-profile-1.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/sk.riyaz.562329', 'instagram' => '#', 'linkedin' => 'https://www.linkedin.com/in/skriyaz1/']],
-                    ['name' => 'Ronit Pal', 'role' => 'CSE, 3rd YR', 'image' => 'https://i.postimg.cc/N071myYx/Ronit-Pal.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Mohit Kumar', 'role' => 'CSE, 3rd YR', 'image' => 'https://i.postimg.cc/N0pKQRBZ/Mohit-Kumar.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Deisgn Team' => [
-                    ['name' => 'Harsh Kumar Shaw', 'role' => 'CSE M.Tech, 1st YR', 'image' => 'https://i.ibb.co/vxTNy8Xk/Harsh-Kumar-Shaw.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Eshanu Mondal', 'role' => 'BCA, 3rd YR,<br>Mob: 9002540842</br>', 'image' => 'https://i.ibb.co/vvP7QybG/Eshanu-Mondal.jpg', 'social' => ['twitter' => 'https://x.com/EshanuMondal08', 'facebook' => 'https://www.facebook.com/eshanu.mondal.12', 'instagram' => 'https://www.instagram.com/mondaleshanu?igsh=ZWFqZHl5OWt4NzI1', 'linkedin' => '#']],
-                ],
-                'Cultural Team' => [
-                    ['name' => 'Dipanwita Lahiri', 'role' => 'Drama, 3rd YR, BCA, <br>Mob: 8653384930</br>', 'image' => 'https://i.postimg.cc/x8QyBKRh/Dipanwita-Lahiri.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/profile.php?id=100069767917332&mibextid=ZbWKwL', 'instagram' => 'https://www.instagram.com/dipanwita_glorious_night?igsh=MXV6aGxxY2l6OXFzeA==', 'linkedin' => '#']],
-                    ['name' => 'Krishnasish Bose', 'role' => 'Dance, 4th YR, IT<br>Mob: 9531602043</br>', 'image' => 'https://i.postimg.cc/J7Kk1V4G/Krishnasish-Bose.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/share/1CKHsdSCAL/', 'instagram' => 'https://www.instagram.com/__.krishnasish.bose.__/profilecard/?igsh=Mjl5ejRkemI5M2Vv', 'linkedin' => 'https://www.linkedin.com/in/eshanu-mondal-7692a4317?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app']],
-                    ['name' => 'Debalina Talukder ', 'role' => 'Dance, 3rd, YR, CSE', 'image' => 'https://i.postimg.cc/tg156RJS/Debalina-Talukder.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Jotisingdha Das', 'role' => 'Anchoring and Recitation, 3rd YR, AGE,<br>Mob: 9749284221</br>', 'image' => 'https://i.postimg.cc/KzSngndj/Jotisnigdha-Das.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Amit Kumar', 'role' => 'Anchoring and Recitation, 2nd YR, BBA', 'image' => 'https://i.ibb.co/9mgCss3y/Amit-Kumar.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Ayush Agarwal', 'role' => 'Instrument and Band, 4th YR, CSE<br>Mob: 6297076034</br>', 'image' => 'https://i.postimg.cc/xTYtZSp8/Ayush.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Debopriya Das', 'role' => 'Instrument and Band, 3rd YR, ECE', 'image' => 'https://i.postimg.cc/4xwcxD18/Debopriya-Das.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Upasana Paul', 'role' => 'Fashion Show, 4rd YR, ECE,<br>Mob: 6291324934</br>', 'image' => 'https://i.postimg.cc/DZPbJRrp/Upasana-Paul.jpg', 'social' => ['twitter' => '#', 'facebook' => 'https://www.facebook.com/sromoni.paul?mibextid=ZbWKwL', 'instagram' => 'https://www.instagram.com/_steller._.flower_?igsh=MXhxbmZ5bW5oMmxu', 'linkedin' => 'https://www.linkedin.com/in/upasana-paul-294360244?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app']],
-                ],
-                'Logistics Management Team' => [
-                    ['name' => 'Soumili Ghosh', 'role' => 'CSE, 4th YR<br>Mob: 6289878908</br>', 'image' => 'https://i.ibb.co/qYCjbWtk/Screenshot-2025-03-17-233012.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Ayush Gupta ', 'role' => 'ECE, 3rd YR', 'image' => 'https://i.ibb.co/JjZRdvhr/Ayush-Gupta-3.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Invitation & Reception Team' => [
-                    ['name' => 'Atmika Paul', 'role' => '3rd YR, BME<br>Mob: 9830334901</br>', 'image' => 'https://i.postimg.cc/qqZq2rzw/Atmika-Paul.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                ],
-                'Security & Crowd Management Team' => [
-                    ['name' => 'Devashish Basak', 'role' => 'IT, 4th YR<br>Mob: 9883334724</br>', 'image' => 'https://i.ibb.co/TxKvsXNm/Devashish.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Sagnik Ghosh', 'role' => 'CSE, 2nd YR', 'image' => 'https://i.ibb.co/Y4x7CssW/Sagnik-ghosh.jpg', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']], 
-                    
-                ],
-                'Food and Water Management Team' => [
-                    ['name' => 'Subhajit Saha', 'role' => 'CSE, M.Tech, 1st YR<br>Mob: 8942976671</br>', 'image' => 'https://i.postimg.cc/Zn7JfZF0/Rick.png', 'social' => ['twitter' => '#', 'facebook' => '#', 'instagram' => '#', 'linkedin' => '#']],
-                    ['name' => 'Gourab Nandi', 'role' => 'ECE, 3rd YR', 'image' => 'https://i.postimg.cc/1zZtGJ5k/GOURAB-NANDI.jpg', 'social' => ['twitter' => 'https://x.com/GOURABNANDI2004?s=09', 'facebook' => 'https://www.facebook.com/Gourab600?mibextid=ZbWKwL', 'instagram' => 'https://www.instagram.com/bekar_b.tech_wala?igsh=ZTZuZG5icGZxeHls', 'linkedin' => 'https://www.linkedin.com/in/gourabnandi2004']],
-                ],
-            ];
-
-            foreach ($sections as $sectionTitle => $members) {
-                echo "<div class='mb-5'>";
-                echo "<h2 class='text-2xl font-bold mb-3 text-center underline'>{$sectionTitle}</h2>";
-                echo "<div class='member-card-container'>";
-                foreach ($members as $member) {
-                    echo "<div class='member-card'>";
-                    echo "<img src='{$member['image']}' alt='Avatar' class='mx-auto' onerror=\"this.src='images/nodp.png';\" style='object-fit: cover;'>";
-                    echo "<h3 class='text-lg font-semibold mt-2'>{$member['name']}</h3>";
-                    echo "<p class='text-sm'>{$member['role']}</p>";
-                    echo "<div class='social-icons'>";
-                    echo "<a href='{$member['social']['twitter']}' target='_blank'><i class='fab fa-twitter'></i></a>";
-                    echo "<a href='{$member['social']['facebook']}' target='_blank'><i class='fab fa-facebook'></i></a>";
-                    echo "<a href='{$member['social']['instagram']}' target='_blank'><i class='fab fa-instagram'></i></a>";
-                    echo "<a href='{$member['social']['linkedin']}' target='_blank'><i class='fab fa-linkedin'></i></a>";
-                    echo "</div>";
-                    echo "</div>";
-                }
-                echo "</div>";
-                echo "</div>";
-            }
-            ?>
-        </div>
+        
         </div>
         <?php include 'includes/footer.php'; ?>
 </body>

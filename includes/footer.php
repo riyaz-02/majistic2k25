@@ -15,14 +15,15 @@
             <a href="#"><i class="fa-solid fa-angle-right"></i> Home</a><br>
             <a href="/majistic/index.php#events"><i class="fa-solid fa-angle-right"></i> Events</a><br>
             <a href="/majistic/merchandise.php"><i class="fa-solid fa-angle-right"></i> Merchandise</a><br>
+            <a href="/majistic/commitee.php"><i class="fa-solid fa-angle-right"></i> Commitee</a><br>
             <a href="/majistic/about.php"><i class="fa-solid fa-angle-right"></i> About</a><br>
             <a href="/majistic/contact.php"><i class="fa-solid fa-angle-right"></i> Contact Us</a><br>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>Contact maJIStic</h5>
             <a href="mailto:majistic@jiscollege.ac.in"><i class="fa-solid fa-envelope"></i> majistic@jiscollege.ac.in</a><br>
-            <a href="tel:+1234567890"><i class="fa-solid fa-phone"></i> +91 79805 32913 (Dr. Proloy Ghosh)</a><br>
-            <a href="tel:+0987654321"><i class="fa-solid fa-phone"></i> +91 79809 79789 (Dr. Madhura Chakraborty)</a>
+            <a href="tel:+917980532913"><i class="fa-solid fa-phone"></i> +91 79805 32913 (Dr. Proloy Ghosh)</a><br>
+            <a href="tel:+917980979789"><i class="fa-solid fa-phone"></i> +91 79809 79789 (Dr. Madhura Chakraborty)</a>
             <div class="social mt-4">
                 <a href="https://www.facebook.com/profile.php?id=100090087469753" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/majistic_jisce/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>

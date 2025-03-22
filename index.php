@@ -198,19 +198,19 @@
             <h1 class="text-center display-4 font-weight-bold section-title">IMPACT AT A GLANCE</h1>
         </div>
         <div class="content">
-  <div class="box" data-start="0" data-end="9000" data-duration="3000">
+  <div class="box" data-start="0" data-end="9000" data-duration="1000">
     <span class="counter">9000+</span>
     <p>Footfalls</p>
   </div>
-  <div class="box" data-start="0" data-end="20" data-duration="3000">
+  <div class="box" data-start="0" data-end="20" data-duration="1000">
     <span class="counter">20+</span>
     <p>Events</p>
   </div>
-  <div class="box" data-start="0" data-end="48" data-duration="3000">
+  <div class="box" data-start="0" data-end="48" data-duration="1000">
     <span class="counter">48+</span>
     <p>Hours of Program</p>
   </div>
-  <div class="box" data-start="0" data-end="5000" data-duration="3000">
+  <div class="box" data-start="0" data-end="5000" data-duration="1000">
     <span class="counter">5000+</span>
     <p>Registrations</p>
     </div>
@@ -378,7 +378,7 @@
     </section>
 
     <div class="heading-container flip-in" id="sponsors">
-            <h1 class="text-center display-4 font-weight-bold section-title">Partners in Celebration</h1>
+            <h1 class="text-center display-4 font-weight-bold section-title">Thank You to Our Previous Sponsors</h1>
         </div>
     <!-- Sponsors Section -->
     <!-- <section class="base-template">

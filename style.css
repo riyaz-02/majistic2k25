@@ -294,7 +294,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5vh;
     font-size: 3vh;
-    background: rgba(59, 59, 59, 0.1);
+    background: linear-gradient(90deg, rgba(113, 2, 240, 0.685), rgba(255, 0, 150, 0.685));
     backdrop-filter: blur(10px);
     border: none;
     cursor: pointer;
@@ -304,8 +304,9 @@ body {
 }
 
 #registerBtn:hover {
-    background: rgba(0, 0, 0, 0.473);
+    background: linear-gradient(180deg, rgba(113, 2, 240, 0.685), rgba(255, 0, 150, 0.685));
     transform: scale(1.05);
+    transition: background 0.5s, transform 0.5s;
 }
 
 /*------------------------------------------------------------

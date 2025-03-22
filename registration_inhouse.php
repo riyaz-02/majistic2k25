@@ -499,16 +499,16 @@ if (file_exists('src/config/payment_config.php')) {
             var bannerImage = document.getElementById('bannerImage');
             switch (selectedCompetition) {
                 case 'Taal Se Taal Mila (Dance)':
-                    bannerImage.src = 'https://i.ibb.co/0V1Cxvnr/dance.png';
+                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
                     break;
                 case 'Actomania (Drama)':
-                    bannerImage.src = 'https://i.ibb.co/vvLXHMDF/drama.jpg';
+                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
                     break;
                 case 'Jam Room (Band)':
-                    bannerImage.src = 'https://i.ibb.co/5h1Kw4KB/band.jpg';
+                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
                     break;
                 case 'Fashion Fiesta (Fashion Show)':
-                    bannerImage.src = 'https://i.ibb.co/9drCNqN/fashion.jpg';
+                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
                     break;
                 default:
                     bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';

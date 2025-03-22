@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About & Committee - maJIStic 2k25</title>
+    <title>Committee - maJIStic 2k25</title>
 
     <!-- Added Google Fonts - Roboto for headings -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -230,16 +230,51 @@
             position: relative;
         }
 
-        .section-header::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(45deg, #ff5e62, #ff9966);
-            border-radius: 2px;
+        /* Increase font size for the Committee Members header */
+        .main-header {
+            font-size: 3rem !important; /* Increased from 2.2rem */
+            margin-bottom: 40px;
+        }
+
+        /* Added styles for the notification box */
+        .notification-box {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            border-left: 5px solid #e53e3e;
+            backdrop-filter: blur(10px);
+        }
+
+        .notification-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .meeting-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 20px 0;
+        }
+
+        .meeting-item {
+            background: rgba(229, 62, 62, 0.2);
+            padding: 12px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .meeting-item i {
+            color: #e53e3e;
         }
 
         /* Responsive styles - Updated for better mobile experience */
@@ -334,17 +369,27 @@
         }
     </style>
     <script>
-        // Add script to replace # image sources with nodp.png
         document.addEventListener('DOMContentLoaded', function () {
+            // Handle all image errors by setting default image
             const images = document.querySelectorAll('img');
             images.forEach(img => {
-                if (img.src === window.location.href + '#' || img.getAttribute('src') === '#') {
-                    img.src = 'images/nodp.png'; // Update this path to your no-profile image
+                // Check if image source is empty, #, or invalid
+                if (img.src === window.location.href + '#' || 
+                    img.getAttribute('src') === '#' || 
+                    img.getAttribute('src') === '' || 
+                    img.getAttribute('src') === null) {
+                    img.src = 'images/nodp.png';
                 }
+                
+                // Add error handler for broken images
+                img.onerror = function() {
+                    this.src = 'images/nodp.png';
+                    this.onerror = null; // Prevent infinite loops
+                };
             });
 
             // Add animation to paragraphs on scroll
-            const paragraphs = document.querySelectorAll('.styled-paragraph');
+            const paragraphs = document.querySelectorAll('.styled-paragraph, .notification-box');
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -372,102 +417,34 @@
 
     <!-- About Section -->
     <div class="container mx-auto p-8 content-container">
-        <div class="section-container">
-            <h2 class="container-header text-center">About the Cultural Fest</h2>
-            <p class="styled-paragraph">
-                <span class="highlight">maJIStic 2k25</span> is the annual cultural extravaganza of JIS College of
-                Engineering, Kalyani, a prestigious institution under the renowned JIS Group. Known for its vibrant
-                celebration of talent, creativity, and diversity, <span class="highlight">maJIStic 2k25</span> promises
-                to be a spectacular convergence of art, culture, and innovation, showcasing the dynamic spirit of the
-                students.
-            </p>
-            <p class="styled-paragraph">
-                Set against the backdrop of JIS College of Engineering's state-of-the-art campus in Kalyani, West
-                Bengal, this event is more than just a festival—it's a testament to the institution's legacy of academic
-                brilliance and holistic development.
-            </p>
-            <p class="styled-paragraph">
-                <span class="highlight">maJIStic 2k25</span> will feature an array of events, including:
-            </p>
-            <ul class="list-disc list-inside mb-4 styled-paragraph">
-                <li><span class="highlight">Cultural Performances:</span> From electrifying dance battles to soulful musical renditions, students will have the stage to showcase their artistic flair.</li>
-                <li><span class="highlight">Celebrity Performances:</span> Special appearances and performances by renowned artists and entertainers to captivate the audience.</li>
-                <li><span class="highlight">Food and Fun:</span> A vibrant carnival atmosphere with food stalls, games, and a bustling flea market.</li>
-            </ul>
-            <p class="styled-paragraph">
-                This grand event embodies the ethos of the JIS Group, which is dedicated to nurturing talent and
-                fostering innovation. With a 20+ year legacy in education, JIS Group brings its values of excellence,
-                creativity, and inclusivity to the forefront of <span class="highlight">maJIStic 2k25</span>.
-            </p>
-            <p class="styled-paragraph">
-                Whether you are a student, alumnus, or visitor, <span class="highlight">maJIStic 2k25</span> offers a
-                platform to connect, celebrate, and create memories that will last a lifetime. Join us as we embrace the
-                magic of culture, the rhythm of celebration, and the joy of togetherness.
-            </p>
-            <p class="styled-paragraph">
-                Be part of the fest, be part of the magic—<span class="highlight">maJIStic 2k25</span> awaits you!
-            </p>
-        </div>
-
-        <div class="section-container">
-            <h2 class="section-header">About Our College</h2>
-            <p class="styled-paragraph">
-                Our college, JIS College of Engineering, is a premier institution known for its academic excellence and
-                vibrant campus life. Established in 2000, the college has been providing quality education and fostering
-                a culture of innovation and creativity. With state-of-the-art infrastructure and a dedicated faculty, we
-                strive to create an environment that nurtures the holistic development of our students.
-            </p>
-            <p class="styled-paragraph">
-                The college offers a wide range of undergraduate and postgraduate programs in engineering, management,
-                and other disciplines. Our students have consistently excelled in academics, sports, and extracurricular
-                activities, making us proud with their achievements.
-            </p>
-            <p class="styled-paragraph">
-                JIS College of Engineering is a college located in Kalyani, West Bengal, India. The college was
-                established in 2000. The Institution is declared Autonomous by the University Grants Commission (UGC) in
-                2011. In 2022, the college was accredited by NAAC with Grade-A. It is affiliated to Maulana Abul Kalam
-                Azad University of Technology, West Bengal (MAKAUT, WB). The institute is ranked by NIRF in the range of
-                201–250 in 2021. In Atal Ranking of Institutions on Innovation Achievements (ARIIA) 2020, the institute
-                has secured a place in Band B (Rank Between 26th – 50th) among Private or Self-Financed
-                College/Institutes in India. On 1 September 2020, the institute celebrated its 20th Birthday.
-            </p>
-        </div>
-
-        <div class="section-container">
-            <h2 class="section-header">About JIS Group</h2>
-            <p class="styled-paragraph">
-                Sardar Jodh Singh's unbeatable zeal and extraordinary entrepreneurship skills enabled him to be
-                associated with many ventures into diverse sectors like dairy, transport, infrastructure, iron & steel,
-                cargo, logistics, information technology, agro, overseas, movies, and much more. However, his
-                path-breaking initiatives in the field of education are noteworthy and have earned him global
-                recognition. The largest education service provider in Eastern India, the first college (JV) under the
-                umbrella of JIS Group was Asansol Engineering College. And two years later, JIS followed with the
-                establishment of JIS College of Engineering. There has been no stopping since. Presently, with 30
-                Institutes, 140 Programs, and over 37000+ Students enrolled in the diverse academic courses, the best
-                educational institutes in West Bengal are under the aegis of JIS Group.
-            </p>
-            <p class="styled-paragraph">
-                The hub of academic brilliance and professional excellence, JIS Group continues to be a popular choice
-                among students, teachers, and parents. Offering a wide range of new-age academic courses at the
-                undergraduate, postgraduate and doctoral level, the best private colleges in Kolkata are under JIS
-                Group. Accredited by various government bodies like AICTE, NAAC, NBA, PCI, BCI, DCI, MCI, NCHMCT,
-                Academic Impact United Nations and affiliated to MAKAUT and WBSCTVESD, JIS Group aims to serve the
-                society by being the torchbearer of knowledge, education, and employment.
-            </p>
-            <p class="styled-paragraph">
-                The largest educational Group in Eastern India, JIS has received several rankings, awards, and accolades
-                from various prestigious organizations, industry, and media houses like Zee 24 Ghanta, The Week, NIRF,
-                India Today, Outlook-I-Care, Careers 360, ARIIA, FICCI, Digital Learning, and many more. With conscious
-                and consistent progressive efforts, JIS Group has emerged as one of the largest educational groups of
-                India and aims to spread a 20+-year-old legacy by its collaboration with 550+ Industries, 11 Chambers,
-                73 universities, and 21 countries.
-            </p>
-        </div>
-
         <!-- Committee Members Section -->
         <div class="section-container">
-            <h1 class="section-header">Committee Members</h1>
+            <h1 class="section-header main-header">Committee Members</h1>
+            
+            <div class="notification-box">
+                <div class="notification-title">
+                    Committee Members are not Finalized yet. <br><br>The Page will be updated soon after General Meeting.
+                </div>
+                
+                <div class="notification-title">
+                    General Meeting Announcement
+                </div>
+                
+                <div class="meeting-details">
+                    <div class="meeting-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Monday, 24 March 2025</span>
+                    </div>
+                    <div class="meeting-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>College Auditorium, JIS Campus</span>
+                    </div>
+                </div>
+                
+            </div>
+            
             <?php
+            /* Committee members data is commented out until finalized
             $sections = [
                 'Chief Patron' => [
                     ['name' => 'Mr. Taranjit Singh', 'role' => 'MD, JIS Group', 'image' => 'https://i.postimg.cc/9M6wFdqc/Mr-Taranjit-Singh.jpg', 'social' => ['twitter' => 'https://x.com/jisgroupindia/status/1811268230041989247', 'facebook' => 'https://www.facebook.com/JISGroupEducationalInitiatives', 'instagram' => 'https://www.instagram.com/jisgroup_official/#', 'linkedin' => 'https://www.linkedin.com/posts/jisgroup_md-jis-group-honoured-sardar-taranjit-activity-7100786565513166848-Tvu4']],
@@ -556,10 +533,11 @@
                 echo "</div>";
                 echo "</div>";
             }
+            */
             ?>
         </div>
-        </div>
-        <?php include 'includes/footer.php'; ?>
+    </div>
+    <?php include 'includes/footer.php'; ?>
 </body>
 
 </html>

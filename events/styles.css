@@ -107,31 +107,37 @@
 
 #events-carousel .swiper-slide--one {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url(https://i.postimg.cc/bNbM15My/1.png)
+    url(https://i.postimg.cc/yYZRVCcy/4.jpg)
       no-repeat 50% 50% / cover;
 }
 
 #events-carousel .swiper-slide--two {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url("https://i.postimg.cc/tgrmXG15/2.png'")
+    url(https://i.postimg.cc/G3NYwm8p/6.jpg)
       no-repeat 50% 50% / cover;
 }
 
 #events-carousel .swiper-slide--three {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url("https://i.postimg.cc/9QYnn7Cs/3.png'")
+    url(https://i.postimg.cc/fRQ9yqvn/8.jpg)
       no-repeat 50% 50% / cover;
 }
 
 #events-carousel .swiper-slide--four {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url("https://i.postimg.cc/KzRpjpBy/4.png'")
+    url("https://i.postimg.cc/WzQJM5LZ/2.jpg")
       no-repeat 50% 50% / cover;
 }
 
 #events-carousel .swiper-slide--five {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url("https://i.postimg.cc/bvYBcwvr/5.png'")
+    url("https://i.postimg.cc/bvYBcwvr/5.png")
+      no-repeat 50% 50% / cover;
+}
+
+#events-carousel .swiper-slide--six {
+  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
+    url("https://i.postimg.cc/rwGtrGhd/10.jpg")
       no-repeat 50% 50% / cover;
 }
 
