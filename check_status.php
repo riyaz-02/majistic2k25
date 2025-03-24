@@ -1,6 +1,12 @@
 <?php
 include 'includes/db_config.php';
 
+// Include alumni coordinator configuration
+$alumni_config_path = __DIR__ . '/src/config/alumni_coordinator_config.php';
+if (file_exists($alumni_config_path)) {
+    include_once $alumni_config_path;
+}
+
 $message = '';
 $student_data = null;
 $registration_type = '';
@@ -292,6 +298,68 @@ $days_remaining = $interval->format('%a');
                                 </div>
 
                                 <?php if (!$payment_status): ?>
+                                    <?php if ($registration_type === 'alumni'): ?>
+                                    <!-- Alumni Payment Section with QR Code -->
+                                    <div class="note" style="background-color: rgba(124, 58, 237, 0.15); border-left: 4px solid #7c3aed; padding: 20px; margin: 20px 0; text-align: left; border-radius: 8px;">
+                                        <h4 style="color: #7c3aed; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Alumni Payment</h4>
+                                        
+                                        <p style="margin-bottom: 15px;">Please complete your payment using the QR code below to confirm your participation in maJIStic 2k25.</p>
+                                        
+                                        <div style="margin: 20px auto; text-align: center;">
+                                            <p style="font-weight: bold; font-size: 20px; color: #7c3aed; margin-bottom: 15px;">₹1000</p>
+                                            
+                                            <?php if (defined('ALUMNI_PAYMENT_QR') && !empty(ALUMNI_PAYMENT_QR)): ?>
+                                            <div style="background-color: white; padding: 15px; border-radius: 8px; display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                                <img src="<?php echo htmlspecialchars(ALUMNI_PAYMENT_QR); ?>" alt="Payment QR Code" style="max-width: 200px; height: auto;">
+                                            </div>
+                                            <!-- Removed QR code URL display -->
+                                            <?php else: ?>
+                                            <div style="background-color: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 10px; border-radius: 5px; font-weight: bold; margin-bottom: 15px;">
+                                                QR code not available. Please contact the alumni coordinator directly.
+                                            </div>
+                                            <?php endif; ?>
+                                            
+                                            <div style="text-align: left; font-size: 14px; background-color: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 5px;">
+                                                <p style="margin-top: 0;"><strong>Instructions:</strong></p>
+                                                <p style="margin-bottom: 0;"><?php echo defined('ALUMNI_PAYMENT_INSTRUCTIONS') ? nl2br(htmlspecialchars(ALUMNI_PAYMENT_INSTRUCTIONS)) : 'Scan the QR code with any UPI app to pay the alumni registration fee (Rs. 1000). After payment, please send a screenshot to the coordinator via WhatsApp for verification.'; ?></p>
+                                            </div>
+                                            
+                                            <!-- New message for alumni who have made payments but status not updated -->
+                                            <div style="background-color: rgba(246, 229, 141, 0.2); border-left: 4px solid #f6e58d; padding: 15px; margin-top: 20px; border-radius: 5px; text-align: left;">
+                                                <p style="color: #be9e44; font-weight: 600; margin-top: 0; margin-bottom: 10px; font-size: 16px;"><i class="fas fa-clock" style="margin-right: 8px;"></i> Payment Done But Status Not Updated?</p>
+                                                <p style="margin-bottom: 0;">Hold on! Our team is diligently verifying all payments. Your status will be updated soon. In case of any issues, please contact the Alumni Coordinator directly using the contact details below.</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="margin-top: 20px; background-color: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px;">
+                                            <h4 style="color: #7c3aed; margin-top: 0; margin-bottom: 10px; font-size: 16px;">Alumni Coordinator</h4>
+                                            <p style="margin: 5px 0;"><strong>Name:</strong> <?php echo defined('ALUMNI_COORDINATOR_NAME') ? htmlspecialchars(ALUMNI_COORDINATOR_NAME) : 'Dr. Proloy Ghosh'; ?></p>
+                                            <p style="margin: 5px 0;"><strong>Contact:</strong> <?php echo defined('ALUMNI_COORDINATOR_CONTACT') ? htmlspecialchars(ALUMNI_COORDINATOR_CONTACT) : '7980532913'; ?></p>
+                                            <?php if (defined('ALUMNI_COORDINATOR_EMAIL') && !empty(ALUMNI_COORDINATOR_EMAIL)): ?>
+                                            <p style="margin: 5px 0;"><strong>Email:</strong> <?php echo htmlspecialchars(ALUMNI_COORDINATOR_EMAIL); ?></p>
+                                            <?php endif; ?>
+                                            
+                                            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                                                <?php if (defined('ALUMNI_COORDINATOR_CONTACT') && !empty(ALUMNI_COORDINATOR_CONTACT)): ?>
+                                                <a href="tel:+91<?php echo ALUMNI_COORDINATOR_CONTACT; ?>" style="display: inline-flex; align-items: center; background: rgba(52, 152, 219, 0.2); color: #3498db; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px; gap: 5px;">
+                                                    <i class="fas fa-phone-alt"></i> Call
+                                                </a>
+                                                
+                                                <a href="https://wa.me/91<?php echo ALUMNI_COORDINATOR_CONTACT; ?>?text=Hello,%20I%20have%20registered%20for%20maJIStic%202025%20as%20an%20alumnus%20(JIS%20ID:%20<?php echo urlencode($jis_id); ?>).%20I%20would%20like%20to%20complete%20my%20payment." target="_blank" style="display: inline-flex; align-items: center; background: rgba(37, 211, 102, 0.2); color: #25d366; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px; gap: 5px;">
+                                                    <i class="fab fa-whatsapp"></i> WhatsApp
+                                                </a>
+                                                <?php endif; ?>
+                                                
+                                                <?php if (defined('ALUMNI_COORDINATOR_EMAIL') && !empty(ALUMNI_COORDINATOR_EMAIL)): ?>
+                                                <a href="mailto:<?php echo ALUMNI_COORDINATOR_EMAIL; ?>?subject=Alumni%20Registration%20Payment%20for%20maJIStic%202025&body=Hello,%0A%0AI%20have%20registered%20for%20maJIStic%202025%20as%20an%20alumnus%20(JIS%20ID:%20<?php echo $jis_id; ?>).%0A%0AI%20would%20like%20to%20complete%20my%20payment.%0A%0AThank%20you." style="display: inline-flex; align-items: center; background: rgba(231, 76, 60, 0.2); color: #e74c3c; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px; gap: 5px;">
+                                                    <i class="fas fa-envelope"></i> Email
+                                                </a>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php else: ?>
+                                    <!-- Regular student payment note -->
                                     <div class="note" style="background-color: rgba(241, 196, 15, 0.15); border-left: 4px solid #f1c40f; padding: 15px; margin: 20px 0; text-align: left; border-radius: 4px;">
                                         <p><strong>Important:</strong> Please complete your payment with your department coordinator to confirm your participation in maJIStic 2k25.</p>
                                         
@@ -321,6 +389,7 @@ $days_remaining = $interval->format('%a');
                                         </div>
                                         <?php endif; ?>
                                     </div>
+                                    <?php endif; ?>
                                 <?php else: ?>
                                     <div class="note" style="background-color: rgba(46, 204, 113, 0.15); border-left: 4px solid #2ecc71; padding: 15px; margin: 20px 0; text-align: left; border-radius: 4px;">
                                         <p><strong>Thank you!</strong> Your payment has been completed. 
@@ -338,7 +407,7 @@ $days_remaining = $interval->format('%a');
                                         <i class="fas fa-home"></i> Back to Home
                                     </a>
                                     <a href="merchandise.php" class="btn btn-accent" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white;">
-                                        <i class="fas fa-tshirt"></i> Buy Merchandise
+                                        <i class="fas fa-tshirt"></i> Book Merchandise
                                     </a>
                                     <a href="check_status.php" class="btn" style="background: linear-gradient(135deg,rgb(96, 93, 97),rgb(46, 34, 51)); color: white;">
                                         <i class="fas fa-search"></i> New Search

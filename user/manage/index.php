@@ -14,6 +14,38 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
 // Process form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Registration Status Toggle
+    if (isset($_POST['update_registration_status'])) {
+        $registrationEnabled = isset($_POST['registration_enabled']) ? true : false;
+        
+        $configContent = "<?php\n";
+        $configContent .= "/**\n";
+        $configContent .= " * Registration Configuration\n";
+        $configContent .= " * \n";
+        $configContent .= " * Controls whether new registrations are accepted\n";
+        $configContent .= " * When REGISTRATION_ENABLED is set to false, registration buttons will redirect to a message page\n";
+        $configContent .= " */\n\n";
+        $configContent .= "// Set to false to disable new registrations temporarily\n";
+        $configContent .= "define('REGISTRATION_ENABLED', " . ($registrationEnabled ? 'true' : 'false') . ");\n";
+        $configContent .= "?>";
+        
+        $configFile = realpath(__DIR__ . '/../../src/config/registration_config.php');
+        
+        if (!$configFile) {
+            $configFile = '../../src/config/registration_config.php';
+            $dir = dirname($configFile);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+        }
+        
+        if (file_put_contents($configFile, $configContent)) {
+            $success_message = "Registration status updated successfully!";
+        } else {
+            $error_message = "Failed to update registration status. Check file permissions.";
+        }
+    }
+    
     // Email Configuration Update
     if (isset($_POST['update_email_config'])) {
         $logoUrl = trim($_POST['logo_url']);
@@ -116,6 +148,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Load current registration status
+$registrationEnabled = true; // Default value
+$registrationConfigFile = realpath(__DIR__ . '/../../src/config/registration_config.php');
+
+if ($registrationConfigFile && file_exists($registrationConfigFile)) {
+    include_once $registrationConfigFile;
+    if (defined('REGISTRATION_ENABLED')) {
+        $registrationEnabled = REGISTRATION_ENABLED;
+    }
+}
+
 // Load current email configuration
 $logoUrl = '';
 $baseUrl = '';
@@ -136,6 +179,33 @@ foreach ($possiblePaths as $configFile) {
             $baseUrl = EMAIL_BASE_URL;
             break;
         }
+    }
+}
+
+// Load alumni coordinator configuration
+$alumni_coordinator_name = 'Dr. Proloy Ghosh'; // Default values
+$alumni_coordinator_contact = '7980532913';
+$alumni_coordinator_email = 'alumni.majistic@gmail.com';
+$alumni_payment_qr = '';
+$alumni_payment_instructions = 'Scan the QR code with any UPI app to pay the alumni registration fee (Rs. 1000). After payment, please send a screenshot to the coordinator via WhatsApp for verification.';
+
+$alumni_config_path = realpath(__DIR__ . '/../../src/config/alumni_coordinator_config.php');
+if ($alumni_config_path && file_exists($alumni_config_path)) {
+    include_once $alumni_config_path;
+    if (defined('ALUMNI_COORDINATOR_NAME')) {
+        $alumni_coordinator_name = ALUMNI_COORDINATOR_NAME;
+    }
+    if (defined('ALUMNI_COORDINATOR_CONTACT')) {
+        $alumni_coordinator_contact = ALUMNI_COORDINATOR_CONTACT;
+    }
+    if (defined('ALUMNI_COORDINATOR_EMAIL')) {
+        $alumni_coordinator_email = ALUMNI_COORDINATOR_EMAIL;
+    }
+    if (defined('ALUMNI_PAYMENT_QR')) {
+        $alumni_payment_qr = ALUMNI_PAYMENT_QR;
+    }
+    if (defined('ALUMNI_PAYMENT_INSTRUCTIONS')) {
+        $alumni_payment_instructions = ALUMNI_PAYMENT_INSTRUCTIONS;
     }
 }
 
@@ -207,6 +277,16 @@ try {
         .nav-link.active {
             color: #2470dc;
         }
+        /* Toggle switch styling */
+        .form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+            margin-left: 0;
+        }
+        .form-switch .form-check-input:checked {
+            background-color: #198754;
+            border-color: #198754;
+        }
     </style>
 </head>
 <body>
@@ -231,6 +311,12 @@ try {
                             <a class="nav-link <?php echo $page === 'dashboard' ? 'active' : ''; ?>" href="?page=dashboard">
                                 <i class="bi bi-speedometer2 me-2"></i>
                                 Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo $page === 'registration_control' ? 'active' : ''; ?>" href="?page=registration_control">
+                                <i class="bi bi-toggle-on me-2"></i>
+                                Registration Control
                             </a>
                         </li>
                         <li class="nav-item">
@@ -261,6 +347,9 @@ try {
                     <h1 class="h2">
                         <?php
                         switch ($page) {
+                            case 'registration_control':
+                                echo 'Registration Control';
+                                break;
                             case 'email_config':
                                 echo 'Email Configuration';
                                 break;
@@ -291,7 +380,120 @@ try {
                 </div>
                 <?php endif; ?>
 
-                <?php if ($page === 'email_config'): ?>
+                <?php if ($page === 'registration_control'): ?>
+                <!-- Registration Control Page -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Registration Status Control</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert <?php echo $registrationEnabled ? 'alert-success' : 'alert-danger'; ?>">
+                            <strong>Current Status:</strong> 
+                            <?php echo $registrationEnabled ? 
+                                'Registrations are <span class="badge bg-success">OPEN</span>' : 
+                                'Registrations are <span class="badge bg-danger">CLOSED</span>'; ?>
+                        </div>
+                        
+                        <form method="post" action="?page=registration_control">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="registration_enabled" name="registration_enabled" <?php echo $registrationEnabled ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="registration_enabled">
+                                    <span class="fs-5">Toggle Registration Status</span>
+                                </label>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6>What happens when registrations are closed?</h6>
+                                        <ul>
+                                            <li>Registration buttons will redirect to a message page</li>
+                                            <li>Visitors will see a "Registrations are closed" message</li>
+                                            <li>All registration forms will be inaccessible</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" name="update_registration_status" class="btn btn-primary">
+                                Update Registration Status
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Alumni Coordinator Settings -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Alumni Coordinator Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="alumni_coordinator_update.php">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="alumni_coordinator_name" class="form-label">Coordinator Name</label>
+                                    <input type="text" class="form-control" id="alumni_coordinator_name" name="alumni_coordinator_name" value="<?php echo htmlspecialchars($alumni_coordinator_name); ?>" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="alumni_coordinator_contact" class="form-label">Contact Number</label>
+                                    <input type="text" class="form-control" id="alumni_coordinator_contact" name="alumni_coordinator_contact" value="<?php echo htmlspecialchars($alumni_coordinator_contact); ?>" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="alumni_coordinator_email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="alumni_coordinator_email" name="alumni_coordinator_email" value="<?php echo htmlspecialchars($alumni_coordinator_email); ?>">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="alumni_payment_qr" class="form-label">Payment QR Code URL</label>
+                                <input type="url" class="form-control" id="alumni_payment_qr" name="alumni_payment_qr" value="<?php echo htmlspecialchars($alumni_payment_qr); ?>" required>
+                                <div class="form-text">Enter the direct URL to the payment QR code image (must start with http:// or https://)</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="alumni_payment_instructions" class="form-label">Payment Instructions</label>
+                                <textarea class="form-control" id="alumni_payment_instructions" name="alumni_payment_instructions" rows="3" required><?php echo htmlspecialchars($alumni_payment_instructions); ?></textarea>
+                            </div>
+                            
+                            <?php if (!empty($alumni_payment_qr)): ?>
+                            <div class="mb-3">
+                                <label class="form-label">Current QR Code Preview</label>
+                                <div class="border p-3 text-center bg-dark">
+                                    <img src="<?php echo htmlspecialchars($alumni_payment_qr); ?>" alt="Payment QR Code" style="max-width: 200px; height: auto;">
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                            
+                            <button type="submit" name="update_alumni_coordinator" class="btn btn-primary">
+                                Update Alumni Coordinator Settings
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Registration Message Preview</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>When registrations are closed, visitors will see the following page:</p>
+                        <div class="border p-3 mt-3 bg-light">
+                            <div class="text-center mb-3">
+                                <i class="bi bi-exclamation-circle text-warning" style="font-size: 3rem;"></i>
+                            </div>
+                            <h3 class="text-center">We are not accepting Registrations Right Now</h3>
+                            <p class="text-center">It will be resumed shortly. Keep an eye on the portal. Meanwhile, explore the website.</p>
+                        </div>
+                        <div class="mt-3">
+                            <a href="../../src/handlers/registration_closed.php" target="_blank" class="btn btn-secondary">
+                                <i class="bi bi-eye"></i> View Full Message Page
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <?php elseif ($page === 'email_config'): ?>
                 <!-- Email Configuration Page -->
                 <div class="card">
                     <div class="card-header">
@@ -559,6 +761,21 @@ try {
                         <p class="card-text">Use the navigation menu to manage various aspects of the system.</p>
                         
                         <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="card bg-<?php echo $registrationEnabled ? 'success' : 'danger'; ?> text-white mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Registration Control</h5>
+                                        <p class="card-text">
+                                            <?php echo $registrationEnabled ? 'Registrations are currently open' : 'Registrations are currently closed'; ?>
+                                        </p>
+                                    </div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="?page=registration_control">Manage Registration Status</a>
+                                        <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="col-md-4">
                                 <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">

@@ -296,16 +296,16 @@ IMPORTANT: Please bring your College ID card for check-in. It is mandatory for e
 
 You can check your registration status at: $baseUrl/check_status.php?jis_id=$jisId
 
-If you have any questions or concerns, please don't hesitate to contact us at majistic2k25@gmail.com.
+If you have any questions or concerns, please don't hesitate to contact us at majistic@jiscollege.ac.in.
 
-We look forward to seeing you at MaJIStic 2K25!
+We look forward to seeing you at maJIStic 2K25!
 
 Best regards,
-MaJIStic 2K25 Team
+maJIStic Team
 JIS College of Engineering
 
 -------------------------
-© 2025 MaJIStic. All rights reserved.
+© 2025 maJIStic. All rights reserved.
 JIS College of Engineering, Kalyani, West Bengal, India
 TEXT;
 }

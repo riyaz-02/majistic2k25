@@ -1,6 +1,12 @@
 <?php
 include '../../includes/db_config.php';
 
+// Include alumni coordinator configuration
+$alumni_config_path = __DIR__ . '/../../src/config/alumni_coordinator_config.php';
+if (file_exists($alumni_config_path)) {
+    include_once $alumni_config_path;
+}
+
 // Initialize variables
 $jis_id = isset($_GET['jis_id']) ? $_GET['jis_id'] : '';
 $student_data = null;
@@ -18,7 +24,8 @@ if (!empty($jis_id)) {
                     'department' => $student_doc['department'],
                     'email' => $student_doc['email'],
                     'mobile' => $student_doc['mobile'],
-                    'registration_date' => $student_doc['registration_date']
+                    'registration_date' => $student_doc['registration_date'],
+                    'passout_year' => $student_doc['passout_year'] // For alumni
                 ];
             }
         } else {
@@ -650,6 +657,136 @@ if (!empty($jis_id)) {
             padding-top: 5px;
             margin-top: 5px;
         }
+
+        /* Alumni QR Code Payment Card */
+        .alumni-payment-card {
+            background: rgba(124, 58, 237, 0.15);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid #7c3aed;
+        }
+        
+        .alumni-payment-card:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .alumni-payment-card h3 {
+            color: #7c3aed;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .payment-amount {
+            font-weight: bold;
+            font-size: 20px;
+            color: #7c3aed;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .payment-qr-container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px auto;
+            width: fit-content;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .payment-qr-container img {
+            max-width: 200px;
+            height: auto;
+        }
+        
+        .payment-instructions {
+            text-align: left;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .alumni-coordinator-info {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .alumni-coordinator-info h4 {
+            color: #7c3aed;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .alumni-coordinator-info p {
+            margin: 5px 0;
+        }
+        
+        .alumni-coordinator-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .alumni-coordinator-contact a {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .alumni-coordinator-contact a.call {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+        
+        .alumni-coordinator-contact a.whatsapp {
+            background: rgba(37, 211, 102, 0.2);
+            color: #25d366;
+        }
+        
+        .alumni-coordinator-contact a.email {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+        
+        .alumni-coordinator-contact a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .payment-status-note {
+            background-color: rgba(246, 229, 141, 0.2);
+            border-left: 4px solid #f6e58d;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            text-align: left;
+        }
+        
+        .payment-status-note h4 {
+            color: #be9e44;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -658,7 +795,7 @@ if (!empty($jis_id)) {
     <div class="success-container">
         <div class="success-card animate-in">
             <div class="card-header">
-                <img src="https://i.ibb.co/4nhRJqyk/majistic2k25-white.png" alt="maJIStic Logo" class="logo">
+                <img src="../../images/majisticlogo.png" alt="maJIStic Logo" class="logo">
             </div>
             
             <div class="card-body">
@@ -685,22 +822,86 @@ if (!empty($jis_id)) {
                         <span class="detail-label">Department:</span>
                         <span class="detail-value"><?php echo htmlspecialchars($student_data['department']); ?></span>
                     </div>
+                    <?php if ($is_alumni && isset($student_data['passout_year'])): ?>
+                    <div class="detail-row">
+                        <span class="detail-label">Passout Year:</span>
+                        <span class="detail-value"><?php echo htmlspecialchars($student_data['passout_year']); ?></span>
+                    </div>
+                    <?php endif; ?>
                     <div class="detail-row">
                         <span class="detail-label">Registration Date:</span>
                         <span class="detail-value"><?php echo htmlspecialchars($student_data['registration_date']); ?></span>
                     </div>
                 </div>
 
-                <!-- New Coordinator Contact Card -->
+                <?php if ($is_alumni): ?>
+                <!-- Alumni Payment Card -->
+                <div class="alumni-payment-card">
+                    <h3>Alumni Payment Information</h3>
+                    <p>Please complete your payment using the QR code below to confirm your participation in maJIStic 2k25.</p>
+                    
+                    <div class="payment-amount">₹1000</div>
+                    
+                    <?php if (defined('ALUMNI_PAYMENT_QR') && !empty(ALUMNI_PAYMENT_QR)): ?>
+                    <div class="payment-qr-container">
+                        <img src="<?php echo htmlspecialchars(ALUMNI_PAYMENT_QR); ?>" alt="Payment QR Code">
+                    </div>
+                    
+                    <div class="payment-instructions">
+                        <p><strong>Instructions:</strong></p>
+                        <p><?php echo defined('ALUMNI_PAYMENT_INSTRUCTIONS') ? nl2br(htmlspecialchars(ALUMNI_PAYMENT_INSTRUCTIONS)) : 'Scan the QR code with any UPI app to pay the alumni registration fee (Rs. 1000). After payment, please send a screenshot to the coordinator via WhatsApp for verification.'; ?></p>
+                    </div>
+                    <?php else: ?>
+                    <div style="background-color: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;">
+                        <p style="font-weight: bold; margin-bottom: 0;">QR code not available. Please contact the alumni coordinator directly using the contact information below.</p>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <div class="payment-status-note">
+                        <h4><i class="fas fa-clock" style="margin-right: 8px;"></i> Payment Status Update</h4>
+                        <p>After making your payment, please allow some time for your payment status to be updated. Our team is diligently verifying all payments and will update your status as soon as possible.</p>
+                        <p>If you've already made the payment and status is not updated within 48 hours, please contact the alumni coordinator.</p>
+                    </div>
+                    
+                    <div class="alumni-coordinator-info">
+                        <h4>Alumni Coordinator</h4>
+                        <p><strong>Name:</strong> <?php echo defined('ALUMNI_COORDINATOR_NAME') ? htmlspecialchars(ALUMNI_COORDINATOR_NAME) : 'Dr. Proloy Ghosh'; ?></p>
+                        <p><strong>Contact:</strong> <?php echo defined('ALUMNI_COORDINATOR_CONTACT') ? htmlspecialchars(ALUMNI_COORDINATOR_CONTACT) : '7980532913'; ?></p>
+                        <?php if (defined('ALUMNI_COORDINATOR_EMAIL') && !empty(ALUMNI_COORDINATOR_EMAIL)): ?>
+                        <p><strong>Email:</strong> <?php echo htmlspecialchars(ALUMNI_COORDINATOR_EMAIL); ?></p>
+                        <?php endif; ?>
+                        
+                        <div class="alumni-coordinator-contact">
+                            <?php if (defined('ALUMNI_COORDINATOR_CONTACT') && !empty(ALUMNI_COORDINATOR_CONTACT)): ?>
+                            <a href="tel:+91<?php echo ALUMNI_COORDINATOR_CONTACT; ?>" class="call">
+                                <i class="fas fa-phone-alt"></i> Call
+                            </a>
+                            
+                            <a href="https://wa.me/91<?php echo ALUMNI_COORDINATOR_CONTACT; ?>?text=Hello,%20I%20have%20registered%20for%20maJIStic%202025%20as%20an%20alumnus%20(JIS%20ID:%20<?php echo urlencode($jis_id); ?>).%20I%20would%20like%20to%20complete%20my%20payment." target="_blank" class="whatsapp">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </a>
+                            <?php endif; ?>
+                            
+                            <?php if (defined('ALUMNI_COORDINATOR_EMAIL') && !empty(ALUMNI_COORDINATOR_EMAIL)): ?>
+                            <a href="mailto:<?php echo ALUMNI_COORDINATOR_EMAIL; ?>?subject=Alumni%20Registration%20Payment%20for%20maJIStic%202025&body=Hello,%0A%0AI%20have%20registered%20for%20maJIStic%202025%20as%20an%20alumnus%20(JIS%20ID:%20<?php echo $jis_id; ?>).%0A%0AI%20would%20like%20to%20complete%20my%20payment.%0A%0AThank%20you." class="email">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php else: ?>
+                <!-- Regular Student Coordinator Card -->
                 <div class="coordinator-card" id="coordinatorCard">
-                    <h3>Ticket Payment Information</h3>
-                    <p>For payment of the Ticket Price, Please contact:</p>
+                    <h3>Payment Information</h3>
+                    <p>For payment of the Ticket Price, Please contact the following coordinator at the respective department:</p>
                     <div id="coordinatorDetails">
                         <div class="coordinator-loading">
                             <i class="fas fa-spinner fa-spin"></i> Loading coordinator details...
                         </div>
                     </div>
                 </div>
+                <?php endif; ?>
                 <?php endif; ?>
                 
                 <div class="inspiration-quote">
@@ -712,9 +913,9 @@ if (!empty($jis_id)) {
                 <div class="note">
                     <p><strong>Important Note:</strong> 
                     <?php if ($is_alumni): ?>
-                        Please contact the alumni coordinator or pay the registration fee at the registration desk on the event day.
+                        Please complete the payment using the QR code above or contact the alumni coordinator to confirm your participation.
                     <?php else: ?>
-                        Please contact your department coordinator to pay the registration fee and secure your spot.
+                        Please contact your department coordinator at the department to pay the registration fee and secure your spot.
                     <?php endif; ?>
                     </p>
                 </div>
@@ -722,7 +923,7 @@ if (!empty($jis_id)) {
                 <div class="warning">
                     <p><strong>Remember:</strong> 
                     <?php if ($is_alumni): ?>
-                        Please bring your Alumni ID or any Government ID for verification on the event day.
+                        Please bring your College ID or any Government ID for verification on the event day.
                     <?php else: ?>
                         Your college ID will be mandatory for check-in on the event day. Please ensure you bring it along!
                     <?php endif; ?>
@@ -761,7 +962,7 @@ if (!empty($jis_id)) {
                         <i class="fas fa-search"></i> Check Status
                     </a>
                     <a href="../../merchandise.php" class="btn btn-accent">
-                        <i class="fas fa-tshirt"></i> Buy Merchandise
+                        <i class="fas fa-tshirt"></i> Book Merchandise
                     </a>
                 </div>
                 
@@ -877,7 +1078,9 @@ if (!empty($jis_id)) {
             }
             
             // Fetch coordinator details for the student's department
+            <?php if (!$is_alumni): ?>
             fetchCoordinatorInfo();
+            <?php endif; ?>
         });
         
         function fetchCoordinatorInfo() {
@@ -918,8 +1121,8 @@ if (!empty($jis_id)) {
                     <p><span class="coordinator-label">Contact:</span> <span class="coordinator-value">${coordinator.contact}</span></p>
                     <p><span class="coordinator-label">Time:</span> <span class="coordinator-value">${availableTime}</span></p>
                     <div class="coordinator-contact">
-                        <a href="tel:${coordinator.contact}"><i class="fas fa-phone"></i> Call ${coordinator.contact}</a>
-                        <a href="https://wa.me/91${coordinator.contact}" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp ${coordinator.contact}</a>
+                        <a href="tel:${coordinator.contact}"><i class="fas fa-phone"></i> Call</a>
+                        <a href="https://wa.me/91${coordinator.contact}" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
                     </div>
                 </div>`;
             });

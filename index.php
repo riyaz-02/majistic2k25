@@ -100,9 +100,26 @@
     <div class="modal-content">
         <img class="majisticheadlogo" src="images/majisticlogo.png" alt="maJIStic Logo">
         <h2 class="align-center MT-3">Register for maJIStic 2k25</h2>
+        <?php
+        // Check if registration is enabled
+        $registrationEnabled = true;
+        if (file_exists('src/config/registration_config.php')) {
+            include_once 'src/config/registration_config.php';
+        }
+        if (defined('REGISTRATION_ENABLED')) {
+            $registrationEnabled = REGISTRATION_ENABLED;
+        }
+        
+        // Display appropriate buttons based on registration status
+        if ($registrationEnabled): 
+        ?>
         <button onclick="window.open('registration_inhouse.php', '_blank')" class="modal-option mt-2">Student Registration</button>
 <!--    <button onclick="window.open('registration_outhouse.php', '_blank')" class="modal-option" >Out-house Student</button>  -->
         <button class="modal-option" onclick="window.open('registration_alumni.php', '_blank')" >Alumni Registration</button>
+        <?php else: ?>
+        <button onclick="window.open('src/handler/registration_closed.php', '_blank')" class="modal-option mt-2">Student Registration</button>
+        <button class="modal-option" onclick="window.open('src/handler/registration_closed.php', '_blank')" >Alumni Registration</button>
+        <?php endif; ?>
         <button class="modal-option" onclick="window.open('merchandise.php', '_self')" >Merchandise</button>
         <button class="modal-option" onclick="window.open('check_status.php', '_self')" >Check Status</button>
         <button class="close-btn" id = "close-btn" >Close</button>
