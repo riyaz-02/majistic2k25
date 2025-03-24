@@ -87,13 +87,12 @@
             </div>
             <div class="modal-body">
                 <h6>Booking & Collection Details</h6>
-                <p>JIS students can book and pay for maJIStic 2k25 merchandise at the <h6>Main Building (Room No: 319)</h6>.The merchandise can be collected from the same room one week before maJIStic.</p>
+                <p>JIS students can book and pay for maJIStic 2k25 merchandise at the <h6>Main Building (Room No: 319).</h6>The merchandise can be collected from the same room one week before maJIStic.</p>
                 
                 <h6>Payment Options</h6>
                 <ul>
-                    <li><strong>Cash Payment:</strong> Pay directly in the designated room.</li>
-                    <li><strong>Online Payment:</strong> (Payment link to be provided)</li>
-                </ul>
+                    <li><strong>Cash Payment or Online Payment:</strong> Pay directly in the designated room.</li>
+                    </ul>
                 
                 <h6>Contact Person for Queries</h6>
                 <ul class="contact-list">
