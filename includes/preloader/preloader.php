@@ -132,16 +132,26 @@
     </div>
 
     <script>
-        // Add this to your PHP file to hide preloader after page loads
-        window.addEventListener('load', function() {
+        // Hide preloader after a set time (5 seconds) regardless of page load status
+        const maxPreloaderTime = 5000; // 5 seconds maximum preloader display time
+        
+        // Function to hide preloader
+        function hidePreloader() {
             const preloader = document.querySelector('.preloader');
+            preloader.style.transition = 'opacity 0.5s ease';
+            preloader.style.opacity = '0';
             setTimeout(() => {
-                preloader.style.transition = 'opacity 0.5s ease';
-                preloader.style.opacity = '0';
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 500);
-            }, 500); // Adjust time as needed
+                preloader.style.display = 'none';
+            }, 500);
+        }
+
+        // Set maximum time for preloader display
+        const preloaderTimeout = setTimeout(hidePreloader, maxPreloaderTime);
+        
+        // Add this to your PHP file to hide preloader after page loads (as fallback)
+        window.addEventListener('load', function() {
+            clearTimeout(preloaderTimeout); // Clear the timeout if page loads before max time
+            hidePreloader();
         });
     </script>
 </body>

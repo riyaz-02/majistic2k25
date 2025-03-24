@@ -14,7 +14,7 @@
                 <li><a href="/majistic/index.php#events" class="nav-link">EVENTS</a></li>
                 <li><a href="/majistic/merchandise.php" class="nav-link">MERCHANDIES</a></li>
                 <!--<li><a href="index.php#sponsors">SPONSORS</a></li>-->
-                <li><a href="/majistic/committee.php" class="nav-link">COMMITEE</a></li>
+                <li><a href="/majistic/committee.php" class="nav-link">COMMITTEE</a></li>
                 <li><a href="/majistic/about.php" class="nav-link">ABOUT</a></li>
                 <li><a href="/majistic/contact.php" class="nav-link">CONTACT</a></li> 
             </ul><!-- flex -->

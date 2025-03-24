@@ -2180,6 +2180,7 @@ footer .address {
 }
 
 .footer-container {
+    width: 90%;
     display: flex;
     justify-content: space-between;
     gap: 30px;

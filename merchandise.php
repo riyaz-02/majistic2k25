@@ -69,7 +69,7 @@
                     <p class="product-description"><?= $item['description'] ?></p>
                     <div class="product-price"><span class="price-currency">₹</span><?= $item['price'] ?></div>
                     <button class="buy-now-btn" data-item="<?= $item['name'] ?>" data-price="<?= $item['price'] ?>" data-bs-toggle="modal" data-bs-target="#contactModal">
-                        <i class="fas fa-shopping-bag me-2"></i>Buy Now
+                        <i class="fas fa-shopping-bag me-2"></i>Order Now
                     </button>
                 </div>
             </div>
@@ -82,24 +82,57 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="contactModalLabel">Merchandise Booking & Payment</h5>
+                <h5 class="modal-title" id="contactModalLabel">
+                    <i class="fas fa-shopping-bag me-2"></i>Merchandise Booking
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h6>Booking & Collection Details</h6>
-                <p>JIS students can book and pay for maJIStic 2k25 merchandise at the <h6>Main Building (Room No: 319).</h6>The merchandise can be collected from the same room one week before maJIStic.</p>
+                <div class="booking-section">
+                    <h6><i class="fas fa-map-marker-alt me-2"></i>Booking & Collection</h6>
+                    <div class="info-card">
+                        <p>JIS students can book and pay for merchandise at:</p>
+                        <div class="location-details">
+                            <div><i class="fas fa-building me-2"></i>Main Building</div>
+                            <div><i class="fas fa-door-open me-2"></i>Room No: 319</div>
+                        </div>
+                        <p class="note"><i class="fas fa-info-circle me-1"></i> Items can be collected from the same room one week before maJIStic.</p>
+                    </div>
+                </div>
+
+                <div class="payment-section">
+                    <h6><i class="fas fa-credit-card me-2"></i>Payment Options</h6>
+                    <div class="payment-options">
+                        <div class="payment-option">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Cash</span>
+                        </div>
+                        <div class="payment-option">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                </div>
                 
-                <h6>Payment Options</h6>
-                <ul>
-                    <li><strong>Cash Payment or Online Payment:</strong> Pay directly in the designated room.</li>
-                    </ul>
-                
-                <h6>Contact Person for Queries</h6>
-                <ul class="contact-list">
-                    <li><strong>Name:</strong> Arnab Das</li>
-                    <li><strong>Phone:</strong> <a href="tel:+919749536449">+91 9749536449</a></li>
-                </ul>
-                <p>For any queries related to merchandise, please contact Arnab Das.</p>
+                <div class="contact-section">
+                    <h6><i class="fas fa-headset me-2"></i>Contact Person</h6>
+                    <div class="contact-card">
+                        <div class="contact-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="contact-info">
+                            <div class="contact-name">Arnab Das</div>
+                            <a href="tel:+919749536449" class="contact-phone">
+                                <i class="fas fa-phone-alt me-2"></i>+91 9749536449
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-close-modal" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Close
+                </button>
             </div>
         </div>
     </div>
@@ -685,6 +718,376 @@
                 padding: 1rem;
                 font-size: 1rem;
             }
+        }
+
+        /* Modal Styles - Redesigned */
+        .modal-dialog {
+            max-width: 450px; /* Increased from 400px for desktop */
+        }
+
+        .modal-content {
+            background: rgba(18, 18, 18, 0.95);
+            color: white;
+            border-radius: 15px;
+            border: 1px solid rgba(245, 166, 35, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(245, 166, 35, 0.2);
+            padding: 1.25rem;
+            background: linear-gradient(90deg, rgba(17, 103, 87, 0.3), rgba(21, 168, 138, 0.3));
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.25rem;
+        }
+
+        .modal-body h6 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .booking-section, .payment-section, .contact-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-section {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            width: 98%; /* Increased width as requested */
+            margin: 0 auto;
+        }
+
+        .info-card p {
+            margin: 0 0 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .location-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(245, 166, 35, 0.1);
+            border-left: 3px solid var(--accent);
+            border-radius: 5px;
+        }
+
+        .location-details div {
+            flex: 1 0 calc(50% - 8px);
+            min-width: 120px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .note {
+            margin-top: 10px !important;
+            font-size: 0.85rem !important;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+
+        .payment-options {
+            display: flex;
+            justify-content: space-around;
+            margin: 0;
+            padding: 0;
+            width: 98%; /* Match info-card width */
+            margin: 0 auto;
+        }
+
+        .payment-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px; /* Reduced padding */
+            border-radius: 8px;
+            background: rgba(21, 168, 138, 0.1);
+            width: 40%; /* Reduced from 45% */
+            transition: all 0.3s ease;
+        }
+
+        .payment-option:hover {
+            background: rgba(21, 168, 138, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .payment-option i {
+            font-size: 18px; /* Reduced from 22px */
+            margin-bottom: 5px; /* Reduced from 8px */
+            color: var(--accent);
+        }
+
+        .payment-option span {
+            font-size: 0.85rem; /* Reduced from 0.9rem */
+            font-weight: 500;
+        }
+
+        .contact-card {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            transition: all 0.3s ease;
+            width: 98%; /* Match info-card width */
+            margin: 0 auto;
+        }
+
+        .contact-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(245, 166, 35, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+            color: var(--accent);
+        }
+
+        .contact-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .contact-phone {
+            color: var(--secondary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-phone:hover {
+            color: var(--accent);
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(245, 166, 35, 0.2);
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-close-modal {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-close-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(21, 168, 138, 0.3);
+        }
+
+        .btn-close {
+            background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f5a623'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+            opacity: 1;
+        }
+
+        /* Responsive adjustments for modal */
+        @media (min-width: 768px) {
+            .modal-dialog {
+                max-width: 500px; /* Even wider for larger screens */
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .modal-dialog {
+                margin: 0.5rem;
+                max-width: 95%; /* Take up most of the screen on mobile */
+            }
+            
+            .location-details div {
+                flex: 1 0 100%;
+            }
+            
+            .payment-options {
+                flex-direction: row;
+            }
+            
+            .payment-option {
+                width: 40%; /* Keep consistent with desktop */
+            }
+            
+            .modal-body {
+                padding: 1rem;
+            }
+            
+            .contact-card {
+                flex-direction: row;
+                width: 98%; /* Match info-card width */
+                margin: 0 auto;
+            }
+        }
+
+        /* Modal Styles - Redesigned with Blue-Purple color scheme */
+        .modal-dialog {
+            max-width: 450px;
+        }
+
+        .modal-content {
+            background: rgba(25, 25, 40, 0.95);
+            color: white;
+            border-radius: 15px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            padding: 1.25rem;
+            background: linear-gradient(90deg, rgba(65, 105, 225, 0.3), rgba(138, 43, 226, 0.3));
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #a991ff;
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-body h6 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #6a9cff;
+            display: flex;
+            align-items: center;
+        }
+
+        .location-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(65, 105, 225, 0.1);
+            border-left: 3px solid #6a9cff;
+            border-radius: 5px;
+        }
+
+        .location-details div {
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 4px 0;
+        }
+
+        .payment-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(65, 105, 225, 0.1);
+            width: 40%;
+            transition: all 0.3s ease;
+        }
+
+        .payment-option:hover {
+            background: rgba(65, 105, 225, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .payment-option i {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #a991ff;
+        }
+
+        .contact-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+            color: #a991ff;
+        }
+
+        .contact-phone {
+            color: #6a9cff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-phone:hover {
+            color: #a991ff;
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(138, 43, 226, 0.2);
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-close-modal {
+            background: linear-gradient(90deg, #4169E1, #8A2BE2);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-close-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+        }
+
+        .btn-close {
+            background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23a991ff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+            opacity: 1;
         }
     </style>
 </body>

@@ -125,6 +125,49 @@ if (file_exists('src/config/payment_config.php')) {
             transform: translate(-50%, -50%);
             text-align: left;
         }
+        
+        /* Center text in confirmation modal */l */
+        #confirmationModal .modal-content p {
+            text-align: center;* Maximum height as percentage of viewport height */
+            margin-bottom: 20px; Add vertical scrollbar when content overflows */
+            line-height: 1.5;px; /* Add right padding for scrollbar */
+        }
+        
+        /* Style for modal buttons container */
+        .modal-buttons {icky;
+            display: flex;
+            background: rgba(54, 51, 55, 0.95); /* Slightly darker than the modal background */
+            padding: 10px 0;
+            margin-top: 0;
+            z-index: 1;
+        }
+        
+        #rulesModal .modal-content h3 {
+            margin-top: 15px;
+            margin-bottom: 8px;
+            color: #3498db; /* Blue color for section headings */
+            font-size: 1.1rem;
+        }
+        
+        .rules-content {
+            padding-bottom: 10px; /* Space for the button */
+        }
+        
+        #closeRulesModal {
+            position: sticky;
+            bottom: 0;
+            margin-top: 15px;
+            background-color: #e74c3c; /* Red color for close button */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            width: 80px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
         /* Center text in confirmation modal */
         #confirmationModal .modal-content p {
@@ -206,8 +249,8 @@ if (file_exists('src/config/payment_config.php')) {
                     <li><i class="fas fa-check-circle"></i> Please ensure that all your details are correct before submitting.</li>
                     <li><i class="fas fa-ticket-alt"></i> Event Ticket Price is <strong>Rs. 1000</strong> for Alumni</li>
                     <li><i class="fas fa-id-card"></i> <a href="#" id="rulesLink">Rules and Regulations</a></li>
-                    <li><i class="fas fa-phone-alt"></i> For queries, contact <strong>maJIStic support</strong></li>
-                    <li><i class="fas fa-shopping-bag"></i> For Merchandise, visit <a href="merchandise.php"><strong>Merchandise page</strong></a></li>
+                    <li><i class="fas fa-phone-alt"></i> For queries, contact <a href="mailto:majistic@jiscollege.ac.in"><strong>maJIStic support</strong></a></li>
+                    <li><i class="fas fa-shopping-bag"></i> For Merchandise, visit <a href="/majistic/merchandise.php"><strong>Merchandise page</strong></a></li>
                 </ul>
             </div>
             <div class="content-wrapper">
@@ -341,6 +384,17 @@ if (file_exists('src/config/payment_config.php')) {
                         </a>
                     </div>
                 </div>
+                <div class="contact-card">
+                    <div class="contact-card-inner">
+                        <div class="contact-info">
+                            <h4>Mohit Kumar</h4>
+                            <p>+91 8016804158</p>
+                        </div>
+                        <a href="https://wa.me/918016804158" target="_blank" class="whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -351,17 +405,126 @@ if (file_exists('src/config/payment_config.php')) {
     <!-- Rules and Regulations Modal -->
     <div id="rulesModal" class="modal">
         <div class="modal-content">
-            <h2>Rules and Regulations</h2>
-            <ul class="rules-list">
-                <li>Payment will be accepted after registration.</li>
-                <li>You will receive a confirmation email upon successful registration.</li>
-                <li>Only cash payments are accepted.</li>
-                <li>Please bring your Alumni ID or any Government ID for verification on the event day.</li>
-            </ul>
-            <button type="button" id="closeRulesModal" style="background-color: Red; width: 80px; display: block; margin: 0 auto;">Close</button>
+            <h2>Rules and Regulations – maJIStic 2k25</h2>
+            <div class="rules-content-wrapper">
+                <div class="rules-content">
+                    <p>By registering, you agree to the following terms:</p>
+                    
+                    <h3>1. Registration & Entry</h3>
+                    <ul class="rules-list">
+                        <li>Registration fees are non-refundable.</li>
+                        <li>A QR-based entry ticket will be emailed 2 days before the event.</li>
+                        <li>Tickets are non-transferable and valid only for the registered student.</li>
+                        <li>Late check-ins will result in automatic ticket cancellation.</li>
+                    </ul>
+                    
+                    <h3>2. Conduct & Disciplinary Actions</h3>
+                    <ul class="rules-list">
+                        <li>Misbehavior, misconduct, or disruptions will lead to expulsion and fines.</li>
+                        <li>Smoking, drinking, and drug use are strictly prohibited.</li>
+                        <li>The organizing team reserves the right to deny entry or remove violators.</li>
+                    </ul>
+                    
+                    <h3>3. Merchandise Policies</h3>
+                    <ul class="rules-list">
+                        <li>No refunds on merchandise purchases.</li>
+                        <li>Pick up merchandise one week before the fest (location details via email).</li>
+                        <li>No exchanges after 2 days of booking. No shipping available.</li>
+                    </ul>
+                    
+                    <h3>4. Liability & Safety</h3>
+                    <ul class="rules-list">
+                        <li>The organizers are not responsible for lost or stolen items.</li>
+                        <li>Participants must follow safety protocols and event staff instructions.</li>
+                        <li>For queries, contact majisticjisce@gmail.com.</li>
+                    </ul>
+                    
+                    <p class="terms-agreement">By registering, you agree to these terms.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeRulesModal">Close</button>
+            </div>
         </div>
     </div>
 
+    <style>
+        /* Rules modal specific styles */
+        #rulesModal .modal-content {
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+            padding-bottom: 10px;
+        }
+        
+        #rulesModal h2 {
+            margin-top: 0;
+            position: sticky;
+            top: 0;
+            background: rgba(54, 51, 55, 0.95);
+            padding: 10px 0;
+            margin-bottom: 15px;
+            z-index: 1;
+        }
+        
+        .rules-content-wrapper {
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding-right: 5px;
+        }
+        
+        /* Customize scrollbar */
+        .rules-content-wrapper::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .rules-content-wrapper::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .rules-content-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        
+        .rules-content-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .rules-content {
+            padding-right: 5px;
+        }
+        
+        .rules-content h3 {
+            margin-top: 15px;
+            margin-bottom: 8px;
+            color: #3498db;
+            font-size: 1.1rem;
+        }
+        
+        .terms-agreement {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .modal-footer {
+            margin-top: auto;
+            text-align: center;
+        }
+        
+        #closeRulesModal {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            width: 80px;
+        }
+    </style>
+    
     <!-- Confirmation Modal -->
     <div id="confirmationModal" class="modal">
         <div class="modal-content">

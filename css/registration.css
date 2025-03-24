@@ -477,12 +477,12 @@ p.mt-2 {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px; /* Reduced from 10px to 5px to create tighter spacing */
 }
 
 .info-card ul li {
     font-size: 1rem;
-    padding: 6px 0 6px 30px;
+    padding: 4px 0 4px 30px; /* Reduced top/bottom padding from 6px to 4px */
     position: relative;
     color: #e0e7ff;
     display: flex;
@@ -562,12 +562,14 @@ p.mt-2 {
 
     .info-card {
         width: 95%;
-        padding: 15px 12px;
+        padding: 12px 10px; /* Reduced padding for mobile */
     }
 
     .info-card ul li {
         font-size: 0.95rem;
         padding-left: 25px;
+        padding-top: 3px; /* Reduced top padding for mobile */
+        padding-bottom: 3px; /* Reduced bottom padding for mobile */
     }
 }
 

@@ -19,7 +19,7 @@
 }
 
 .logo {
-  width: 100%;
+  width: 70%;
   height: auto;
   position: relative;
   z-index: 2;
@@ -76,7 +76,7 @@
 
 @media (max-width: 480px) {
   .logoContainer {
-    width: 80%;
+    width: 70%;
     height: auto;
   }
 
