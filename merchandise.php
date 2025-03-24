@@ -20,7 +20,7 @@
             'name' => 'maJIStic 2k25 T-Shirt',
             'category' => 'Apparel',
             'description' => 'Official maJIStic 2k25 T-Shirt with vibrant design. Made of 100% cotton for ultimate comfort.',
-            'price' => 299,
+            'price' => 219,
             'image' => 'images/tshirt1.png',
             'image2' => 'images/tshirt2.png'
         ]
@@ -77,28 +77,35 @@
         </div>
     </div>
 
-    <!-- Contact Modal -->
-    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="contactModalLabel">Contact for Purchase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h6>Contact Person Details</h6>
-                    <ul class="contact-list">
-                        <li><strong>Name:</strong> Arnab Das</li>
-                        <li><strong>Phone:</strong> +91 9749536449</li>
-                    </ul>
-                    <p>Please contact the above person to complete your purchase of the maJIStic 2k25 T-Shirt.</p>
-                </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" style="width: 80px;" data-bs-dismiss="modal">Close</button>
-                </div> -->
+<!-- Contact & Booking Modal --> 
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Merchandise Booking & Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Booking & Collection Details</h6>
+                <p>JIS students can book and pay for maJIStic 2k25 merchandise at the <h6>Main Building (Room No: 319)</h6>.The merchandise can be collected from the same room one week before maJIStic.</p>
+                
+                <h6>Payment Options</h6>
+                <ul>
+                    <li><strong>Cash Payment:</strong> Pay directly in the designated room.</li>
+                    <li><strong>Online Payment:</strong> (Payment link to be provided)</li>
+                </ul>
+                
+                <h6>Contact Person for Queries</h6>
+                <ul class="contact-list">
+                    <li><strong>Name:</strong> Arnab Das</li>
+                    <li><strong>Phone:</strong> <a href="tel:+919749536449">+91 9749536449</a></li>
+                </ul>
+                <p>For any queries related to merchandise, please contact Arnab Das.</p>
             </div>
         </div>
     </div>
+</div>
+
 
     <?php include 'includes/footer.php'; ?>
     <?php include 'includes/scripts.php'; ?>
