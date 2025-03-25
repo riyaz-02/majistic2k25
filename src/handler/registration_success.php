@@ -1146,37 +1146,25 @@ if (!empty($jis_id)) {
             const coordinatorDetailsDiv = document.getElementById('coordinatorDetails');
             
             coordinatorDetailsDiv.innerHTML = `<div class="coordinator-info animate-in default-coordinator">
-                <h4>Department Coordinator Not Found</h4>
-                <p>Please contact any of the following coordinators for payment:</p>
+                <h4>No Department Coordinators Found</h4>
+                <p>Contact your respective department for ticket payment or contact maJIStic Support.</p>
                 
-                <div class="default-coordinator">
-                    <p><span class="coordinator-label">Name:</span> <span class="coordinator-value">Priyanshu Nayan</span></p>
-                    <p><span class="coordinator-label">Contact:</span> <span class="coordinator-value">7004706722</span></p>
-                    <p><span class="coordinator-label">Time:</span> <span class="coordinator-value">10:00 AM - 5:00 PM (Monday-Friday)</span></p>
-                    <div class="coordinator-contact">
-                        <a href="tel:7004706722"><i class="fas fa-phone"></i> Call 7004706722</a>
-                        <a href="https://wa.me/917004706722" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp 7004706722</a>
+                <div style="margin-top: 20px; text-align: center;">
+                    <p><strong>For any assistance with payment or registration:</strong></p>
+                    <div class="coordinator-contact" style="justify-content: center; margin-top: 15px;">
+                        <a href="mailto:majistic@jiscollege.ac.in" style="margin: 5px;">
+                            <i class="fas fa-envelope"></i> Email maJIStic Support
+                        </a>
+                        <a href="https://wa.me/917004706722?text=Hello%2C%20I%20need%20help%20with%20my%20maJIStic%20registration%20payment." target="_blank" style="margin: 5px;">
+                            <i class="fab fa-whatsapp"></i> WhatsApp Support
+                        </a>
                     </div>
                 </div>
                 
-                <div class="default-coordinator">
-                    <p><span class="coordinator-label">Name:</span> <span class="coordinator-value">Dr. Proloy Ghosh</span></p>
-                    <p><span class="coordinator-label">Contact:</span> <span class="coordinator-value">7980532913</span></p>
-                    <p><span class="coordinator-label">Time:</span> <span class="coordinator-value">10:00 AM - 5:00 PM (Monday-Friday)</span></p>
-                    <div class="coordinator-contact">
-                        <a href="tel:7980532913"><i class="fas fa-phone"></i> Call 7980532913</a>
-                        <a href="https://wa.me/917980532913" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp 7980532913</a>
-                    </div>
-                </div>
-                
-                <div class="default-coordinator">
-                    <p><span class="coordinator-label">Name:</span> <span class="coordinator-value">Dr. Madhura Chakraborty</span></p>
-                    <p><span class="coordinator-label">Contact:</span> <span class="coordinator-value">7980979789</span></p>
-                    <p><span class="coordinator-label">Time:</span> <span class="coordinator-value">10:00 AM - 5:00 PM (Monday-Friday)</span></p>
-                    <div class="coordinator-contact">
-                        <a href="tel:7980979789"><i class="fas fa-phone"></i> Call 7980979789</a>
-                        <a href="https://wa.me/917980979789" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp 7980979789</a>
-                    </div>
+                <div style="margin-top: 25px; padding-top: 15px; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+                    <p style="text-align: center; font-style: italic; color: #a0aec0;">
+                        You can also visit the registration desk at the college during office hours for in-person assistance.
+                    </p>
                 </div>
             </div>`;
         }

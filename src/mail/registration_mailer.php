@@ -401,18 +401,12 @@ HTML;
 function getCoordinatorInfo($department) {
     global $department_coordinators;
     
-    // Initialize default coordinator info with multiple contacts
+    // Initialize default coordinator info with contact support message
     $default_info = "<h4>Department Coordinator Contact</h4>";
     $default_info .= "<p><strong>Payment Amount:</strong> <span style='color: #e63946; font-weight: bold;'>Rs. 500</span></p>";
-    $default_info .= "<p><strong>Name:</strong> Priyanshu Nayam</p>";
-    $default_info .= "<p><strong>Contact:</strong> 7004706722</p>";
-    
-    $default_info .= "<p><strong>Name:</strong> Dr. Proloy Ghosh</p>";
-    $default_info .= "<p><strong>Contact:</strong> 7980532913</p>";
-    
-    $default_info .= "<p style='margin-top:10px'><strong>Name:</strong> Dr. Madhura Chakraborty</p>";
-    $default_info .= "<p><strong>Contact:</strong> 7980979789</p>";
-    
+    $default_info .= "<p><strong>Note:</strong> No specific coordinator found for your department. Please contact your respective department for ticket fee payment or contact maJIStic Support.</p>";
+    $default_info .= "<p><strong>Support Email:</strong> <a href='mailto:majistic@jiscollege.ac.in'>majistic@jiscollege.ac.in</a></p>";
+    $default_info .= "<p><strong>WhatsApp Community:</strong> <a href='https://chat.whatsapp.com/JyDMUAA3zw9KfbPvWhXQ1l'>Join Here</a></p>";
     
     // Try to find a coordinator for the specific department
     if (isset($department_coordinators) && !empty($department)) {

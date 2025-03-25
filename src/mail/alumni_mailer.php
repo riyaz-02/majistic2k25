@@ -461,8 +461,10 @@ HTML;
 function getAlumniCoordinatorInfo($department) {
     global $department_coordinators;
     
-    // Initialize default coordinator info with minimal content
-    $default_info = "<p style='margin:5px 0'><em>Alt. Contacts:</em> Dr. Proloy Ghosh (7980532913)</p>";
+    // Initialize default coordinator info with support contacts
+    $default_info = "<p style='margin:5px 0'><strong>Note:</strong> No specific coordinator found. Please contact maJIStic Support.</p>";
+    $default_info .= "<p style='margin:5px 0'><strong>Support Email:</strong> <a href='mailto:majistic@jiscollege.ac.in'>majistic@jiscollege.ac.in</a></p>";
+    $default_info .= "<p style='margin:5px 0'><strong>WhatsApp Community:</strong> <a href='https://chat.whatsapp.com/JyDMUAA3zw9KfbPvWhXQ1l'>Join Here</a></p>";
     
     // Try to find a coordinator for the specific department
     if (isset($department_coordinators) && !empty($department)) {

@@ -375,17 +375,14 @@ $days_remaining = $interval->format('%a');
                                         </div>
                                         <?php else: ?>
                                         <div style="margin-top: 20px; background-color: rgba(255, 255, 255, 0.08); padding: 15px; border-radius: 8px;">
-                                            <h4 style="color: #f1c40f; margin-top: 0; margin-bottom: 10px;">Payment Coordinators</h4>
-                                            <p><strong>Name:</strong> Priyanshu Nayam</p>
-                                            <p><strong>Contact:</strong> 7004706722</p>
+                                            <h4 style="color: #f1c40f; margin-top: 0; margin-bottom: 10px;">No Department Coordinators Found</h4>
+                                            <p>Contact your respective department for ticket payment or contact maJIStic Support.</p>
                                             
-                                            <p style="margin-top:15px"><strong>Name:</strong> Dr. Proloy Ghosh</p>
-                                            <p><strong>Contact:</strong> 7980532913</p>
-                                            
-                                            <p style="margin-top:15px"><strong>Name:</strong> Dr. Madhura Chakraborty</p>
-                                            <p><strong>Contact:</strong> 7980979789</p>
-                                            
-                                            <p style="margin-top: 15px;"><strong>Note:</strong> Cash payment only. Please contact any of the coordinators above to complete your payment.</p>
+                                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+                                                <p><strong>For assistance with payment:</strong></p>
+                                                <p>Email: <a href="mailto:majistic@jiscollege.ac.in" style="color: #3498db;">majistic@jiscollege.ac.in</a></p>
+                                                <p>Visit the registration desk at the college during office hours for in-person assistance.</p>
+                                            </div>
                                         </div>
                                         <?php endif; ?>
                                     </div>
