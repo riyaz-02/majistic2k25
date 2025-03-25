@@ -590,9 +590,13 @@ if (file_exists('src/config/payment_config.php')) {
         document.getElementById('competition_group').style.display = 'none';
         document.getElementById('inhouse_yes').addEventListener('change', function() {
             document.getElementById('competition_group').style.display = 'block';
+            // Make the competition field required when "Yes" is selected
+            document.getElementById('competition').setAttribute('required', 'required');
         });
         document.getElementById('inhouse_no').addEventListener('change', function() {
             document.getElementById('competition_group').style.display = 'none';
+            // Remove the required attribute when "No" is selected
+            document.getElementById('competition').removeAttribute('required');
             document.getElementById('competition').value = '';
         });
 
@@ -714,6 +718,9 @@ if (file_exists('src/config/payment_config.php')) {
             var email = document.getElementById('email').value.trim();
             var department = document.getElementById('department').value.trim();
             var gender = document.getElementById('gender').value.trim();
+            var inhouseYes = document.getElementById('inhouse_yes').checked;
+            var inhouseNo = document.getElementById('inhouse_no').checked;
+            var competition = document.getElementById('competition').value.trim();
 
             if (studentName === "" || /\d/.test(studentName)) {
                 errors.push({id: 'student_name', message: 'Student name should not contain numbers'});
@@ -745,6 +752,18 @@ if (file_exists('src/config/payment_config.php')) {
 
             if (gender === "") {
                 errors.push({id: 'gender', message: 'Please select gender'});
+                isValid = false;
+            }
+            
+            // Check if the user has selected at least one radio button (Yes or No)
+            if (!inhouseYes && !inhouseNo) {
+                errors.push({id: 'inhouse_yes', message: 'Please select whether you want to participate in an event'});
+                isValid = false;
+            }
+            
+            // If "Yes" is selected, ensure an event is chosen
+            if (inhouseYes && competition === "") {
+                errors.push({id: 'competition', message: 'Please select an event to participate in'});
                 isValid = false;
             }
             

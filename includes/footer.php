@@ -29,6 +29,7 @@
                 <a href="https://www.instagram.com/majistic_jisce/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <!--    <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>  -->
                 <a href="https://www.linkedin.com/company/majistic-jisce/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="https://chat.whatsapp.com/JyDMUAA3zw9KfbPvWhXQ1l" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
         </div>
     </div>
@@ -44,7 +45,7 @@
     <div class="made-with-love">
         <div class="container">
             <div class="love-content">
-                <span>Made with <i class="fa-solid fa-heart pulse-heart"></i> by</span>
+                <span>Designed and Developed with <i class="fa-solid fa-heart pulse-heart"></i> by</span>
                 <a href="#" id="tech-team-link">maJIStic Tech Team</a>
             </div>
         </div>
@@ -89,8 +90,8 @@
                     <div class="social-icons">
                         <a href="#" target="_blank" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
                         <a href="#" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/myself_ronit_/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/ronit-pal-246745253/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="tech-team-card">
@@ -100,8 +101,8 @@
                     <div class="social-icons">
                         <a href="#" target="_blank" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
                         <a href="#" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/ig__mohit978/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/mohit-kumar-648b07272" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>

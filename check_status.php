@@ -513,6 +513,15 @@ $days_remaining = $interval->format('%a');
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- WhatsApp Community Section -->
+                                <div class="whatsapp-community-section">
+                                    <h4><i class="fab fa-whatsapp"></i> Join Our WhatsApp Community</h4>
+                                    <p>Stay updated with all maJIStic 2k25 announcements, events, and connect with other participants!</p>
+                                    <a href="https://chat.whatsapp.com/JyDMUAA3zw9KfbPvWhXQ1l" target="_blank" class="whatsapp-btn">
+                                        <i class="fab fa-whatsapp"></i> Join Community
+                                    </a>
+                                </div>
                             </div>
 
                             <div class="timeline-column">
@@ -710,5 +719,59 @@ $days_remaining = $interval->format('%a');
             });
         });
     </script>
+    <style>
+        .whatsapp-community-section {
+            background: linear-gradient(145deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.15));
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid rgba(37, 211, 102, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .whatsapp-community-section h4 {
+            color: #25d366;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .whatsapp-community-section p {
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: #e0e0e0;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #25d366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #128c7e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .whatsapp-btn i {
+            font-size: 1.2rem;
+        }
+    </style>
 </body>
 </html>

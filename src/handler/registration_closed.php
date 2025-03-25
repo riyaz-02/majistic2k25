@@ -222,8 +222,53 @@
                 <a href="../../index.php" class="btn btn-explore">
                     <i class="bi bi-arrow-left-circle me-2"></i>Back to Home Page
                 </a>
+                
+                <div class="community-container mt-4">
+                    <p class="community-text">Stay updated with all event announcements and connect with other participants!</p>
+                    <a href="https://chat.whatsapp.com/JyDMUAA3zw9KfbPvWhXQ1l" target="_blank" class="btn btn-whatsapp">
+                        <i class="bi bi-whatsapp me-2"></i>Join WhatsApp Community
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+
+    <style>
+        /* WhatsApp Community Button */
+        .community-container {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        .community-text {
+            font-size: 0.95rem;
+            color: #777;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .btn-whatsapp:hover {
+            background-color: #128c7e;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            color: white;
+        }
+        
+        .btn-whatsapp i {
+            font-size: 1.2rem;
+        }
+    </style>
 </body>
 </html>

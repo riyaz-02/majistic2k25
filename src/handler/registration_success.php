@@ -787,6 +787,15 @@ if (!empty($jis_id)) {
             margin-bottom: 10px;
             font-size: 16px;
         }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: white;
+        }
+        
+        .btn-whatsapp:hover {
+            background: linear-gradient(135deg, #128c7e, #075e54);
+        }
     </style>
 </head>
 <body>
@@ -963,6 +972,9 @@ if (!empty($jis_id)) {
                     </a>
                     <a href="../../merchandise.php" class="btn btn-accent">
                         <i class="fas fa-tshirt"></i> Book Merchandise
+                    </a>
+                    <a href="https://chat.whatsapp.com/JyDMUAA3zw9KfbPvWhXQ1l" target="_blank" class="btn btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Join WhatsApp Community
                     </a>
                 </div>
                 
