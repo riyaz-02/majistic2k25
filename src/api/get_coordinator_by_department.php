@@ -14,9 +14,9 @@ if (empty($department)) {
 }
 
 try {
-    // Use exact matching for department name with = operator
-    // This ensures CSE won't match with CSE AI-ML and vice versa
-    $query = "SELECT name, contact, available_time FROM department_coordinators WHERE department = :department ORDER BY name ASC";
+    // Use STRICT equality with = operator and BINARY for case sensitivity
+    // This ensures only EXACT matches are returned
+    $query = "SELECT name, contact, available_time FROM department_coordinators WHERE BINARY department = BINARY :department ORDER BY name ASC";
     $stmt = $db->prepare($query);
     $stmt->execute([':department' => $department]);
     $coordinators = $stmt->fetchAll(PDO::FETCH_ASSOC);

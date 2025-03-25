@@ -1,13 +1,9 @@
 <?php
-include 'includes/db_config.php';
+session_start();
+require_once 'includes/db_config.php';
 
-// Include alumni coordinator configuration
-$alumni_config_path = __DIR__ . '/src/config/alumni_coordinator_config.php';
-if (file_exists($alumni_config_path)) {
-    include_once $alumni_config_path;
-}
-
-$message = '';
+// Initialize variables
+$error_message = '';
 $student_data = null;
 $registration_type = '';
 $payment_status = false; // Default to false, will update if payment found
@@ -17,16 +13,19 @@ $checkin_day1 = false;
 $checkin_day2 = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $jis_id = isset($_POST['jis_id']) ? $_POST['jis_id'] : '';
-    $student_name = isset($_POST['student_name']) ? $_POST['student_name'] : '';
+    $jis_id = isset($_POST['jis_id']) ? trim($_POST['jis_id']) : '';
+    $student_name = isset($_POST['student_name']) ? trim($_POST['student_name']) : '';
     
     if (!empty($jis_id) && !empty($student_name)) {
         try {
-            // Check regular registrations collection
-            $registration = $registrations->findOne(['jis_id' => $jis_id]);
+            // Check regular registrations table first
+            $query = "SELECT * FROM registrations WHERE jis_id = :jis_id LIMIT 1";
+            $stmt = $db->prepare($query);
+            $stmt->execute([':jis_id' => $jis_id]);
+            $registration = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($registration) {
-                $student_data = formatDocument((array)$registration);
+                $student_data = $registration;
                 $registration_type = 'student';
                 
                 // Check if name matches (case-insensitive)
@@ -37,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Check payment status
                     $payment_status = ($student_data['payment_status'] == 'Paid');
                     
-                    // Check ticket generation status
+                    // Check ticket generation status - if column exists
                     $ticket_generated = isset($student_data['ticket']) && $student_data['ticket'] == 'generated';
                     
-                    // Check check-in status - handle various formats
+                    // Check check-in status - if columns exist
                     $checkin_day1 = false;
                     $checkin_day2 = false;
                     
@@ -49,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $checkin_day1 = ($student_data['checkin_1'] === true || 
                                         $student_data['checkin_1'] === 'checkedin' || 
                                         $student_data['checkin_1'] == '1' ||
-                                        $student_data['checkin_1'] == 'yes');
+                                        $student_data['checkin_1'] == 'Yes');
                     }
                     
                     // Check for day 2
@@ -57,26 +56,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $checkin_day2 = ($student_data['checkin_2'] === true || 
                                         $student_data['checkin_2'] === 'checkedin' || 
                                         $student_data['checkin_2'] == '1' ||
-                                        $student_data['checkin_2'] == 'yes');
+                                        $student_data['checkin_2'] == 'Yes');
                     }
                     
                     // If payment is not complete, get department coordinator info
                     if (!$payment_status && isset($student_data['department'])) {
-                        $coordinator = $department_coordinators->findOne([
-                            'department' => ['$regex' => $student_data['department'], '$options' => 'i']
-                        ]);
-                        
-                        if ($coordinator) {
-                            $coordinator_info = formatDocument((array)$coordinator);
-                        }
+                        $coord_query = "SELECT * FROM department_coordinators WHERE BINARY department = BINARY :department LIMIT 1";
+                        $coord_stmt = $db->prepare($coord_query);
+                        $coord_stmt->execute([':department' => $student_data['department']]);
+                        $coordinator_info = $coord_stmt->fetch(PDO::FETCH_ASSOC);
                     }
                 }
             } else {
-                // If not found in registrations collection, check alumni collection
-                $registration = $alumni_registrations->findOne(['jis_id' => $jis_id]);
+                // If not found in registrations table, check alumni table
+                $query = "SELECT * FROM alumni_registrations WHERE jis_id = :jis_id LIMIT 1";
+                $stmt = $db->prepare($query);
+                $stmt->execute([':jis_id' => $jis_id]);
+                $registration = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 if ($registration) {
-                    $student_data = formatDocument((array)$registration);
+                    $student_data = $registration;
                     $registration_type = 'alumni';
                     
                     // Check if name matches (case-insensitive)
@@ -93,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         // Check ticket generation status
                         $ticket_generated = isset($student_data['ticket']) && $student_data['ticket'] == 'generated';
                         
-                        // Check check-in status - handle various formats
+                        // Check check-in status - if columns exist
                         $checkin_day1 = false;
                         $checkin_day2 = false;
                         
@@ -115,20 +114,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
                         // If payment is not complete, get department coordinator info
                         if (!$payment_status && isset($student_data['department'])) {
-                            $coordinator = $department_coordinators->findOne([
-                                'department' => ['$regex' => $student_data['department'], '$options' => 'i']
-                            ]);
-                            
-                            if ($coordinator) {
-                                $coordinator_info = formatDocument((array)$coordinator);
-                            }
+                            $coord_query = "SELECT * FROM department_coordinators WHERE BINARY department = BINARY :department LIMIT 1";
+                            $coord_stmt = $db->prepare($coord_query);
+                            $coord_stmt->execute([':department' => $student_data['department']]);
+                            $coordinator_info = $coord_stmt->fetch(PDO::FETCH_ASSOC);
                         }
                     }
                 } else {
                     $message = 'No registration found for the provided JIS ID.';
                 }
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             $message = 'An error occurred while retrieving your information. Please try again later.';
             error_log("Error in check_status.php: " . $e->getMessage());
         }
@@ -137,11 +133,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Format registration date if available
-if (isset($student_data['registration_date'])) {
-    if ($student_data['registration_date'] instanceof MongoDB\BSON\UTCDateTime) {
-        $registration_date = $student_data['registration_date']->toDateTime();
-        $student_data['registration_date'] = $registration_date->format('d M Y, h:i A');
+// Include alumni coordinator configuration
+$alumni_coordinator_name = 'Dr. Proloy Ghosh'; // Default values
+$alumni_coordinator_contact = '7980532913';
+$alumni_coordinator_email = 'alumni.majistic@gmail.com';
+$alumni_payment_qr = '';
+$alumni_payment_instructions = 'Scan the QR code with any UPI app to pay the alumni registration fee (Rs. 1000). After payment, please send a screenshot to the coordinator via WhatsApp for verification.';
+
+$alumni_config_path = realpath(__DIR__ . '/src/config/alumni_coordinator_config.php');
+if ($alumni_config_path && file_exists($alumni_config_path)) {
+    include_once $alumni_config_path;
+    if (defined('ALUMNI_COORDINATOR_NAME')) {
+        $alumni_coordinator_name = ALUMNI_COORDINATOR_NAME;
+    }
+    if (defined('ALUMNI_COORDINATOR_CONTACT')) {
+        $alumni_coordinator_contact = ALUMNI_COORDINATOR_CONTACT;
+    }
+    if (defined('ALUMNI_COORDINATOR_EMAIL')) {
+        $alumni_coordinator_email = ALUMNI_COORDINATOR_EMAIL;
+    }
+    if (defined('ALUMNI_PAYMENT_QR')) {
+        $alumni_payment_qr = ALUMNI_PAYMENT_QR;
+    }
+    if (defined('ALUMNI_PAYMENT_INSTRUCTIONS')) {
+        $alumni_payment_instructions = ALUMNI_PAYMENT_INSTRUCTIONS;
     }
 }
 
@@ -583,7 +598,7 @@ $days_remaining = $interval->format('%a');
                                                         <?php if ($checkin_day1): ?>
                                                             You've successfully checked in for Day 1 of maJIStic 2k25. The excitement has begun! Get ready for a day full of innovation, creativity, and incredible performances!
                                                         <?php elseif ($ticket_generated): ?>
-                                                            Get ready for an electrifying Day 1! Bring your ticket to check in at the registration desk and prepare to be amazed by spectacular performances.!
+                                                            Get ready for an electrifying Day 1! Bring your ticket to check in at the registration desk and prepare to be amazed by spectacular performances.! 
                                                         <?php else: ?>
                                                             Day 1 promises to be an unforgettable experience with opening ceremonies, and thrilling events. Don't miss out!
                                                         <?php endif; ?>

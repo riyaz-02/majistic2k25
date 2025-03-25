@@ -10,11 +10,12 @@ try {
     $coordinators = [];
     
     if ($department) {
-        // Try to find coordinators for the specified department (using LIKE for partial matching)
+        // Use STRICT equality with BINARY for case sensitivity
+        // This ensures only EXACT matches are returned
         $query = "SELECT id, department, name, contact, available_time FROM department_coordinators 
-                  WHERE department LIKE :department ORDER BY department ASC";
+                  WHERE BINARY department = BINARY :department ORDER BY department ASC";
         $stmt = $db->prepare($query);
-        $stmt->execute([':department' => "%$department%"]);
+        $stmt->execute([':department' => $department]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         foreach ($results as $row) {
@@ -27,8 +28,8 @@ try {
             ];
         }
         
-        // If still no results, get all coordinators
-        if (empty($coordinators)) {
+        // If no results, get all coordinators only if explicitly requested
+        if (empty($coordinators) && isset($_GET['fallback']) && $_GET['fallback'] === 'true') {
             $query = "SELECT id, department, name, contact, available_time FROM department_coordinators 
                       ORDER BY department ASC";
             $stmt = $db->prepare($query);
