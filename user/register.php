@@ -54,44 +54,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif ($role === 'Coordinator' && empty($department)) {
         $error = "Department is required for Coordinator role";
     } else {
-        // Check if username already exists
-        $existing_user = $db->admin_users->findOne(['username' => $username]);
-        
-        if ($existing_user) {
-            $error = "Username already exists. Please choose another.";
-        } else {
-            // Hash password
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        try {
+            // Check if username already exists
+            $query = "SELECT COUNT(*) FROM admin_users WHERE username = :username";
+            $stmt = $db->prepare($query);
+            $stmt->execute([':username' => $username]);
+            $count = $stmt->fetchColumn();
             
-            // Create user document
-            $user_data = [
-                'name' => $name,
-                'mobile' => $mobile,
-                'email' => $email,
-                'username' => $username,
-                'password' => $hashed_password,
-                'role' => $role,
-                'created_at' => new MongoDB\BSON\UTCDateTime(),
-            ];
-            
-            // Add department if coordinator
-            if ($role === 'Coordinator') {
-                $user_data['department'] = $department;
-            }
-            
-            // Insert user into database
-            try {
-                $result = $db->admin_users->insertOne($user_data);
-                if ($result->getInsertedCount()) {
-                    $success = "Registration successful! You can now <a href='login.php'>login</a>.";
-                    // Clear form data on success
-                    $name = $mobile = $email = $username = '';
+            if ($count > 0) {
+                $error = "Username already exists. Please choose another.";
+            } else {
+                // Hash password
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                
+                // Create user data
+                $user_data = [
+                    'name' => $name,
+                    'mobile' => $mobile,
+                    'email' => $email,
+                    'username' => $username,
+                    'password' => $hashed_password,
+                    'role' => $role,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+                
+                // Add department if coordinator
+                if ($role === 'Coordinator') {
+                    $user_data['department'] = $department;
+                }
+                
+                // Insert user into database
+                $fields = implode(', ', array_keys($user_data));
+                $placeholders = ':' . implode(', :', array_keys($user_data));
+                
+                $query = "INSERT INTO admin_users ($fields) VALUES ($placeholders)";
+                $stmt = $db->prepare($query);
+                
+                $stmt->execute($user_data);
+                
+                if ($stmt->rowCount() > 0) {
+                    $success = "Registration successful! You can now login with your credentials.";
                 } else {
                     $error = "Registration failed. Please try again.";
                 }
-            } catch (Exception $e) {
-                $error = "Error: " . $e->getMessage();
             }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            $error = "Registration failed due to a system error. Please try again later.";
         }
     }
 }
@@ -327,7 +336,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="register-header">
             <img src="../images/majisticlogo.png" alt="MaJIStic Logo" class="register-logo">
             <h1>MaJIStic 2K25</h1>
-            <p>Create New Account</p>
+            <p>Admin Registration</p>
         </div>
         
         <div class="register-form">
@@ -348,40 +357,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form method="POST" action="register.php">
                 <div class="form-group">
                     <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" required value="<?php echo isset($name) ? htmlspecialchars($name) : ''; ?>">
+                    <input type="text" id="name" name="name" required value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
                     <i class="fas fa-user icon"></i>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="mobile">Mobile Number</label>
-                        <input type="text" id="mobile" name="mobile" required pattern="[0-9]{10}" title="10 digit mobile number" value="<?php echo isset($mobile) ? htmlspecialchars($mobile) : ''; ?>">
+                        <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" required value="<?php echo isset($_POST['mobile']) ? htmlspecialchars($_POST['mobile']) : ''; ?>">
                         <i class="fas fa-phone icon"></i>
                     </div>
                     
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>">
+                        <input type="email" id="email" name="email" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                         <i class="fas fa-envelope icon"></i>
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>">
+                    <input type="text" id="username" name="username" required value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>">
                     <i class="fas fa-user-tag icon"></i>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required minlength="6">
+                        <input type="password" id="password" name="password" required>
                         <i class="fas fa-lock icon"></i>
                     </div>
                     
                     <div class="form-group">
                         <label for="confirm_password">Confirm Password</label>
-                        <input type="password" id="confirm_password" name="confirm_password" required minlength="6">
+                        <input type="password" id="confirm_password" name="confirm_password" required>
                         <i class="fas fa-lock icon"></i>
                     </div>
                 </div>
@@ -389,22 +398,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="form-group">
                     <label for="role">Role</label>
                     <select id="role" name="role" required>
-                        <option value="" disabled selected>Select your role</option>
-                        <?php foreach ($roles as $role_option): ?>
-                            <option value="<?php echo htmlspecialchars($role_option); ?>" <?php echo isset($role) && $role === $role_option ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($role_option); ?>
+                        <option value="" selected disabled>Select Role</option>
+                        <?php foreach ($roles as $r): ?>
+                            <option value="<?php echo htmlspecialchars($r); ?>" <?php echo isset($_POST['role']) && $_POST['role'] === $r ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($r); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                     <i class="fas fa-user-shield icon"></i>
                 </div>
                 
-                <div id="department-section" class="form-group department-section">
+                <div class="form-group department-section" id="department-section" style="display: <?php echo isset($_POST['role']) && $_POST['role'] === 'Coordinator' ? 'block' : 'none'; ?>;">
                     <label for="department">Department</label>
-                    <select id="department" name="department">
-                        <option value="" disabled selected>Select your department</option>
+                    <select id="department" name="department" <?php echo isset($_POST['role']) && $_POST['role'] === 'Coordinator' ? 'required' : ''; ?>>
+                        <option value="" selected disabled>Select Department</option>
                         <?php foreach ($departments as $dept): ?>
-                            <option value="<?php echo htmlspecialchars($dept); ?>" <?php echo isset($department) && $department === $dept ? 'selected' : ''; ?>>
+                            <option value="<?php echo htmlspecialchars($dept); ?>" <?php echo isset($_POST['department']) && $_POST['department'] === $dept ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($dept); ?>
                             </option>
                         <?php endforeach; ?>
@@ -412,18 +421,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <i class="fas fa-building icon"></i>
                 </div>
                 
-                <button type="submit" class="btn-register">
-                    <i class="fas fa-user-plus"></i> Register
-                </button>
+                <button type="submit" class="btn-register">Register</button>
                 
                 <div class="login-link">
                     Already have an account? <a href="login.php">Login here</a>
                 </div>
             </form>
-            
-            <div class="register-footer">
-                &copy; <?php echo date('Y'); ?> MaJIStic 2K25 - All Rights Reserved
-            </div>
+        </div>
+        
+        <div class="register-footer">
+            &copy; <?php echo date('Y'); ?> MaJIStic 2K25 - All Rights Reserved
         </div>
     </div>
     

@@ -173,7 +173,7 @@ include 'backend.php';
                     </thead>
                     <tbody>
                         <?php 
-                        $sl_no = ($page - 1) * $items_per_page + 1;
+                        $sl_no = 1; // Start counting from 1 without pagination
                         if (!empty($result) && $tab == 'inhouse') {
                             foreach ($result as $row):
                                 // Convert registration date to IST if it exists
@@ -359,7 +359,7 @@ include 'backend.php';
                     </thead>
                     <tbody>
                         <?php 
-                        $sl_no = ($page - 1) * $items_per_page + 1;
+                        $sl_no = 1; // Start counting from 1 without pagination
                         if (!empty($result) && $tab == 'alumni') {
                             foreach ($result as $row):
                                 // Convert registration date to IST if it exists
@@ -711,17 +711,12 @@ include 'backend.php';
                 
             // Add payment details if paid
             if (registration.payment_status === 'Paid') {
-                // Format payment date correctly from MongoDB timestamp
-                let paymentDate = 'N/A';
-                if (registration.payment_timestamp) {
-                    // Format in IST timezone
-                    paymentDate = formatDateToIST(registration.payment_timestamp);
-                }
-                
+                let paymentDate = registration.payment_update_timestamp ? formatDateToIST(registration.payment_update_timestamp) : 'N/A';
+
                 html += `
                 <div class="detail-section payment-info">
                     <h3>Payment Information</h3>
-                    <div class="payment-field-modal"><span>Amount Paid:</span> ₹${registration.payment_amount || '500'}</div>
+                    <div class="payment-field-modal"><span>Amount Paid:</span> ₹${registration.paid_amount || '500'}</div>
                     <div class="payment-field-modal"><span>Receipt Number:</span> ${registration.receipt_number || 'N/A'}</div>
                     <div class="payment-field-modal"><span>Payment Date:</span> ${paymentDate}</div>
                     <div class="payment-field-modal"><span>Payment Updated By:</span> ${registration.payment_updated_by || 'N/A'}</div>
@@ -760,17 +755,12 @@ include 'backend.php';
                 
             // Add payment details if paid
             if (registration.payment_status === 'Paid') {
-                // Format payment date correctly from MongoDB timestamp
-                let paymentDate = 'N/A';
-                if (registration.payment_timestamp) {
-                    // Format in IST timezone
-                    paymentDate = formatDateToIST(registration.payment_timestamp);
-                }
-                
+                let paymentDate = registration.payment_update_timestamp ? formatDateToIST(registration.payment_update_timestamp) : 'N/A';
+
                 html += `
                 <div class="detail-section payment-info">
                     <h3>Payment Information</h3>
-                    <div class="payment-field-modal"><span>Amount Paid:</span> ₹${registration.payment_amount || '1000'}</div>
+                    <div class="payment-field-modal"><span>Amount Paid:</span> ₹${registration.paid_amount || '1000'}</div>
                     <div class="payment-field-modal"><span>Receipt Number:</span> ${registration.receipt_number || 'N/A'}</div>
                     <div class="payment-field-modal"><span>Payment Date:</span> ${paymentDate}</div>
                     <div class="payment-field-modal"><span>Payment Updated By:</span> ${registration.payment_updated_by || 'N/A'}</div>
@@ -895,6 +885,17 @@ include 'backend.php';
             }
             
             tbody.innerHTML = html;
+            
+            // Re-apply column visibility after updating table data
+            const table = document.querySelector(`#${tabId} table`);
+            const savedColumns = getColumnVisibilityState(tabId);
+            
+            Object.keys(savedColumns).forEach(columnId => {
+                const columnIndex = getColumnIndex(columnId, tabId);
+                if (columnIndex !== -1) {
+                    toggleColumnVisibility(table, columnIndex, savedColumns[columnId]);
+                }
+            });
         }
 
         // Update tab switching functionality
@@ -962,21 +963,36 @@ include 'backend.php';
                 document.getElementById('payment-error').style.display = 'block';
                 return;
             }
-            
+
+            const paidAmount = document.getElementById('payment-amount').textContent.trim();
+            let type = currentPaymentType; // Ensure this is set when opening the modal
+            const id = currentPaymentJisId; // Ensure this is set when opening the modal
+
+            // Map 'inhouse' to 'student' for backend compatibility
+            if (type === 'inhouse') {
+                type = 'student';
+            }
+
+            console.log("Debug: Confirm Payment - Type:", type, "ID:", id, "Receipt Number:", receiptNumber, "Paid Amount:", paidAmount);
+
+            if (!type || !id) {
+                console.error("Debug: Missing or invalid type or id - Type:", type, "ID:", id);
+                document.getElementById('payment-error-message').textContent = 'Missing or invalid registration type or ID';
+                document.getElementById('payment-error').style.display = 'block';
+                return;
+            }
+
             // Disable buttons during processing
             const confirmBtn = document.querySelector('.btn-confirm-payment');
             const cancelBtn = document.querySelector('.btn-cancel-payment');
             confirmBtn.disabled = true;
             cancelBtn.disabled = true;
             confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            
+
             // Hide any previous messages
             document.getElementById('payment-success').style.display = 'none';
             document.getElementById('payment-error').style.display = 'none';
-            
-            // Get amount based on type
-            const amount = currentPaymentType === 'alumni' ? 1000 : 500;
-            
+
             // Send AJAX request to process payment
             fetch('process_payment.php', {
                 method: 'POST',
@@ -984,23 +1000,28 @@ include 'backend.php';
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    type: currentPaymentType,
-                    jis_id: currentPaymentJisId,
+                    type: type, // Ensure the type is sent
+                    id: id, // Ensure the ID is sent
                     receipt_number: receiptNumber,
-                    amount: amount
+                    paid_amount: parseFloat(paidAmount)
                 }),
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log("Debug: Response Status:", response.status);
+                return response.json();
+            })
             .then(data => {
+                console.log("Debug: Response Data:", data);
+
                 // Re-enable buttons
                 confirmBtn.disabled = false;
                 cancelBtn.disabled = false;
                 confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Payment';
-                
+
                 if (data.success) {
                     // Show success message
                     document.getElementById('payment-success').style.display = 'block';
-                    
+
                     // Auto close modal after delay and refresh page
                     setTimeout(() => {
                         closePaymentModal();
@@ -1013,15 +1034,16 @@ include 'backend.php';
                 }
             })
             .catch(error => {
+                console.error("Debug: Fetch Error:", error);
+
                 // Re-enable buttons
                 confirmBtn.disabled = false;
                 cancelBtn.disabled = false;
                 confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Payment';
-                
+
                 // Show error message
                 document.getElementById('payment-error-message').textContent = 'An error occurred while processing payment';
                 document.getElementById('payment-error').style.display = 'block';
-                console.error('Error:', error);
             });
         }
 
@@ -1059,14 +1081,33 @@ include 'backend.php';
             const inhouseTable = document.querySelector('#inhouse table');
             const alumniTable = document.querySelector('#alumni table');
             
-            // Hide inhouse columns initially
-            toggleColumnVisibility(inhouseTable, 3, false); // Gender
-            toggleColumnVisibility(inhouseTable, 5, false); // Competition
-            toggleColumnVisibility(inhouseTable, 6, false); // Registration Date
+            // Hide inhouse columns initially but ensure header and content cells match
+            // Note: We're NOT hiding department (index 4) anymore
+            const inhouseColumnsToHide = [3, 5, 6]; // Gender, Competition, Registration Date
+            inhouseColumnsToHide.forEach(colIndex => {
+                toggleColumnVisibility(inhouseTable, colIndex, false);
+            });
             
-            // Hide alumni columns initially
-            toggleColumnVisibility(alumniTable, 3, false); // Gender
-            toggleColumnVisibility(alumniTable, 8, false); // Registration Date
+            // Make sure department is visible for inhouse (index 4)
+            toggleColumnVisibility(inhouseTable, 4, true);
+            
+            // Hide alumni columns initially but ensure header and content cells match
+            // Note: We're NOT hiding department (index 6) anymore
+            const alumniColumnsToHide = [3, 8]; // Gender, Registration Date
+            alumniColumnsToHide.forEach(colIndex => {
+                toggleColumnVisibility(alumniTable, colIndex, false);
+            });
+            
+            // Make sure department is visible for alumni (index 6)
+            toggleColumnVisibility(alumniTable, 6, true);
+            
+            // Set department checkbox to checked
+            document.getElementById('col-department-inhouse').checked = true;
+            document.getElementById('col-department-alumni').checked = true;
+            
+            // Save state to session storage
+            sessionStorage.setItem('col-department-inhouse', 'true');
+            sessionStorage.setItem('col-department-alumni', 'true');
             
             // Update toggle all checkboxes
             updateToggleAllCheckbox('inhouse');
@@ -1149,7 +1190,8 @@ include 'backend.php';
             const parts = checkboxId.split('-');
             const columnType = parts[1];
             
-            // Fixed column indices for each table based on their HTML structure
+            // Define column indices for each table based on their HTML structure
+            // These must match exactly with the actual table structure in the HTML
             const columnMaps = {
                 'inhouse': {
                     'gender': 3,
@@ -1177,18 +1219,44 @@ include 'backend.php';
             const headers = table.querySelectorAll('th');
             const rows = table.querySelectorAll('tbody tr');
             
-            // Toggle header visibility
-            if (headers[columnIndex]) {
-                headers[columnIndex].style.display = isVisible ? '' : 'none';
+            // Ensure the column index is valid
+            if (columnIndex < 0 || columnIndex >= headers.length) {
+                console.error(`Invalid column index: ${columnIndex}`);
+                return;
             }
+            
+            // Toggle header visibility
+            headers[columnIndex].style.display = isVisible ? '' : 'none';
             
             // Toggle cell visibility in each row
             rows.forEach(row => {
                 const cells = row.querySelectorAll('td');
-                if (cells[columnIndex]) {
+                // Ensure we have enough cells in this row
+                if (columnIndex < cells.length) {
                     cells[columnIndex].style.display = isVisible ? '' : 'none';
+                } else {
+                    console.warn(`Row does not have cell at index ${columnIndex}`);
                 }
             });
+        }
+        
+        // Helper function to get stored column visibility state
+        function getColumnVisibilityState(tabId) {
+            const columnState = {};
+            const dropdown = document.getElementById(`column-dropdown-${tabId}`);
+            const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]:not(#toggle-all-' + tabId + ')');
+            
+            checkboxes.forEach(checkbox => {
+                const savedState = sessionStorage.getItem(checkbox.id);
+                if (savedState !== null) {
+                    columnState[checkbox.id] = savedState === 'true';
+                } else {
+                    // Default state if not saved
+                    columnState[checkbox.id] = checkbox.checked;
+                }
+            });
+            
+            return columnState;
         }
     </script>
 </body>

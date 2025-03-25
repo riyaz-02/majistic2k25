@@ -16,9 +16,9 @@ $is_alumni = isset($_GET['alumni']) && $_GET['alumni'] == '1';
 if (!empty($jis_id)) {
     try {
         if ($is_alumni) {
-            $student_doc = $alumni_registrations->findOne(['jis_id' => $jis_id]);
+            $student_doc = findDocument('alumni_registrations', ['jis_id' => $jis_id]);
             if ($student_doc) {
-                // Convert MongoDB document to array and format fields consistently with old MySQL output
+                // Format alumni data consistently with expected output structure
                 $student_data = [
                     'student_name' => $student_doc['alumni_name'],
                     'department' => $student_doc['department'],
@@ -29,9 +29,9 @@ if (!empty($jis_id)) {
                 ];
             }
         } else {
-            $student_doc = $registrations->findOne(['jis_id' => $jis_id]);
+            $student_doc = findDocument('registrations', ['jis_id' => $jis_id]);
             if ($student_doc) {
-                // Convert MongoDB document to array and format fields
+                // Format student data
                 $student_data = [
                     'student_name' => $student_doc['student_name'],
                     'department' => $student_doc['department'],
@@ -41,9 +41,25 @@ if (!empty($jis_id)) {
                 ];
             }
         }
-    } catch (Exception $e) {
-        error_log("MongoDB query error: " . $e->getMessage());
+    } catch (PDOException $e) {
+        error_log("MySQL query error: " . $e->getMessage());
     }
+}
+
+// Before querying the database for coordinators, ensure the department variable is defined
+$department = isset($student_data['department']) ? $student_data['department'] : 'Unknown';
+
+// Fetch department coordinator based on the selected department
+$department_coordinators = [];
+try {
+    // Use exact matching with '=' operator instead of LIKE to avoid partial matches
+    // This ensures CSE won't match with CSE AI-ML and vice versa
+    $query = "SELECT name, contact, available_time FROM department_coordinators WHERE department = :department ORDER BY name ASC";
+    $stmt = $db->prepare($query);
+    $stmt->execute([':department' => $department]);
+    $department_coordinators = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $error_message = "Error fetching department coordinators: " . $e->getMessage();
 }
 ?>
 

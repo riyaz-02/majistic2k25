@@ -1,4 +1,5 @@
 <?php
+// Start the session if it hasn't been started already
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -6,15 +7,19 @@ if (session_status() === PHP_SESSION_NONE) {
 // Clear all session variables
 $_SESSION = array();
 
-// If it's desired to kill the session, also delete the session cookie.
-if (isset($_COOKIE[session_name()])) {
-    setcookie(session_name(), '', time() - 42000, '/');
+// Destroy the session cookie
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
 }
 
-// Finally, destroy the session.
+// Destroy the session
 session_destroy();
 
-// Redirect to login page with a logout message
+// Redirect to login page with success message
 header('Location: login.php?logout=success');
-exit();
+exit;
 ?>

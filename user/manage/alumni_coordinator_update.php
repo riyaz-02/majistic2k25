@@ -11,81 +11,108 @@ if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_role']) || $_SESSIO
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_alumni_coordinator'])) {
     // Get the form data
-    $name = isset($_POST['alumni_coordinator_name']) ? trim($_POST['alumni_coordinator_name']) : '';
-    $contact = isset($_POST['alumni_coordinator_contact']) ? trim($_POST['alumni_coordinator_contact']) : '';
-    $email = isset($_POST['alumni_coordinator_email']) ? trim($_POST['alumni_coordinator_email']) : '';
-    $payment_qr = isset($_POST['alumni_payment_qr']) ? trim($_POST['alumni_payment_qr']) : '';
-    $payment_instructions = isset($_POST['alumni_payment_instructions']) ? trim($_POST['alumni_payment_instructions']) : '';
+    $name = isset($_POST['coordinator_name']) ? trim($_POST['coordinator_name']) : '';
+    $contact = isset($_POST['coordinator_contact']) ? trim($_POST['coordinator_contact']) : '';
+    $email = isset($_POST['coordinator_email']) ? trim($_POST['coordinator_email']) : '';
+    $payment_qr_url = isset($_POST['payment_qr']) ? trim($_POST['payment_qr']) : '';
+    $payment_instructions = isset($_POST['payment_instructions']) ? trim($_POST['payment_instructions']) : '';
     
-    // Validate the input
+    // Validate the data
     $errors = [];
     
     if (empty($name)) {
         $errors[] = "Coordinator name is required";
     }
     
-    if (empty($contact)) {
-        $errors[] = "Coordinator contact is required";
+    if (empty($contact) || !preg_match('/^\d{10}$/', $contact)) {
+        $errors[] = "Valid 10-digit contact number is required";
     }
     
     if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format";
     }
     
-    if (empty($payment_qr)) {
-        $errors[] = "Payment QR code URL is required";
-    } 
-    // Modified the URL validation to be more lenient - some valid URLs might not pass strict validation
-    else if (!preg_match('/^https?:\/\//', $payment_qr)) {
-        $errors[] = "QR code URL must start with http:// or https://";
+    // Validate QR code URL if provided
+    if (!empty($payment_qr_url) && !filter_var($payment_qr_url, FILTER_VALIDATE_URL)) {
+        $errors[] = "Invalid QR code URL format. Please provide a valid URL";
     }
     
-    // If no errors, update the configuration file
+    // If no errors, update the config file
     if (empty($errors)) {
-        // Create the configuration content
-        $config_content = "<?php\n";
-        $config_content .= "/**\n";
-        $config_content .= " * Alumni Coordinator Configuration\n";
-        $config_content .= " * \n";
-        $config_content .= " * This file contains settings for the alumni coordinator\n";
-        $config_content .= " * and payment QR code information\n";
-        $config_content .= " */\n\n";
-        $config_content .= "// Alumni Coordinator Details\n";
-        $config_content .= "define('ALUMNI_COORDINATOR_NAME', '" . addslashes($name) . "');\n";
-        $config_content .= "define('ALUMNI_COORDINATOR_CONTACT', '" . addslashes($contact) . "');\n";
-        $config_content .= "define('ALUMNI_COORDINATOR_EMAIL', '" . addslashes($email) . "');\n\n";
-        $config_content .= "// Payment QR Code Information\n";
-        $config_content .= "define('ALUMNI_PAYMENT_QR', '" . addslashes($payment_qr) . "');\n";
-        $config_content .= "define('ALUMNI_PAYMENT_INSTRUCTIONS', '" . addslashes($payment_instructions) . "');\n";
-        $config_content .= "?>";
+        // Path to the config file
+        $config_file = '../../src/config/alumni_coordinator_config.php';
         
-        // Write to the configuration file
-        $config_file = __DIR__ . '/../../src/config/alumni_coordinator_config.php';
-        
-        // Make sure directory exists
-        $dir = dirname($config_file);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
+        // Create config directory if it doesn't exist
+        $config_dir = dirname($config_file);
+        if (!is_dir($config_dir)) {
+            mkdir($config_dir, 0755, true);
         }
         
-        if (file_put_contents($config_file, $config_content)) {
-            // Set success message
-            $_SESSION['success_message'] = "Alumni coordinator settings updated successfully.";
-        } else {
-            // Set error message
-            $_SESSION['error_message'] = "Failed to write to configuration file. Please check file permissions.";
+        // Save configuration to MySQL
+        try {
+            // Check if config already exists
+            $query = "SELECT COUNT(*) FROM app_configs WHERE config_key = 'alumni_coordinator'";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $config_exists = ($stmt->fetchColumn() > 0);
+            
+            $config_data = [
+                'coordinator_name' => $name,
+                'coordinator_contact' => $contact,
+                'coordinator_email' => $email,
+                'payment_instructions' => $payment_instructions,
+                'payment_qr' => $payment_qr_url
+            ];
+            
+            if ($config_exists) {
+                // Update existing config
+                $query = "UPDATE app_configs SET config_value = :config_value, updated_at = NOW() WHERE config_key = 'alumni_coordinator'";
+                $stmt = $db->prepare($query);
+                $stmt->execute([
+                    ':config_value' => json_encode($config_data)
+                ]);
+            } else {
+                // Create new config
+                $query = "INSERT INTO app_configs (config_key, config_value, created_at, updated_at) VALUES ('alumni_coordinator', :config_value, NOW(), NOW())";
+                $stmt = $db->prepare($query);
+                $stmt->execute([
+                    ':config_value' => json_encode($config_data)
+                ]);
+            }
+            
+            // Generate PHP config file
+            $config_content = "<?php\n";
+            $config_content .= "// Alumni Coordinator Configuration - Auto-generated\n";
+            $config_content .= "define('ALUMNI_COORDINATOR_NAME', " . var_export($name, true) . ");\n";
+            $config_content .= "define('ALUMNI_COORDINATOR_CONTACT', " . var_export($contact, true) . ");\n";
+            
+            if (!empty($email)) {
+                $config_content .= "define('ALUMNI_COORDINATOR_EMAIL', " . var_export($email, true) . ");\n";
+            }
+            
+            if (!empty($payment_qr_url)) {
+                $config_content .= "define('ALUMNI_PAYMENT_QR', " . var_export($payment_qr_url, true) . ");\n";
+            }
+            
+            if (!empty($payment_instructions)) {
+                $config_content .= "define('ALUMNI_PAYMENT_INSTRUCTIONS', " . var_export($payment_instructions, true) . ");\n";
+            }
+            
+            // Write to file
+            file_put_contents($config_file, $config_content);
+            
+            $_SESSION['success_message'] = "Alumni coordinator settings updated successfully!";
+        } catch (PDOException $e) {
+            $_SESSION['error_message'] = "Database error: " . $e->getMessage();
+        } catch (Exception $e) {
+            $_SESSION['error_message'] = "Error updating configuration: " . $e->getMessage();
         }
     } else {
-        // Set error message
-        $_SESSION['error_message'] = "Please correct the following errors: " . implode(", ", $errors);
+        $_SESSION['error_message'] = implode("<br>", $errors);
     }
-    
-    // Redirect back to the manage page with the registration_control tab active
-    header("Location: index.php?page=registration_control");
-    exit;
 }
 
-// If not a POST request or update_alumni_coordinator not set, redirect back
-header("Location: index.php?page=registration_control");
+// Redirect back to the alumni settings page
+header("Location: index.php?page=alumni_settings");
 exit;
 ?>

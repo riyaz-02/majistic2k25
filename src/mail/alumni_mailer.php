@@ -459,7 +459,7 @@ HTML;
  * @return string HTML content for coordinator information
  */
 function getAlumniCoordinatorInfo($department) {
-    global $department_coordinators;
+    global $db;
     
     // Initialize default coordinator info with support contacts
     $default_info = "<p style='margin:5px 0'><strong>Note:</strong> No specific coordinator found. Please contact maJIStic Support.</p>";
@@ -467,13 +467,13 @@ function getAlumniCoordinatorInfo($department) {
     $default_info .= "<p style='margin:5px 0'><strong>WhatsApp Community:</strong> <a href='https://chat.whatsapp.com/JyDMUAA3zw9KfbPvWhXQ1l'>Join Here</a></p>";
     
     // Try to find a coordinator for the specific department
-    if (isset($department_coordinators) && !empty($department)) {
+    if (!empty($department)) {
         try {
-            // Create a department filter
-            $filter = ['department' => ['$regex' => $department, '$options' => 'i']];
-            
-            // Find the coordinator
-            $coordinator = $department_coordinators->findOne($filter);
+            // Create MySQL query to find coordinator by department
+            $query = "SELECT * FROM department_coordinators WHERE department LIKE :department LIMIT 1";
+            $stmt = $db->prepare($query);
+            $stmt->execute([':department' => '%'.$department.'%']);
+            $coordinator = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($coordinator) {
                 $coordinator_info = "<p style='margin:5px 0'><strong>Name:</strong> " . htmlspecialchars($coordinator['name']) . "</p>";
@@ -481,7 +481,7 @@ function getAlumniCoordinatorInfo($department) {
                 
                 return $coordinator_info;
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             error_log("Error fetching coordinator for alumni email: " . $e->getMessage());
         }
     }

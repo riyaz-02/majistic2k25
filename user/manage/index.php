@@ -2,6 +2,21 @@
 session_start();
 require_once '../../includes/db_config.php';
 
+// Debug what's in the session
+error_log("SESSION redirect_url: " . (isset($_SESSION['redirect_url']) ? $_SESSION['redirect_url'] : 'not set'));
+
+// Check for redirect after form processing - place this before ANY output
+if (isset($_SESSION['redirect_url'])) {
+    $redirect_url = $_SESSION['redirect_url'];
+    unset($_SESSION['redirect_url']);
+    
+    // Log before redirecting
+    error_log("Redirecting to: $redirect_url");
+    
+    header("Location: $redirect_url");
+    exit;
+}
+
 // Check if user is logged in with admin privileges
 if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'Manage Website') {
     // Fix the redirect path to avoid potential loops
@@ -79,27 +94,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Department Coordinator Management
+    // Department Coordinator Management - Using MySQL
     if (isset($_POST['add_coordinator'])) {
         $department = trim($_POST['department']);
         $name = trim($_POST['coordinator_name']);
         $contact = trim($_POST['contact']);
         $available_time = trim($_POST['available_time']);
+        
         if (empty($department) || empty($name) || empty($contact)) {
             $error_message = "All fields are required for adding a coordinator.";
         } else {
-            $result = $department_coordinators->insertOne([
-                'department' => $department,
-                'name' => $name,
-                'contact' => $contact,
-                'available_time' => $available_time,
-                'created_at' => new MongoDB\BSON\UTCDateTime()
-            ]);
-            
-            if ($result->getInsertedCount()) {
-                $success_message = "Coordinator added successfully!";
-            } else {
-                $error_message = "Failed to add coordinator.";
+            try {
+                $query = "INSERT INTO department_coordinators (department, name, contact, available_time, created_at) 
+                          VALUES (:department, :name, :contact, :available_time, NOW())";
+                          
+                $stmt = $db->prepare($query);
+                $stmt->execute([
+                    ':department' => $department,
+                    ':name' => $name,
+                    ':contact' => $contact,
+                    ':available_time' => $available_time
+                ]);
+                
+                if ($stmt->rowCount() > 0) {
+                    $success_message = "Coordinator added successfully!";
+                } else {
+                    $error_message = "Failed to add coordinator.";
+                }
+            } catch (PDOException $e) {
+                $error_message = "Database error: " . $e->getMessage();
             }
         }
     }
@@ -114,21 +137,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($department) || empty($name) || empty($contact)) {
             $error_message = "All fields are required for updating a coordinator.";
         } else {
-            $result = $department_coordinators->updateOne(
-                ['_id' => new MongoDB\BSON\ObjectId($id)],
-                ['$set' => [
-                    'department' => $department,
-                    'name' => $name,
-                    'contact' => $contact,
-                    'available_time' => $available_time,
-                    'updated_at' => new MongoDB\BSON\UTCDateTime()
-                ]]
-            );
-            
-            if ($result->getModifiedCount()) {
-                $success_message = "Coordinator updated successfully!";
-            } else {
-                $error_message = "No changes were made or coordinator not found.";
+            try {
+                $query = "UPDATE department_coordinators 
+                          SET department = :department, name = :name, contact = :contact, 
+                          available_time = :available_time, updated_at = NOW() 
+                          WHERE id = :id";
+                          
+                $stmt = $db->prepare($query);
+                $stmt->execute([
+                    ':department' => $department,
+                    ':name' => $name,
+                    ':contact' => $contact,
+                    ':available_time' => $available_time,
+                    ':id' => $id
+                ]);
+                
+                if ($stmt->rowCount() > 0) {
+                    $success_message = "Coordinator updated successfully!";
+                } else {
+                    $error_message = "No changes were made or coordinator not found.";
+                }
+            } catch (PDOException $e) {
+                $error_message = "Database error: " . $e->getMessage();
             }
         }
     }
@@ -136,14 +166,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_coordinator'])) {
         $id = $_POST['coordinator_id'];
         
-        $result = $department_coordinators->deleteOne(
-            ['_id' => new MongoDB\BSON\ObjectId($id)]
-        );
-        
-        if ($result->getDeletedCount()) {
-            $success_message = "Coordinator deleted successfully!";
-        } else {
-            $error_message = "Failed to delete coordinator or coordinator not found.";
+        try {
+            $query = "DELETE FROM department_coordinators WHERE id = :id";
+            $stmt = $db->prepare($query);
+            $stmt->execute([':id' => $id]);
+            
+            if ($stmt->rowCount() > 0) {
+                $success_message = "Coordinator deleted successfully!";
+            } else {
+                $error_message = "Failed to delete coordinator or coordinator not found.";
+            }
+        } catch (PDOException $e) {
+            $error_message = "Database error: " . $e->getMessage();
         }
     }
 }
@@ -209,37 +243,25 @@ if ($alumni_config_path && file_exists($alumni_config_path)) {
     }
 }
 
-// Fetch all department coordinators
+// Fetch all department coordinators using MySQL
 $coordinators = [];
-$cursor = $department_coordinators->find([], ['sort' => ['department' => 1]]);
-foreach ($cursor as $doc) {
-    $coordinators[] = [
-        'id' => (string)$doc->_id,
-        'department' => $doc->department,
-        'name' => $doc->name,
-        'contact' => $doc->contact,
-        'available_time' => $doc->available_time ?? ''
-    ];
+try {
+    $query = "SELECT id, department, name, contact, available_time FROM department_coordinators ORDER BY department ASC";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    $coordinators = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $error_message = "Error fetching coordinators: " . $e->getMessage();
 }
 
 // Fetch all admin users
 $admin_users = [];
 try {
-    $cursor = $db->admin_users->find([], ['sort' => ['name' => 1]]);
-    foreach ($cursor as $doc) {
-        $admin_users[] = [
-            'id' => (string)$doc->_id,
-            'name' => $doc->name ?? '',
-            'username' => $doc->username ?? '',
-            'email' => $doc->email ?? '',
-            'mobile' => $doc->mobile ?? '',
-            'role' => $doc->role ?? '',
-            'department' => $doc->department ?? 'N/A',
-            'created_at' => isset($doc->created_at) ? $doc->created_at->toDateTime()->format('Y-m-d H:i:s') : '',
-            'last_login' => isset($doc->last_login) ? $doc->last_login->toDateTime()->format('Y-m-d H:i:s') : 'Never'
-        ];
-    }
-} catch (Exception $e) {
+    $query = "SELECT id, name, username, email, mobile, role, department, created_at, last_login FROM admin_users ORDER BY name ASC";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    $admin_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
     $error_message = "Error fetching admin users: " . $e->getMessage();
 }
 ?>
@@ -320,6 +342,12 @@ try {
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link <?php echo $page === 'alumni_settings' ? 'active' : ''; ?>" href="?page=alumni_settings">
+                                <i class="bi bi-mortarboard me-2"></i>
+                                Alumni Coordinator
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link <?php echo $page === 'email_config' ? 'active' : ''; ?>" href="?page=email_config">
                                 <i class="bi bi-envelope me-2"></i>
                                 Email Configuration
@@ -329,6 +357,12 @@ try {
                             <a class="nav-link <?php echo $page === 'coordinators' ? 'active' : ''; ?>" href="?page=coordinators">
                                 <i class="bi bi-people me-2"></i>
                                 Department Coordinators
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo $page === 'all_registrations' ? 'active' : ''; ?>" href="?page=all_registrations">
+                                <i class="bi bi-list-check me-2"></i>
+                                All Registrations
                             </a>
                         </li>
                         <li class="nav-item">
@@ -350,11 +384,17 @@ try {
                             case 'registration_control':
                                 echo 'Registration Control';
                                 break;
+                            case 'alumni_settings':
+                                echo 'Alumni Coordinator Settings';
+                                break;
                             case 'email_config':
                                 echo 'Email Configuration';
                                 break;
                             case 'coordinators':
                                 echo 'Department Coordinators';
+                                break;
+                            case 'all_registrations':
+                                echo 'Manage Registrations';
                                 break;
                             case 'admin_users':
                                 echo 'Admin Users';
@@ -422,56 +462,6 @@ try {
                     </div>
                 </div>
                 
-                <!-- Alumni Coordinator Settings -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Alumni Coordinator Settings</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" action="alumni_coordinator_update.php">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="alumni_coordinator_name" class="form-label">Coordinator Name</label>
-                                    <input type="text" class="form-control" id="alumni_coordinator_name" name="alumni_coordinator_name" value="<?php echo htmlspecialchars($alumni_coordinator_name); ?>" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="alumni_coordinator_contact" class="form-label">Contact Number</label>
-                                    <input type="text" class="form-control" id="alumni_coordinator_contact" name="alumni_coordinator_contact" value="<?php echo htmlspecialchars($alumni_coordinator_contact); ?>" required>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="alumni_coordinator_email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="alumni_coordinator_email" name="alumni_coordinator_email" value="<?php echo htmlspecialchars($alumni_coordinator_email); ?>">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="alumni_payment_qr" class="form-label">Payment QR Code URL</label>
-                                <input type="url" class="form-control" id="alumni_payment_qr" name="alumni_payment_qr" value="<?php echo htmlspecialchars($alumni_payment_qr); ?>" required>
-                                <div class="form-text">Enter the direct URL to the payment QR code image (must start with http:// or https://)</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="alumni_payment_instructions" class="form-label">Payment Instructions</label>
-                                <textarea class="form-control" id="alumni_payment_instructions" name="alumni_payment_instructions" rows="3" required><?php echo htmlspecialchars($alumni_payment_instructions); ?></textarea>
-                            </div>
-                            
-                            <?php if (!empty($alumni_payment_qr)): ?>
-                            <div class="mb-3">
-                                <label class="form-label">Current QR Code Preview</label>
-                                <div class="border p-3 text-center bg-dark">
-                                    <img src="<?php echo htmlspecialchars($alumni_payment_qr); ?>" alt="Payment QR Code" style="max-width: 200px; height: auto;">
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            
-                            <button type="submit" name="update_alumni_coordinator" class="btn btn-primary">
-                                Update Alumni Coordinator Settings
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">Registration Message Preview</h5>
@@ -493,6 +483,77 @@ try {
                     </div>
                 </div>
                 
+                <?php elseif ($page === 'alumni_settings'): ?>
+                <!-- Alumni Coordinator Settings Page -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Alumni Coordinator Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="alumni_coordinator_update.php">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="coordinator_name" class="form-label">Coordinator Name</label>
+                                    <input type="text" class="form-control" id="coordinator_name" name="coordinator_name" value="<?php echo htmlspecialchars($alumni_coordinator_name); ?>" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="coordinator_contact" class="form-label">Contact Number</label>
+                                    <input type="text" class="form-control" id="coordinator_contact" name="coordinator_contact" value="<?php echo htmlspecialchars($alumni_coordinator_contact); ?>" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="coordinator_email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="coordinator_email" name="coordinator_email" value="<?php echo htmlspecialchars($alumni_coordinator_email); ?>">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="payment_qr" class="form-label">Payment QR Code URL</label>
+                                <input type="url" class="form-control" id="payment_qr" name="payment_qr" value="<?php echo htmlspecialchars($alumni_payment_qr); ?>">
+                                <small class="form-text text-muted">Enter the direct URL to the payment QR code image (must be a valid URL starting with http:// or https://)</small>
+                            </div>
+                            
+                            <?php if (!empty($alumni_payment_qr)): ?>
+                            <div class="mb-3">
+                                <label class="form-label">Current QR Code Preview</label>
+                                <div class="border p-3 text-center bg-light">
+                                    <img src="<?php echo htmlspecialchars($alumni_payment_qr); ?>" alt="Payment QR Code" style="max-width: 200px; height: auto;">
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                            
+                            <div class="mb-3">
+                                <label for="payment_instructions" class="form-label">Payment Instructions</label>
+                                <textarea class="form-control" id="payment_instructions" name="payment_instructions" rows="3" required><?php echo htmlspecialchars($alumni_payment_instructions); ?></textarea>
+                                <small class="form-text text-muted">These instructions will be shown to alumni when making payments.</small>
+                            </div>
+                            
+                            <button type="submit" name="update_alumni_coordinator" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Update Alumni Coordinator Settings
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Alumni Email Preview</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Alumni will receive an email with the following QR code and coordinator information:</p>
+                        
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i> The email will include the coordinator details and payment QR code above.
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="../../src/handler/email_preview.php?type=alumni" target="_blank" class="btn btn-secondary">
+                                <i class="bi bi-envelope-fill me-1"></i> Preview Alumni Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <?php elseif ($page === 'email_config'): ?>
                 <!-- Email Configuration Page -->
                 <div class="card">
@@ -710,7 +771,19 @@ try {
                     </div>
                 </div>
 
-                <?php elseif ($page === 'admin_users'): ?>
+                <?php elseif ($page === 'student_registrations'): ?>
+    <!-- Include the student registration list page -->
+    <?php include 'student_registrations.php'; ?>
+
+<?php elseif ($page === 'alumni_registrations'): ?>
+    <!-- Include the alumni registration list page -->
+    <?php include 'alumni_registrations.php'; ?>
+
+<?php elseif ($page === 'all_registrations'): ?>
+    <!-- Include the unified registrations list page -->
+    <?php include 'all_registrations.php'; ?>
+
+<?php elseif ($page === 'admin_users'): ?>
                 <!-- Admin Users Management Page -->
                 <div class="card">
                     <div class="card-header">
@@ -753,76 +826,269 @@ try {
                         </div>
                     </div>
                 </div>
-                <?php else: ?>
-                <!-- Dashboard Content -->
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Welcome to maJIStic Admin Dashboard</h5>
-                        <p class="card-text">Use the navigation menu to manage various aspects of the system.</p>
-                        
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <div class="card bg-<?php echo $registrationEnabled ? 'success' : 'danger'; ?> text-white mb-4">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Registration Control</h5>
-                                        <p class="card-text">
-                                            <?php echo $registrationEnabled ? 'Registrations are currently open' : 'Registrations are currently closed'; ?>
-                                        </p>
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="?page=registration_control">Manage Registration Status</a>
-                                        <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
+                <?php elseif ($page === 'dashboard'): ?>
+<!-- Dashboard Content -->
+<div class="row">
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase fw-bold mb-1">Student Registrations</h6>
+                        <?php
+                        try {
+                            $query = "SELECT COUNT(*) FROM registrations";
+                            $stmt = $db->prepare($query);
+                            $stmt->execute();
+                            $student_count = $stmt->fetchColumn();
                             
-                            <div class="col-md-4">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Email Configuration</h5>
-                                        <p class="card-text">Manage email logos and base URLs for links in emails.</p>
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="?page=email_config">View Details</a>
-                                        <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
+                            $query = "SELECT COUNT(*) FROM registrations WHERE payment_status = 'Paid'";
+                            $stmt = $db->prepare($query);
+                            $stmt->execute();
+                            $student_paid = $stmt->fetchColumn();
+                        } catch (PDOException $e) {
+                            $student_count = 0;
+                            $student_paid = 0;
+                        }
+                        ?>
+                        <h2 class="display-4 fw-bold mb-0"><?php echo number_format($student_count); ?></h2>
+                    </div>
+                    <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
+                        <i class="bi bi-people-fill fs-1"></i>
+                    </div>
+                </div>
+                <small class="fw-semibold"><?php echo number_format($student_paid); ?> Paid / <?php echo number_format($student_count - $student_paid); ?> Pending</small>
+            </div>
+            <div class="card-footer bg-primary bg-opacity-75 py-2">
+                <a href="?page=student_registrations" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
+                    <span>View Details</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase fw-bold mb-1">Alumni Registrations</h6>
+                        <?php
+                        try {
+                            $query = "SELECT COUNT(*) FROM alumni_registrations";
+                            $stmt = $db->prepare($query);
+                            $stmt->execute();
+                            $alumni_count = $stmt->fetchColumn();
                             
-                            <div class="col-md-4">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Department Coordinators</h5>
-                                        <p class="card-text">Manage department coordinators information.</p>
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="?page=coordinators">View Details</a>
-                                        <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-4">
-                                <div class="card bg-info text-white mb-4">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Admin Users</h5>
-                                        <p class="card-text">View all admin users and their details.</p>
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="?page=admin_users">View Details</a>
-                                        <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Add more dashboard cards as needed -->
+                            $query = "SELECT COUNT(*) FROM alumni_registrations WHERE payment_status = 'Paid'";
+                            $stmt = $db->prepare($query);
+                            $stmt->execute();
+                            $alumni_paid = $stmt->fetchColumn();
+                        } catch (PDOException $e) {
+                            $alumni_count = 0;
+                            $alumni_paid = 0;
+                        }
+                        ?>
+                        <h2 class="display-4 fw-bold mb-0"><?php echo number_format($alumni_count); ?></h2>
+                    </div>
+                    <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
+                        <i class="bi bi-mortarboard-fill fs-1"></i>
+                    </div>
+                </div>
+                <small class="fw-semibold"><?php echo number_format($alumni_paid); ?> Paid / <?php echo number_format($alumni_count - $alumni_paid); ?> Pending</small>
+            </div>
+            <div class="card-footer bg-info bg-opacity-75 py-2">
+                <a href="?page=alumni_registrations" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
+                    <span>View Details</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase fw-bold mb-1">Payment Status</h6>
+                        <?php
+                        $total_paid = $student_paid + $alumni_paid;
+                        $total_registrations = $student_count + $alumni_count;
+                        $paid_percentage = ($total_registrations > 0) ? round(($total_paid / $total_registrations) * 100) : 0;
+                        ?>
+                        <h2 class="display-4 fw-bold mb-0"><?php echo $paid_percentage; ?>%</h2>
+                    </div>
+                    <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
+                        <i class="bi bi-cash-stack fs-1"></i>
+                    </div>
+                </div>
+                <small class="fw-semibold"><?php echo number_format($total_paid); ?> Paid / <?php echo number_format($total_registrations - $total_paid); ?> Pending</small>
+            </div>
+            <div class="card-footer bg-success bg-opacity-75 py-2">
+                <a href="?page=all_registrations&payment_status=Paid" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
+                    <span>View Paid Registrations</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card bg-warning text-dark h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase fw-bold mb-1">Department Coordinators</h6>
+                        <?php
+                        try {
+                            $query = "SELECT COUNT(*) FROM department_coordinators";
+                            $stmt = $db->prepare($query);
+                            $stmt->execute();
+                            $coordinator_count = $stmt->fetchColumn();
+                        } catch (PDOException $e) {
+                            $coordinator_count = 0;
+                        }
+                        ?>
+                        <h2 class="display-4 fw-bold mb-0"><?php echo number_format($coordinator_count); ?></h2>
+                    </div>
+                    <div class="icon-shape bg-white bg-opacity-25 text-dark rounded-3 p-3">
+                        <i class="bi bi-person-badge fs-1"></i>
+                    </div>
+                </div>
+                <small class="fw-semibold">Contact information for students</small>
+            </div>
+            <div class="card-footer bg-warning bg-opacity-75 py-2">
+                <a href="?page=coordinators" class="text-dark d-flex justify-content-between align-items-center text-decoration-none">
+                    <span>Manage Coordinators</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">Registration Status</h5>
+            </div>
+            <div class="card-body">
+                < class="mb-4">
+                    <h6>Registration is currently <?php echo $registrationEnabled ? '<span class="badge bg-success">OPEN</span>' : '<span class="badge bg-danger">CLOSED</span>'; ?></h6>
+                    <p class="text-muted">
+                        <?php if ($registrationEnabled): ?>
+                            Students and alumni can currently register for the event.
+                        <?php else: ?>
+                            Registration has been temporarily disabled.
+                        <?php endif; ?>
+                    </p>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar <?php echo $registrationEnabled ? 'bg-success' : 'bg-danger'; ?>" 
+                             role="progressbar" 
+                             style="width: <?php echo $registrationEnabled ? '100%' : '0%'; ?>;"
+                             aria-valuenow="<?php echo $registrationEnabled ? '100' : '0'; ?>" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100"></div>
+                            <?php echo $registrationEnabled ? 'ENABLED' : 'DISABLED'; ?>
                         </div>
                     </div>
                 </div>
-                <?php endif; ?>
-            </main>
+                <div class="d-grid">
+                    <a href="?page=registration_control" class="btn btn-primary"></a>
+                        <i class="bi bi-gear-fill me-2"></i> Configure Registration Settings
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <div class="col-md-6 mb-4"></div>
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Registrations</h5>
+            </div>
+            <div class="card-body">
+                <?php
+                // Fetch most recent registrations
+                try {
+                    $query = "(SELECT id, 'student' AS type, student_name AS name, jis_id, department, registration_date 
+                              FROM registrations
+                              ORDER BY registration_date DESC LIMIT 5)
+                              UNION ALL
+                              (SELECT id, 'alumni' AS type, alumni_name AS name, jis_id, department, registration_date 
+                              FROM alumni_registrations
+                              ORDER BY registration_date DESC LIMIT 5)
+                              ORDER BY registration_date DESC LIMIT 5";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+                    $recent_registrations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch (PDOException $e) {
+                    $recent_registrations = [];
+                }
+                
+                if (!empty($recent_registrations)):
+                ?>
+                <div class="list-group">
+                    <?php foreach ($recent_registrations as $reg): ?>
+                    <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0"><?php echo htmlspecialchars($reg['name']); ?>
+                                <small class="ms-2 badge bg-<?php echo $reg['type'] === 'student' ? 'info' : 'secondary'; ?>">
+                                    <?php echo ucfirst($reg['type']); ?>
+                                </small>
+                            </h6>
+                            <p class="text-muted small mb-0">
+                                <?php echo htmlspecialchars($reg['jis_id']); ?> - 
+                                <?php echo htmlspecialchars($reg['department']); ?>
+                            </p>
+                        </div>
+                        <div class="text-muted small">
+                            <?php 
+                            $date = new DateTime($reg['registration_date']);
+                            $now = new DateTime();
+                            $diff = $date->diff($now);
+                            
+                            if ($diff->d == 0) {
+                                if ($diff->h == 0) {
+                                    echo $diff->i . ' min ago';
+                                } else {
+                                    echo $diff->h . ' hours ago';
+                                }
+                            } elseif ($diff->d == 1) {
+                                echo 'Yesterday';
+                            } else {
+                                echo $date->format('d M Y');
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php else: ?>
+                <div class="text-center py-4">
+                    <i class="bi bi-calendar2-x text-muted" style="font-size: 2rem;"></i>
+                    <p class="text-muted mt-2">No recent registrations found</p>
+                </div>
+                <?php endif; ?>
+                
+                <div class="d-grid mt-3">
+                    <a href="?page=all_registrations" class="btn btn-outline-primary">
+                        View All Registrations
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- Footer -->
+<footer class="mt-4 mb-2 py-3 text-center text-muted">
+    <small>&copy; <?php echo date('Y'); ?> maJIStic Admin Dashboard | JIS College of Engineering</small>
+</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -849,7 +1115,7 @@ try {
                                 break;
                             }
                         }
-                        
+                       
                         document.getElementById('edit_coordinator_name').value = name;
                         document.getElementById('edit_contact').value = contact;
                         document.getElementById('edit_available_time').value = availableTime || '';
@@ -872,6 +1138,26 @@ try {
                         document.getElementById('delete_coordinator_name').textContent = name;
                         
                         const modal = new bootstrap.Modal(document.getElementById('deleteCoordinatorModal'));
+                        modal.show();
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+            const deleteAdminButtons = document.querySelectorAll('.delete-admin-user');
+            if (deleteAdminButtons) {
+                deleteAdminButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const name = this.getAttribute('data-name');
+                        
+                        document.getElementById('delete_admin_user_id').value = id;
+                        document.getElementById('delete_admin_user_name').textContent = name;
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('deleteAdminUserModal'));
                         modal.show();
                     });
                 });

@@ -1,8 +1,4 @@
 <?php
-// Turn on error reporting for debugging
-ini_set('display_errors', 0);
-error_reporting(E_ALL & ~E_DEPRECATED); // Suppress deprecation notices
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -15,62 +11,44 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
 require_once __DIR__ . '/../../includes/db_config.php';
 
-// Log the request for debugging
-error_log("Request details: Type: {$_GET['type']}, ID: {$_GET['id']}");
-
-// Set content type before any output
 header('Content-Type: application/json');
 
-$type = isset($_GET['type']) ? $_GET['type'] : '';
-$id = isset($_GET['id']) ? $_GET['id'] : '';
+// Validate input parameters
+$type = isset($_GET['type']) ? trim($_GET['type']) : '';
+$jis_id = isset($_GET['id']) ? trim($_GET['id']) : '';
 
-if (empty($type) || empty($id)) {
+if (empty($type) || empty($jis_id)) {
     echo json_encode(['error' => 'Missing required parameters']);
     exit();
 }
 
+// Determine the table based on the type
+$table = $type === 'inhouse' ? 'registrations' : ($type === 'alumni' ? 'alumni_registrations' : '');
+
+if (empty($table)) {
+    echo json_encode(['error' => 'Invalid registration type']);
+    exit();
+}
+
 try {
-    $response = [];
-    
-    if ($type === 'inhouse') {
-        $registration = $registrations->findOne(['jis_id' => $id]);
-        if (!$registration) {
-            echo json_encode(['error' => 'Student registration not found']);
-            exit();
-        }
-    } else if ($type === 'alumni') {
-        $registration = $alumni_registrations->findOne(['jis_id' => $id]);
-        if (!$registration) {
-            echo json_encode(['error' => 'Alumni registration not found']);
-            exit();
-        }
-    } else {
-        echo json_encode(['error' => 'Invalid registration type']);
+    // Fetch registration details
+    $query = "SELECT * FROM $table WHERE jis_id = :jis_id LIMIT 1";
+    $stmt = $db->prepare($query);
+    $stmt->execute([':jis_id' => $jis_id]);
+    $registration = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$registration) {
+        echo json_encode(['error' => 'Registration not found']);
         exit();
     }
 
-    // Convert MongoDB document to array safely
-    $registration_array = [];
-    foreach ($registration as $key => $value) {
-        if ($value instanceof MongoDB\BSON\UTCDateTime) {
-            // Store the date information in a format JavaScript can parse easily
-            $date = $value->toDateTime();
-            $registration_array[$key] = [
-                '$date' => $date->format('c') // ISO 8601 format
-            ];
-        } else if ($value instanceof MongoDB\BSON\ObjectId) {
-            $registration_array[$key] = (string)$value;
-        } else {
-            $registration_array[$key] = $value;
-        }
-    }
-    
-    $response['registration'] = $registration_array;
-    
-    echo json_encode($response, JSON_PRETTY_PRINT);
+    // Include payment_update_timestamp in the response
+    $registration['payment_update_timestamp'] = $registration['payment_update_timestamp'] ?? null;
 
-} catch (Exception $e) {
-    error_log("Error in get_registration_details.php: " . $e->getMessage());
+    // Return the registration details
+    echo json_encode(['registration' => $registration]);
+} catch (PDOException $e) {
+    error_log("Database error in get_registration_details.php: " . $e->getMessage());
     echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
     exit();
 }

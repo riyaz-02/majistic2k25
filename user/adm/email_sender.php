@@ -3,6 +3,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../includes/db_config.php'; // Include MySQL configuration
 
 /**
  * Sends a payment confirmation email to the user
@@ -43,6 +44,7 @@ function sendPaymentConfirmationEmail($data) {
         $mail->AltBody = getPlainTextEmail($data);
         
         $mail->send();
+
         return true;
     } catch (Exception $e) {
         error_log("Error sending email: " . $e->getMessage());
@@ -75,20 +77,22 @@ function getEmailTemplate($data) {
     
     $paymentDate = $data['payment_date'];
     $receiptNumber = $data['receipt_number'];
-    $amount = $data['amount'];
     $name = $data['name'];
     $jisId = $data['jis_id'];
     $department = $data['department'];
     
-    // Additional fields based on type
-    $additionalInfo = '';
-    if ($data['type'] === 'inhouse') {
-        $competition = $data['competition'] ?? 'N/A';
-        $additionalInfo = "<p><strong>Competition:</strong> $competition</p>";
-    } else {
-        $passoutYear = $data['passout_year'] ?? 'N/A';
-        $additionalInfo = "<p><strong>Passout Year:</strong> $passoutYear</p>";
-    }
+    // Set parameters based on registration type
+    $isStudent = ($data['type'] === 'student');
+    $amount = $isStudent ? '500' : '1000';
+    $receiptLabel = $isStudent ? 'Receipt Number' : 'Receipt/Ref. Number';
+    
+    // Custom payment details content based on type
+    $paymentDetails = "<p><strong>Name:</strong> $name</p>
+                       <p><strong>JIS ID:</strong> $jisId</p>
+                       <p><strong>Department:</strong> $department</p>
+                       <p><strong>Amount Paid:</strong> ₹$amount</p>
+                       <p><strong>$receiptLabel:</strong> $receiptNumber</p>
+                       <p><strong>Payment Date:</strong> $paymentDate</p>";
     
     // Email template with inline CSS
     return <<<HTML
@@ -200,13 +204,7 @@ function getEmailTemplate($data) {
             <p>We're pleased to confirm that your payment for maJIStic 2K25 has been successfully processed. Below are the details of your payment:</p>
             
             <div class="payment-details">
-                <p><strong>Name:</strong> $name</p>
-                <p><strong>JIS ID:</strong> $jisId</p>
-                <p><strong>Department:</strong> $department</p>
-                $additionalInfo
-                <p><strong>Amount Paid:</strong> ₹$amount</p>
-                <p><strong>Receipt Number:</strong> $receiptNumber</p>
-                <p><strong>Payment Date:</strong> $paymentDate</p>
+                $paymentDetails
             </div>
             
             <div class="important-notice">
@@ -262,20 +260,14 @@ function getPlainTextEmail($data) {
 
     $paymentDate = $data['payment_date'];
     $receiptNumber = $data['receipt_number'];
-    $amount = $data['amount'];
     $name = $data['name'];
     $jisId = $data['jis_id'];
     $department = $data['department'];
     
-    // Additional info based on type
-    $additionalInfo = '';
-    if ($data['type'] === 'inhouse') {
-        $competition = $data['competition'] ?? 'N/A';
-        $additionalInfo = "Competition: $competition\n";
-    } else {
-        $passoutYear = $data['passout_year'] ?? 'N/A';
-        $additionalInfo = "Passout Year: $passoutYear\n";
-    }
+    // Set parameters based on registration type
+    $isStudent = ($data['type'] === 'student');
+    $amount = $isStudent ? '500' : '1000';
+    $receiptLabel = $isStudent ? 'Receipt Number' : 'Receipt/Ref. Number';
     
     return <<<TEXT
 PAYMENT CONFIRMATION - MAJISTIC 2K25
@@ -287,9 +279,8 @@ We're pleased to confirm that your payment for MaJIStic 2K25 has been successful
 Name: $name
 JIS ID: $jisId
 Department: $department
-$additionalInfo
 Amount Paid: ₹$amount
-Receipt Number: $receiptNumber
+$receiptLabel: $receiptNumber
 Payment Date: $paymentDate
 
 IMPORTANT: Please bring your College ID card for check-in. It is mandatory for entry.

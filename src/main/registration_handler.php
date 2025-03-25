@@ -1,5 +1,10 @@
 <?php
-include __DIR__ . '/../../includes/db_config.php';
+// Include the database configuration with table creation
+require_once __DIR__ . '/../../includes/db_config.php';
+
+// Ensure required tables are created
+createRequiredTables();
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -49,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
         $current_organization = isset($_POST['current_organization']) ? $_POST['current_organization'] : '';
         
         // Check if the JIS ID already exists in alumni registrations
-        $existing_alumni = $alumni_registrations->findOne(['jis_id' => $jis_id]);
+        $existing_alumni = findDocument('alumni_registrations', ['jis_id' => $jis_id]);
         
         if ($existing_alumni) {
             // JIS ID exists - display message that they're already registered
@@ -63,8 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
             $registration_success = true;
         } else {
             // If JIS ID is new, check if email or mobile already exists in alumni registrations
-            $existing_email = $alumni_registrations->findOne(['email' => $email]);
-            $existing_mobile = $alumni_registrations->findOne(['mobile' => $mobile]);
+            $existing_email = findDocument('alumni_registrations', ['email' => $email]);
+            $existing_mobile = findDocument('alumni_registrations', ['mobile' => $mobile]);
             
             if ($existing_email) {
                 $message = "Registration failed! This email address is already registered for the event.";
@@ -86,9 +91,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                 ];
 
                 try {
-                    $insert_result = $alumni_registrations->insertOne($alumni_data);
+                    // Insert alumni data into MySQL
+                    global $db;
+                    $sql = "INSERT INTO alumni_registrations (alumni_name, gender, jis_id, mobile, email, department, 
+                            passout_year, current_organization, registration_date, payment_status) 
+                            VALUES (:alumni_name, :gender, :jis_id, :mobile, :email, :department, 
+                            :passout_year, :current_organization, :registration_date, :payment_status)";
                     
-                    if ($insert_result->getInsertedCount() > 0) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->execute($alumni_data);
+                    
+                    if ($stmt->rowCount() > 0) {
                         $message = "Thank You for your Interest. Your registration is complete. Please pay at the registration desk on the event day.";
                         $registration_success = true;
 
@@ -159,16 +172,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                     } else {
                         $message = "Registration failed! Please try again.";
                     }
-                } catch (Exception $e) {
+                } catch (PDOException $e) {
                     $message = "Registration failed! Database error: " . $e->getMessage();
-                    error_log("MongoDB insertion error: " . $e->getMessage());
+                    error_log("MySQL insertion error: " . $e->getMessage());
                 }
             }
         }
     } else {
         // Regular student registration
         // First check if the JIS ID already exists
-        $existing_student = $registrations->findOne(['jis_id' => $jis_id]);
+        $existing_student = findDocument('registrations', ['jis_id' => $jis_id]);
         
         if ($existing_student) {
             // JIS ID exists - show message they're already registered
@@ -183,8 +196,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
             $registration_success = true;
         } else {
             // If JIS ID is new, check if email or mobile already exists
-            $existing_email = $registrations->findOne(['email' => $email]);
-            $existing_mobile = $registrations->findOne(['mobile' => $mobile]);
+            $existing_email = findDocument('registrations', ['email' => $email]);
+            $existing_mobile = findDocument('registrations', ['mobile' => $mobile]);
             
             if ($existing_email) {
                 $message = "Registration failed! This email address is already registered for the event.";
@@ -209,9 +222,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                 ];
 
                 try {
-                    $insert_result = $registrations->insertOne($student_data);
+                    // Insert student data into MySQL
+                    global $db;
+                    $sql = "INSERT INTO registrations (student_name, gender, jis_id, mobile, email, department, 
+                            inhouse_competition, competition_name, registration_date, payment_status) 
+                            VALUES (:student_name, :gender, :jis_id, :mobile, :email, :department, 
+                            :inhouse_competition, :competition_name, :registration_date, :payment_status)";
                     
-                    if ($insert_result->getInsertedCount() > 0) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->execute($student_data);
+                    
+                    if ($stmt->rowCount() > 0) {
                         $message = "Thank You for your Interest. Your registration is complete. Please pay at your department coordinator.";
                         $registration_success = true;
 
@@ -282,9 +303,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                     } else {
                         $message = "Registration failed! Please try again.";
                     }
-                } catch (Exception $e) {
+                } catch (PDOException $e) {
                     $message = "Registration failed! Database error: " . $e->getMessage();
-                    error_log("MongoDB insertion error: " . $e->getMessage());
+                    error_log("MySQL insertion error: " . $e->getMessage());
                 }
             }
         }

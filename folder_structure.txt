@@ -1,0 +1,184 @@
+Folder PATH listing for volume Work Station
+Volume serial number is 7E90-662C
+F:.
+|   .gitattributes
+|   .gitignore
+|   about.php
+|   check_status.php
+|   committee.php
+|   composer.json
+|   composer.lock
+|   contact.php
+|   folder_structure.txt
+|   index.php
+|   merchandise.php
+|   merchant_payment.php
+|   package-lock.json
+|   package.json
+|   README-MONGODB.md
+|   README.md
+|   registration_alumni.php
+|   registration_inhouse.php
+|   style.css
+|   
++---node_modules
++---artist
+|       index.php
+|       
++---css
+|       about.css
+|       bootstrap.css
+|       bootstrap.min.css
+|       carousel.css
+|       check_status.css
+|       check_ststus.css
+|       fontawesome-all.min.css
+|       fontawesome.css
+|       fontawesome.min.css
+|       payment.css
+|       registration.css
+|       swiper.css
+|       swiper.min.css
+|       
++---events
+|       index.php
+|       styles.css
+|       
++---fonts
+|       beyond_the_mountains.otf
+|       beyond_the_mountains.ttf
+|       
++---images
+|   |   clglogo.png
+|   |   footer-cover.jpg
+|   |   footer-cover.png
+|   |   heroback.png
+|   |   jis.png
+|   |   jislogo.png
+|   |   majistic2k25_black.png
+|   |   majistic2k25_white.png
+|   |   majistichero.png
+|   |   majisticlogo.png
+|   |   majisticlogob.png
+|   |   majisticlogoblack.png
+|   |   majisticlogohero.png
+|   |   nodp.png
+|   |   pageback.png
+|   |   pageback_1.png
+|   |   tshirt1.png
+|   |   tshirt2.png
+|   |   tshirt3.png
+|   |   
+|   +---carousel
+|   |       snig.png
+|   |       somlata.png
+|   |       trap.png
+|   |       trap1.png
+|   |       
+|   +---contact
+|   |       Priyanshu_Nayan.jpg
+|   |       TaranjitSingh.jpg
+|   |       
+|   +---Merchandise
+|   |       cover.jpg
+|   |       footer-cover_1.jpg
+|   |       green.jpg
+|   |       green_2.jpg
+|   |       middle-cover.jpg
+|   |       middle-cover1.jpg
+|   |       
+|   +---registration
+|   |       band.jpg
+|   |       banner1.png
+|   |       banner2.png
+|   |       banner3.png
+|   |       dance.png
+|   |       drama.jpg
+|   |       fashion.jpg
+|   |       
+|   \---sponsors
+|           1.1.png
+|           2.1.png
+|           3.1.png
+|           4.1.png
+|           5.1.png
+|           6.1.png
+|           
++---includes
+|   |   db_config.php
+|   |   footer.php
+|   |   header.php
+|   |   links.php
+|   |   scripts.php
+|   |   
+|   \---preloader
+|           preloader.module.css
+|           preloader.php
+|           preloader.tsx
+|           
++---js
+|       responsive.js
+|       
++---proshows
+|       index.php
+|       styles.css
+|       
++---sponsors
+|       index.php
+|       script.js
+|       style.css
+|       
++---sql
+|       
++---src
+|   +---admin
+|   +---api
+|   |       get_coordinators.php
+|   |       get_coordinator_by_department.php
+|   |       
+|   +---config
+|   |       alumni_coordinator_config.php
+|   |       email_logo_config.php
+|   |       payment_config.php
+|   |       registration_config.php
+|   |       
+|   +---handler
+|   |       registration_closed.php
+|   |       registration_success.php
+|   |       
+|   +---handlers
+|   +---mail
+|   |       alumni_mailer.php
+|   |       registration_mailer.php
+|   |       
+|   +---main
+|   |       registration_handler.php
+|   |       
+|   \---transaction
++---user
+|   |   login.php
+|   |   logout.php
+|   |   register.php
+|   |   
+|   +---adm
+|   |       backend.php
+|   |       email_sender.php
+|   |       get_registration_details.php
+|   |       madm.php
+|   |       process_payment.php
+|   |       styles.css
+|   |       
+|   +---control
+|   |   |   fetch_details.php
+|   |   |   index.php
+|   |   |   update_checkin.php
+|   |   |   update_ticket.php
+|   |   |   
+|   |   \---css
+|   |           style.css
+|   |           
+|   \---manage
+|           alumni_coordinator_update.php
+|           index.php
+|           
+\---vendor

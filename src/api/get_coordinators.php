@@ -7,55 +7,59 @@ header('Content-Type: application/json');
 $department = isset($_GET['department']) ? $_GET['department'] : null;
 
 try {
-    $filter = [];
     $coordinators = [];
     
     if ($department) {
-        // Try exact match first (case-insensitive)
-        $exactMatch = $department_coordinators->findOne([
-            'department' => ['$regex' => '^' . preg_quote($department) . '$', '$options' => 'i']
-        ]);
+        // Try to find coordinators for the specified department (using LIKE for partial matching)
+        $query = "SELECT id, department, name, contact, available_time FROM department_coordinators 
+                  WHERE department LIKE :department ORDER BY department ASC";
+        $stmt = $db->prepare($query);
+        $stmt->execute([':department' => "%$department%"]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        if ($exactMatch) {
-            // If exact match found, return only that coordinator
+        foreach ($results as $row) {
             $coordinators[] = [
-                'id' => (string)$exactMatch->_id,
-                'department' => $exactMatch->department,
-                'name' => $exactMatch->name,
-                'contact' => $exactMatch->contact,
-                'available_time' => isset($exactMatch->available_time) ? $exactMatch->available_time : null
+                'id' => $row['id'],
+                'department' => $row['department'],
+                'name' => $row['name'],
+                'contact' => $row['contact'],
+                'available_time' => $row['available_time']
             ];
-        } else {
-            // If no exact match, try another approach - check for department code
-            // This handles cases like "ME" vs "Mechanical Engineering"
-            $cursor = $department_coordinators->find([
-                '$or' => [
-                    ['department_code' => ['$regex' => '^' . preg_quote($department) . '$', '$options' => 'i']],
-                    ['department_aliases' => ['$in' => [$department]]]
-                ]
-            ]);
+        }
+        
+        // If still no results, get all coordinators
+        if (empty($coordinators)) {
+            $query = "SELECT id, department, name, contact, available_time FROM department_coordinators 
+                      ORDER BY department ASC";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            foreach ($cursor as $doc) {
+            foreach ($results as $row) {
                 $coordinators[] = [
-                    'id' => (string)$doc->_id,
-                    'department' => $doc->department,
-                    'name' => $doc->name,
-                    'contact' => $doc->contact,
-                    'available_time' => isset($doc->available_time) ? $doc->available_time : null
+                    'id' => $row['id'],
+                    'department' => $row['department'],
+                    'name' => $row['name'],
+                    'contact' => $row['contact'],
+                    'available_time' => $row['available_time']
                 ];
             }
         }
     } else {
-        // If no department specified, get all coordinators
-        $cursor = $department_coordinators->find([], ['sort' => ['department' => 1]]);
+        // Get all coordinators
+        $query = "SELECT id, department, name, contact, available_time FROM department_coordinators 
+                  ORDER BY department ASC";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        foreach ($cursor as $doc) {
+        foreach ($results as $row) {
             $coordinators[] = [
-                'id' => (string)$doc->_id,
-                'department' => $doc->department,
-                'name' => $doc->name,
-                'contact' => $doc->contact,
-                'available_time' => isset($doc->available_time) ? $doc->available_time : null
+                'id' => $row['id'],
+                'department' => $row['department'],
+                'name' => $row['name'],
+                'contact' => $row['contact'],
+                'available_time' => $row['available_time']
             ];
         }
     }
@@ -66,7 +70,7 @@ try {
         'data' => $coordinators
     ]);
     
-} catch (Exception $e) {
+} catch (PDOException $e) {
     echo json_encode([
         'status' => 'error',
         'message' => 'Failed to retrieve department coordinators: ' . $e->getMessage()

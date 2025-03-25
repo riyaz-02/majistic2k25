@@ -39,40 +39,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $role = $_POST['role'];
 
-    // Find user in MongoDB
-    $user = $db->admin_users->findOne([
-        'username' => $username,
-        'role' => $role
-    ]);
+    try {
+        // Find user in MySQL
+        $query = "SELECT * FROM admin_users WHERE username = :username AND role = :role";
+        $stmt = $db->prepare($query);
+        $stmt->execute([
+            ':username' => $username,
+            ':role' => $role
+        ]);
+        
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user) {
-        // Check password
-        if (password_verify($password, $user['password']) || $password === $user['password']) {
-            $_SESSION['admin_logged_in'] = true;
-            $_SESSION['admin_id'] = (string)$user['_id'];
-            $_SESSION['admin_username'] = $user['username'];
-            $_SESSION['admin_role'] = $user['role'];
-            
-            // Redirect based on role
-            if ($user['role'] === 'website manager') {
-                header('Location: management.php');
-            } elseif ($user['role'] === 'Manage Website') {
-                header('Location: manage/index.php');
-            } elseif ($user['role'] === 'Controller') {
-                header('Location: control/index.php');
-            } else {
-                header('Location: adm/madm.php');
+        if ($user) {
+            // Check password
+            if (password_verify($password, $user['password']) || $password === $user['password']) {
+                $_SESSION['admin_logged_in'] = true;
+                $_SESSION['admin_id'] = $user['id'];
+                $_SESSION['admin_username'] = $user['username'];
+                $_SESSION['admin_role'] = $user['role'];
+                
+                // Redirect based on role
+                if ($user['role'] === 'website manager') {
+                    header('Location: management.php');
+                } elseif ($user['role'] === 'Manage Website') {
+                    header('Location: manage/index.php');
+                } elseif ($user['role'] === 'Controller') {
+                    header('Location: control/index.php');
+                } else {
+                    header('Location: adm/madm.php');
+                }
+                exit;
             }
-            exit;
         }
+        
+        $error = "Invalid username, password or role";
+    } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage());
+        $error = "System error. Please try again later.";
     }
-    
-    $error = "Invalid username, password or role";
 }
 
-// Get available roles from MongoDB
-$roles = $db->admin_users->distinct('role');
-if (empty($roles)) {
+// Get available roles from MySQL
+try {
+    $query = "SELECT DISTINCT role FROM admin_users";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    $roles = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    
+    if (empty($roles)) {
+        $roles = ['admin', 'website manager', 'verifier', 'HOD', 'faculty coordinator', 'student', 'Manage Website'];
+    }
+} catch (PDOException $e) {
+    error_log("Error fetching roles: " . $e->getMessage());
     $roles = ['admin', 'website manager', 'verifier', 'HOD', 'faculty coordinator', 'student', 'Manage Website'];
 }
 ?>
