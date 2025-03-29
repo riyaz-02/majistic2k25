@@ -293,6 +293,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
         <span class="badge bg-primary"><?php echo number_format($total_records); ?> Total</span>
     </div>
     <div class="card-body">
+        <!-- Excel Export Button -->
+        <div class="d-flex justify-content-end mb-3">
+            <a href="../control/filtered_excel_export.php?<?php 
+                $params = [];
+                if(isset($_GET['type']) && !empty($_GET['type'])) $params[] = 'type=' . urlencode($_GET['type']);
+                if(isset($_GET['search']) && !empty($_GET['search'])) $params[] = 'search=' . urlencode($_GET['search']);
+                if(isset($_GET['payment_status']) && !empty($_GET['payment_status'])) $params[] = 'payment_status=' . urlencode($_GET['payment_status']);
+                if(isset($_GET['department']) && !empty($_GET['department'])) $params[] = 'department=' . urlencode($_GET['department']);
+                echo implode('&', $params);
+            ?>" class="btn btn-success">
+                <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
+            </a>
+        </div>
+        
         <!-- Search & Filter Form -->
         <form method="get" class="row g-3 mb-4">
             <input type="hidden" name="page" value="all_registrations">

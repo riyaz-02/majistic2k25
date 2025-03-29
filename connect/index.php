@@ -39,7 +39,8 @@ if (isset($instagram_config['show_profile_info']) && $instagram_config['show_pro
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>maJIStic - Instagram Feed</title>
+    <title>maJIStic | Feed</title>
+    <link rel="icon" href="../images/majisticlogo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <?php include '../includes/links.php'; ?> <!-- Ensure this line is present to include the site icon -->
@@ -53,7 +54,7 @@ if (isset($instagram_config['show_profile_info']) && $instagram_config['show_pro
     <section class="hero-section">
         <div class="container">
             <h1 class="headline">Connect with maJIStic</h1>
-            <p class="subheadline">Experience the festival vibes through our Instagram feed</p>
+            <p class="subheadline">Experience the festival vibes through our Social Media Feed</p>
         </div>
     </section>
 

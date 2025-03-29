@@ -15,12 +15,20 @@
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>Quick Links</h5>
-            <a href="#"><i class="fa-solid fa-angle-right"></i> Home</a><br>
-            <a href="/majistic/index.php#events"><i class="fa-solid fa-angle-right"></i> Events</a><br>
-            <a href="/majistic/merchandise.php"><i class="fa-solid fa-angle-right"></i> Merchandise</a><br>
-            <a href="/majistic/commitee.php"><i class="fa-solid fa-angle-right"></i> Committee</a><br>
-            <a href="/majistic/about.php"><i class="fa-solid fa-angle-right"></i> About</a><br>
-            <a href="/majistic/contact.php"><i class="fa-solid fa-angle-right"></i> Contact Us</a><br>
+            <div class="quick-links-container">
+                <div class="quick-links-column">
+                    <a href="#"><i class="fa-solid fa-angle-right"></i> Home</a>
+                    <a href="/index.php#events"><i class="fa-solid fa-angle-right"></i> Events</a>
+                    <a href="/merchandise.php"><i class="fa-solid fa-angle-right"></i> Merchandise</a>
+                    <a href="/commitee.php"><i class="fa-solid fa-angle-right"></i> Committee</a>
+                </div>
+                <div class="quick-links-column">
+                    <a href="/connect/index.php"><i class="fa-solid fa-angle-right"></i> Social</a>
+                    <a href="/check_status.php"><i class="fa-solid fa-angle-right"></i> Check Status</a>
+                    <a href="/about.php"><i class="fa-solid fa-angle-right"></i> About</a>
+                    <a href="/contact.php"><i class="fa-solid fa-angle-right"></i> Contact Us</a>
+                </div>
+            </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>Contact maJIStic</h5>
@@ -43,7 +51,7 @@
                     <span>&#169; <?php echo date("Y"); ?> maJIStic. All rights reserved.</span>
                 </div>
                 <div class="copyright-links">
-                    <a href="/majistic/contact.php">Terms & Conditions</a> | <a href="/majistic/contact.php">Privacy Policy</a> | <a href="/majistic/contact.php">FAQ</a>
+                    <a href="/contact.php">Terms & Conditions</a> | <a href="/contact.php">Privacy Policy</a> | <a href="/contact.php">FAQ</a>
                 </div>
             </div>
         </div>
@@ -117,6 +125,7 @@
 </div>
 
 <style>
+    
 /* Modal Styles */
 .copyright {
     padding: 12px 0 8px;
@@ -238,6 +247,38 @@
     }
     100% {
         transform: scale(1);
+    }
+}
+
+/* Quick Links Styles */
+.quick-links-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.quick-links-column a {
+    display: block;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.quick-links-column a:hover {
+    transform: translateX(5px);
+    color: #e53e3e;
+}
+
+/* Responsive adjustments for quick links */
+@media (max-width: 576px) {
+    .quick-links-container {
+        flex-direction: column;
+    }
+    
+    .quick-links-column {
+        width: 100%;
+    }
+    
+    .quick-links-column:first-child {
+        margin-bottom: 10px;
     }
 }
 
