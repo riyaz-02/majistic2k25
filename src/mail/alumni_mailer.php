@@ -77,7 +77,7 @@ function sendAlumniRegistrationEmail($data) {
         $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
         $mail->SMTPAuth = true;
         $mail->Username   = 'majistic.alumni@gmail.com';
-        $mail->Password   = 'iakqdaxcbtmcfucr';
+        $mail->Password   = 'gzmkepqbaguvnoao';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         
@@ -136,13 +136,12 @@ function generateAlumniRegistrationTemplate($data) {
     $coordinator_name = defined('ALUMNI_COORDINATOR_NAME') ? ALUMNI_COORDINATOR_NAME : 'Dr. Proloy Ghosh';
     $coordinator_contact = defined('ALUMNI_COORDINATOR_CONTACT') ? ALUMNI_COORDINATOR_CONTACT : '7980532913';
     $coordinator_email = defined('ALUMNI_COORDINATOR_EMAIL') ? ALUMNI_COORDINATOR_EMAIL : 'majistic@jiscollege.ac.in';
-    $payment_qr = defined('ALUMNI_PAYMENT_QR') ? ALUMNI_PAYMENT_QR : '';
-    $payment_instructions = defined('ALUMNI_PAYMENT_INSTRUCTIONS') ? ALUMNI_PAYMENT_INSTRUCTIONS : 'Scan the QR code with any UPI app to pay the alumni registration fee (Rs. 1000). After payment, please send a screenshot to the coordinator via WhatsApp for verification.';
+    $payment_instructions = defined('ALUMNI_PAYMENT_INSTRUCTIONS') ? ALUMNI_PAYMENT_INSTRUCTIONS : 'Please contact the alumni coordinator for payment instructions. The alumni registration fee is Rs. 1000.';
     
     // Base URL for links - get from config or use default
-    $baseUrl = defined('EMAIL_BASE_URL') ? EMAIL_BASE_URL : 'https://jiscollege.ac.in/majistic';
+    $baseUrl = defined('EMAIL_BASE_URL') ? EMAIL_BASE_URL : 'https://majistic.org';
     
-    // HTML Template - Redesigned to include QR code
+    // HTML Template - Redesigned without QR code
     $html = <<<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -269,27 +268,6 @@ function generateAlumniRegistrationTemplate($data) {
             border-top: 1px solid #eeeeee;
             margin: 15px 0;
         }
-        .qr-container {
-            text-align: center;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-            border: 1px solid #e0e0e0;
-        }
-        .qr-container .qr-image {
-            background-color: white;
-            padding: 10px;
-            border-radius: 8px;
-            display: inline-block;
-            margin-bottom: 10px;
-            border: 1px solid #e0e0e0;
-            max-width: 200px;
-        }
-        .qr-container img {
-            max-width: 100%;
-            height: auto;
-        }
         .payment-amount {
             font-size: 18px;
             font-weight: bold;
@@ -382,22 +360,9 @@ function generateAlumniRegistrationTemplate($data) {
             <div class="payment-box">
                 <h4>💳 Payment Instructions</h4>
                 <p style="margin:5px 0;font-size:13px;">
-                   Please use the QR code below to make your payment | <strong>Amount: Rs. 1000</strong>
+                   Please contact the alumni coordinator to complete your registration payment | <strong>Amount: Rs. 1000</strong>
                 </p>
-            </div>
-            
-            <!-- QR Code for Payment -->
-            <div class="qr-container">
-                <div class="payment-amount">₹1000</div>
-                
-                <?php if (!empty($payment_qr)): ?>
-                <div class="qr-image">
-                    <img src="{$payment_qr}" alt="Payment QR Code">
-                </div>
-                <p style="font-size: 13px; color: #666; text-align: left;">{$payment_instructions}</p>
-                <?php else: ?>
-                <p style="color: #e74c3c; font-weight: bold;">QR code not available. Please contact the alumni coordinator directly.</p>
-                <?php endif; ?>
+                <p style="margin:5px 0;font-size:13px;">{$payment_instructions}</p>
             </div>
             
             <!-- Payment status note -->

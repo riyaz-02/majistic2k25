@@ -386,7 +386,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                     ?>
                         <tr>
                             <td>
-                                <input class="form-check-input registration-checkbox" type="checkbox" name="selected_ids[]" value="<?php echo $reg_id; ?>">
+                                <input type="checkbox" class="form-check-input registration-checkbox" name="selected_ids[]" value="<?php echo $reg_id; ?>">
                                 <input type="hidden" name="selected_types[]" value="<?php echo $reg_type_label; ?>">
                             </td>
                             <td>
@@ -401,8 +401,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                             <td><?php echo $reg_date; ?></td>
                             <td><span class="badge bg-<?php echo $status_badge; ?>"><?php echo $payment_status; ?></span></td>
                             <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-info view-btn" 
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-info view-btn" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#viewModal"
                                             data-id="<?php echo $reg_id; ?>"
@@ -410,7 +410,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                                             title="View Details">
                                         <i class="bi bi-eye"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-primary edit-btn"
+                                    <button type="button" class="btn btn-primary edit-btn"
                                             data-bs-toggle="modal" 
                                             data-bs-target="#editModal"
                                             data-id="<?php echo $reg_id; ?>"
@@ -419,7 +419,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <?php if ($payment_status !== 'Paid'): ?>
-                                    <button type="button" class="btn btn-sm btn-success mark-paid-btn" 
+                                    <button type="button" class="btn btn-success mark-paid-btn"
                                             data-bs-toggle="modal" 
                                             data-bs-target="#markPaidModal"
                                             data-id="<?php echo $reg_id; ?>"

@@ -20,13 +20,17 @@
 
         .logo-container {
             position: relative;
-            width: 600px;
+            width: 50%;
+            max-width: 600px;
+            min-width: 200px;
+            margin: 0 auto;
             animation: pulse 2s infinite;
         }
 
         .logo {
             width: 100%;
             height: auto;
+            max-width: 100%;
             opacity: 0;
             animation: zoomOut 1s ease-in forwards;
         }
@@ -54,7 +58,7 @@
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.03); }
             100% { transform: scale(1); }
         }
 
@@ -85,7 +89,7 @@
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.05);
+                transform: scale(1.03);
             }
         }
 
@@ -94,14 +98,15 @@
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.1);
+                transform: scale(1.05);
             }
         }
 
         /* Responsive styles */
         @media (max-width: 768px) {
             .logo-container {
-                width: 70%;
+                width: 60%;
+                max-width: 400px;
             }
 
             .loading-bar {
@@ -111,7 +116,8 @@
 
         @media (max-width: 480px) {
             .logo-container {
-                width: 80%;
+                width: 70%;
+                max-width: 300px;
             }
 
             .loading-bar {
@@ -133,16 +139,16 @@
 
     <script>
         // Hide preloader after a set time (5 seconds) regardless of page load status
-        const maxPreloaderTime = 5000; // 5 seconds maximum preloader display time
+        const maxPreloaderTime = 6000; // 5 seconds maximum preloader display time
         
         // Function to hide preloader
         function hidePreloader() {
             const preloader = document.querySelector('.preloader');
-            preloader.style.transition = 'opacity 2.5s ease';
+            preloader.style.transition = 'opacity 0.5s ease';
             preloader.style.opacity = '0';
             setTimeout(() => {
                 preloader.style.display = 'none';
-            }, 2500);
+            }, 3500);
         }
 
         // Set maximum time for preloader display

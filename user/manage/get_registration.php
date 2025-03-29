@@ -4,6 +4,7 @@ require_once '../../includes/db_config.php';
 
 // Check if user is logged in with admin privileges
 if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'Manage Website') {
+    header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
     exit;
 }
@@ -13,6 +14,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : '';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (empty($type) || $id <= 0) {
+    header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => 'Invalid registration specified']);
     exit;
 }
@@ -29,6 +31,7 @@ try {
     $registration = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$registration) {
+        header('Content-Type: application/json');
         echo json_encode(['status' => 'error', 'message' => 'Registration not found']);
         exit;
     }
@@ -110,7 +113,7 @@ try {
         if ($registration['inhouse_competition'] === 'Yes' && !empty($registration['competition_name'])) {
             $html .= '<div class="col-md-6">';
             $html .= '<div class="mb-3">';
-            $html .= '<label class="fw-bold">Competition:</label>';
+            $html .= '<label class="fw-bold">Competition Name:</label>';
             $html .= '<div>' . htmlspecialchars($registration['competition_name']) . '</div>';
             $html .= '</div>';
             $html .= '</div>';
@@ -144,9 +147,52 @@ try {
     $html .= '</div>';
     $html .= '</div>';
     
+    // Payment details if paid
+    if ($registration['payment_status'] === 'Paid') {
+        $html .= '<div class="row mt-3 border-top pt-3">';
+        $html .= '<div class="col-md-12">';
+        $html .= '<h6 class="mb-3">Payment Details</h6>';
+        $html .= '</div>';
+        
+        $html .= '<div class="col-md-6">';
+        $html .= '<div class="mb-3">';
+        $html .= '<label class="fw-bold">Receipt Number:</label>';
+        $html .= '<div>' . htmlspecialchars($registration['receipt_number'] ?? 'N/A') . '</div>';
+        $html .= '</div>';
+        $html .= '</div>';
+        
+        $html .= '<div class="col-md-6">';
+        $html .= '<div class="mb-3">';
+        $html .= '<label class="fw-bold">Payment Date:</label>';
+        $html .= '<div>' . (isset($registration['payment_date']) ? date('d M Y, h:i A', strtotime($registration['payment_date'])) : 'N/A') . '</div>';
+        $html .= '</div>';
+        $html .= '</div>';
+        
+        // Payment amount and mode
+        if (isset($registration['paid_amount']) || isset($registration['payment_mode'])) {
+            $html .= '<div class="col-md-6">';
+            $html .= '<div class="mb-3">';
+            $html .= '<label class="fw-bold">Amount Paid:</label>';
+            $html .= '<div>₹' . number_format((float)($registration['paid_amount'] ?? ($type === 'student' ? 500 : 1000)), 2) . '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+            
+            $html .= '<div class="col-md-6">';
+            $html .= '<div class="mb-3">';
+            $html .= '<label class="fw-bold">Payment Mode:</label>';
+            $html .= '<div>' . htmlspecialchars($registration['payment_mode'] ?? 'Cash') . '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+        
+        $html .= '</div>';
+    }
+    
     $html .= '</div>'; // End registration-details
     
+    header('Content-Type: application/json');
     echo json_encode(['status' => 'success', 'html' => $html]);
 } catch (PDOException $e) {
+    header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
 }

@@ -451,7 +451,7 @@ include 'backend.php';
                         <input type="text" id="receipt-number" placeholder="Enter receipt number" required>
                     </div>
                     <div class="payment-message">
-                        <p>This payment will be marked as paid after confirmation. The amount should be collected in cash.</p>
+                        <p>This payment will be marked as paid after confirmation.</p>
                     </div>
                 </div>
                 <div class="payment-buttons">
@@ -1026,7 +1026,7 @@ include 'backend.php';
                     setTimeout(() => {
                         closePaymentModal();
                         window.location.reload();
-                    }, 2000);
+                    }, 500);
                 } else {
                     // Show error message
                     document.getElementById('payment-error-message').textContent = data.error || 'An error occurred while processing payment';

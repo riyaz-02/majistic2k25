@@ -14,19 +14,24 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 require_once __DIR__ . '/../../includes/db_config.php';
 
-// Fetch data from the database
-$registrations = $db->registrations->find(['payment_status' => 'Paid'])->toArray();
-$alumni_registrations = $db->alumni_registrations->find(['payment_status' => 'Paid'])->toArray();
+// Fetch data from the database using PDO
+$stmt1 = $db->prepare("SELECT * FROM registrations WHERE payment_status = 'Paid'");
+$stmt1->execute();
+$registrations = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt2 = $db->prepare("SELECT * FROM alumni_registrations WHERE payment_status = 'Paid'");
+$stmt2->execute();
+$alumni_registrations = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
 // Combine data
 $students = array_merge($registrations, $alumni_registrations);
 
 // Calculate stats
 $total_students = count($students);
-$tickets_generated = count(array_filter($students, fn($s) => isset($s['ticket']) && $s['ticket'] === "generated"));
+$tickets_generated = count(array_filter($students, fn($s) => isset($s['ticket_generated']) && $s['ticket_generated'] === "Yes"));
 $tickets_not_generated = $total_students - $tickets_generated;
-$day1_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_1']) && $s['checkin_1'] === "checkedin"));
-$day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']) && $s['checkin_2'] === "checkedin"));
+$day1_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_1']) && $s['checkin_1'] === "Yes"));
+$day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']) && $s['checkin_2'] === "Yes"));
 ?>
 
 <!DOCTYPE html>
@@ -38,6 +43,99 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Custom styles to reduce padding and margins */
+        .container-fluid {
+            padding: 0.75rem !important;
+        }
+        
+        .card {
+            margin-bottom: 0.75rem;
+        }
+        
+        .mb-4 {
+            margin-bottom: 0.75rem !important;
+        }
+        
+        .p-4 {
+            padding: 0.75rem !important;
+        }
+        
+        .card-body {
+            padding: 0.5rem;
+        }
+        
+        .paid-students-notice {
+            font-weight: bold;
+            color: #dc3545;
+            background-color: #fff3cd;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            border-left: 4px solid #dc3545;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        .row > * {
+            padding-left: 0.375rem;
+            padding-right: 0.375rem;
+        }
+        
+        .table>:not(caption)>*>* {
+            padding: 0.3rem;
+        }
+        
+        /* Stat card responsive fixes */
+        .stat-card {
+            height: 100%;
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .stat-card .stat-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+        
+        .stat-card .card-title {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Keep cards in the same row on desktop */
+        @media (min-width: 992px) {
+            .stats-container {
+                display: flex;
+                flex-wrap: nowrap;
+            }
+            
+            .stats-container > div {
+                flex: 1;
+                min-width: 0; /* Allows flex items to shrink below content size */
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation bar with user info and logout button -->
@@ -71,15 +169,17 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
                     <div class="card-body">
                         <h2><i class="fas fa-tachometer-alt me-2"></i>Controller Dashboard</h2>
                         <p class="text-muted">Manage student registrations and check-ins</p>
-                        <p class="text-muted">THIS PAGE CONTAINS ONLY PAID STUDENTS DETAILS</p>
+                        <div class="paid-students-notice">
+                            <i class="fas fa-info-circle me-1"></i> THIS PAGE CONTAINS ONLY PAID STUDENTS DETAILS
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Stat Cards -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-4 col-lg-2">
+        <div class="row stats-container mb-4">
+            <div class="col-md-4 col-lg">
                 <div class="card stat-card">
                     <div class="card-body">
                         <div class="stat-icon"><i class="fas fa-users"></i></div>
@@ -88,7 +188,7 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-lg-2">
+            <div class="col-md-4 col-lg">
                 <div class="card stat-card ticket-generated">
                     <div class="card-body">
                         <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
@@ -97,7 +197,7 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-lg-2">
+            <div class="col-md-4 col-lg">
                 <div class="card stat-card ticket-not-generated">
                     <div class="card-body">
                         <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
@@ -106,7 +206,7 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg">
                 <div class="card stat-card day-one">
                     <div class="card-body">
                         <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
@@ -115,7 +215,7 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg">
                 <div class="card stat-card day-two">
                     <div class="card-body">
                         <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
@@ -133,6 +233,10 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Search & Filter</h5>
+                            <!-- Download Button -->
+                            <a href="download_excel.php" class="btn btn-success" title="Download All Registrations">
+                                <i class="fas fa-file-excel me-1"></i> Download Excel
+                            </a>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
@@ -202,9 +306,9 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
                                         $phone = $student['mobile'] ?? 'N/A';
                                         
                                         // Check statuses
-                                        $ticketGenerated = isset($student['ticket']) && $student['ticket'] === "generated";
-                                        $day1CheckedIn = isset($student['checkin_1']) && $student['checkin_1'] === "checkedin";
-                                        $day2CheckedIn = isset($student['checkin_2']) && $student['checkin_2'] === "checkedin";
+                                        $ticketGenerated = isset($student['ticket_generated']) && $student['ticket_generated'] === "Yes";
+                                        $day1CheckedIn = isset($student['checkin_1']) && $student['checkin_1'] === "Yes";
+                                        $day2CheckedIn = isset($student['checkin_2']) && $student['checkin_2'] === "Yes";
                                     ?>
                                         <tr data-department="<?= $department ?>" data-type="<?= $type ?>">
                                             <td><?= htmlspecialchars($name) ?></td>
@@ -214,21 +318,21 @@ $day2_checked_in = count(array_filter($students, fn($s) => isset($s['checkin_2']
                                             <td><?= htmlspecialchars($email) ?></td>
                                             <td><?= htmlspecialchars($phone) ?></td>
                                             <td>
-                                                <button class="btn btn-sm btn-primary view-btn" data-id="<?= $student['_id'] ?>" data-type="<?= $type ?>" title="View Details">
+                                                <button class="btn btn-sm btn-primary view-btn" data-id="<?= $student['id'] ?>" data-type="<?= $type ?>" title="View Details">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                                 <button class="btn btn-sm <?= $ticketGenerated ? 'btn-success disabled' : 'btn-outline-success' ?> generate-ticket-btn" 
-                                                    data-id="<?= $student['_id'] ?>" data-type="<?= $type ?>" 
+                                                    data-id="<?= $student['id'] ?>" data-type="<?= $type ?>" 
                                                     <?= $ticketGenerated ? 'disabled' : '' ?> title="<?= $ticketGenerated ? 'Ticket Generated' : 'Generate Ticket' ?>">
                                                     <i class="fas fa-ticket-alt"></i>
                                                 </button>
                                                 <button class="btn btn-sm <?= $day1CheckedIn ? 'btn-info disabled' : 'btn-outline-info' ?> checkin1-btn" 
-                                                    data-id="<?= $student['_id'] ?>" data-type="<?= $type ?>" 
+                                                    data-id="<?= $student['id'] ?>" data-type="<?= $type ?>" 
                                                     <?= $day1CheckedIn ? 'disabled' : '' ?> title="<?= $day1CheckedIn ? 'Day 1 Checked In' : 'Day 1 Check-In' ?>">
                                                     <i class="fas fa-calendar-check"></i> 1
                                                 </button>
                                                 <button class="btn btn-sm <?= $day2CheckedIn ? 'btn-warning disabled' : 'btn-outline-warning' ?> checkin2-btn" 
-                                                    data-id="<?= $student['_id'] ?>" data-type="<?= $type ?>" 
+                                                    data-id="<?= $student['id'] ?>" data-type="<?= $type ?>" 
                                                     <?= $day2CheckedIn ? 'disabled' : '' ?> title="<?= $day2CheckedIn ? 'Day 2 Checked In' : 'Day 2 Check-In' ?>">
                                                     <i class="fas fa-calendar-check"></i> 2
                                                 </button>

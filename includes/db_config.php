@@ -2,10 +2,16 @@
 // db_config.php
 
 // MySQL database configuration
-$host = 'localhost';          // Replace with your MySQL host
-$dbname = 'majistic2k25';     // Database name
-$username = 'root';           // Replace with your MySQL username
-$password = '';               // Replace with your MySQL password
+//$host = 'localhost';          // Replace with your MySQL host
+//$dbname = 'majistic2k25';     // Database name
+//$username = 'root';           // Replace with your MySQL username
+//$password = '';               // Replace with your MySQL password
+
+// MySQL database configuration
+$host = 'srv1834.hstgr.io';          // Replace with your MySQL host
+$dbname = 'u901957751_majistic2k25';     // Database name
+$username = 'u901957751_majistic2k25';           // Replace with your MySQL username
+$password = '0!MyCmOOd4CA';               // Replace with your MySQL password
 
 try {
     // Establish PDO connection
@@ -243,7 +249,9 @@ function createRequiredTables() {
         paid_amount DECIMAL(10, 2) DEFAULT NULL,
         ticket_generated ENUM('Yes', 'No') DEFAULT 'No',
         checkin_1 ENUM('Yes', 'No') DEFAULT 'No',
+        checkin_1_timestamp DATETIME DEFAULT NULL,
         checkin_2 ENUM('Yes', 'No') DEFAULT 'No',
+        checkin_2_timestamp DATETIME DEFAULT NULL,
         edited_by VARCHAR(255) DEFAULT NULL,
         edited_timestamp DATETIME DEFAULT NULL,
         UNIQUE INDEX (email),
@@ -269,7 +277,9 @@ function createRequiredTables() {
         paid_amount DECIMAL(10, 2) DEFAULT NULL,
         ticket_generated ENUM('Yes', 'No') DEFAULT 'No',
         checkin_1 ENUM('Yes', 'No') DEFAULT 'No',
+        checkin_1_timestamp DATETIME DEFAULT NULL,
         checkin_2 ENUM('Yes', 'No') DEFAULT 'No',
+        checkin_2_timestamp DATETIME DEFAULT NULL,
         edited_by VARCHAR(255) DEFAULT NULL,
         edited_timestamp DATETIME DEFAULT NULL,
         UNIQUE INDEX (email),

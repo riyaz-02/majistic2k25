@@ -1162,17 +1162,16 @@ try {
             const coordinatorDetailsDiv = document.getElementById('coordinatorDetails');
             
             coordinatorDetailsDiv.innerHTML = `<div class="coordinator-info animate-in default-coordinator">
-                <h4>No Department Coordinators Found</h4>
                 <p>Contact your respective department for ticket payment or contact maJIStic Support.</p>
                 
                 <div style="margin-top: 20px; text-align: center;">
                     <p><strong>For any assistance with payment or registration:</strong></p>
                     <div class="coordinator-contact" style="justify-content: center; margin-top: 15px;">
                         <a href="mailto:majistic@jiscollege.ac.in" style="margin: 5px;">
-                            <i class="fas fa-envelope"></i> Email maJIStic Support
+                            <i class="fas fa-envelope"></i> Email maJIStic
                         </a>
                         <a href="https://wa.me/917004706722?text=Hello%2C%20I%20need%20help%20with%20my%20maJIStic%20registration%20payment." target="_blank" style="margin: 5px;">
-                            <i class="fab fa-whatsapp"></i> WhatsApp Support
+                            <i class="fab fa-whatsapp"></i> WhatsApp
                         </a>
                     </div>
                 </div>

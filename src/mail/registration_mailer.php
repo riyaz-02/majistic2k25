@@ -71,7 +71,7 @@ function sendRegistrationConfirmationEmail($data) {
         $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
         $mail->SMTPAuth = true;
         $mail->Username   = 'majistic.reg@gmail.com';
-        $mail->Password   = 'uflsvdypbnnbnisn';
+        $mail->Password   = 'qbbegaqdqyhvdrla';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         
@@ -115,7 +115,7 @@ function generateRegistrationEmailTemplate($data) {
     // Get current year for copyright (using IST)
     $year = date('Y');
     // Use the configured base URL if available, or fallback to default
-    $baseUrl = defined('EMAIL_BASE_URL') ? EMAIL_BASE_URL : 'https://jiscollege.ac.in/majistic';
+    $baseUrl = defined('EMAIL_BASE_URL') ? EMAIL_BASE_URL : 'https://majistic.org';
     
     // Format registration date for display in email if not already formatted
     if (isset($data['registration_date']) && strtotime($data['registration_date'])) {
@@ -404,7 +404,8 @@ function getCoordinatorInfo($department) {
     // Initialize default coordinator info with contact support message
     $default_info = "<h4>Department Coordinator Contact</h4>";
     $default_info .= "<p><strong>Payment Amount:</strong> <span style='color: #e63946; font-weight: bold;'>Rs. 500</span></p>";
-    $default_info .= "<p><strong>Note:</strong> No specific coordinator found for your department. Please contact your respective department for ticket fee payment or contact maJIStic Support.</p>";
+    $default_info .= "<p><strong>Note:</strong> No specific coordinator found for your department. Please contact your respective department for ticket fee payment or contact maJIStic Support. or</p>";
+    $default_info .= "<p><strong>Contact: </strong> Dr. Madhura Chakraborty (+91 7980979789)</p>";
     $default_info .= "<p><strong>Support Email:</strong> <a href='mailto:majistic@jiscollege.ac.in'>majistic@jiscollege.ac.in</a></p>";
     $default_info .= "<p><strong>WhatsApp Community:</strong> <a href='https://chat.whatsapp.com/JyDMUAA3zw9KfbPvWhXQ1l'>Join Here</a></p>";
     

@@ -11,25 +11,21 @@ use PHPMailer\PHPMailer\Exception;
 require __DIR__ . '/../../vendor/autoload.php'; // Include the PHPMailer autoload file
 
 // Include the registration mailers with error handling
-$studentMailerAvailable = false;
-$alumniMailerAvailable = false;
+$studentMailerPath = __DIR__ . '/../../src/mail/registration_mailer.php';
+$alumniMailerPath = __DIR__ . '/../../src/mail/alumni_mailer.php';
 
-if (file_exists(__DIR__ . '/../mail/registration_mailer.php')) {
-    try {
-        require_once __DIR__ . '/../mail/registration_mailer.php';
-        $studentMailerAvailable = function_exists('sendRegistrationConfirmationEmail');
-    } catch (Exception $e) {
-        error_log("Error loading student registration mailer: " . $e->getMessage());
-    }
+// Load the student registration mailer
+if (file_exists($studentMailerPath)) {
+    require_once $studentMailerPath;
+} else {
+    error_log("Warning: Student registration mailer not found at $studentMailerPath");
 }
 
-if (file_exists(__DIR__ . '/../mail/alumni_mailer.php')) {
-    try {
-        require_once __DIR__ . '/../mail/alumni_mailer.php';
-        $alumniMailerAvailable = function_exists('sendAlumniRegistrationEmail');
-    } catch (Exception $e) {
-        error_log("Error loading alumni registration mailer: " . $e->getMessage());
-    }
+// Load the alumni registration mailer
+if (file_exists($alumniMailerPath)) {
+    require_once $alumniMailerPath;
+} else {
+    error_log("Warning: Alumni registration mailer not found at $alumniMailerPath");
 }
 
 $message = ""; // Variable to store messages
@@ -106,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                         $registration_success = true;
 
                         // Send email using alumni mailer
-                        if ($alumniMailerAvailable) {
+                        if (function_exists('sendAlumniRegistrationEmail')) {
                             // Set timezone to ensure consistent date format
                             date_default_timezone_set('Asia/Kolkata');
                             
@@ -237,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['payment_check'])) {
                         $registration_success = true;
 
                         // Send email using our new professional template
-                        if ($studentMailerAvailable) {
+                        if (function_exists('sendRegistrationConfirmationEmail')) {
                             // Set timezone to ensure consistent date format
                             date_default_timezone_set('Asia/Kolkata');
                             

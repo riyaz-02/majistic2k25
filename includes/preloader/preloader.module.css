@@ -15,12 +15,17 @@
 .logoContainer {
   position: relative;
   width: 200px;
-  height: 200px;
+  height: auto;
+  max-width: 90vw;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
 }
 
 .logo {
   width: 70%;
   height: auto;
+  max-width: 100%;
   position: relative;
   z-index: 2;
   animation: pulse 2s infinite ease-in-out;
@@ -48,13 +53,15 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
 }
 
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+  0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.05); }
+  100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
 }
 
 @keyframes fadeInOut {
@@ -65,8 +72,8 @@
 /* Responsive styles */
 @media (max-width: 768px) {
   .logoContainer {
-    width: 70%;
-    height: auto;
+    width: 150px;
+    max-width: 80vw;
   }
 
   .loadingText {
@@ -76,8 +83,8 @@
 
 @media (max-width: 480px) {
   .logoContainer {
-    width: 70%;
-    height: auto;
+    width: 120px;
+    max-width: 70vw;
   }
 
   .loadingText {

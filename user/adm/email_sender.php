@@ -24,13 +24,13 @@ function sendPaymentConfirmationEmail($data) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
         $mail->SMTPAuth = true;
-        $mail->Username = 'payment.majistic@gmail.com'; // Replace with your email
-        $mail->Password = 'csibomhfcfmtxpjp'; // Replace with app password or actual password
+        $mail->Username = 'payment1.majistic@gmail.com'; // Replace with your email
+        $mail->Password = 'vrtxebzvfglscywn'; // Replace with app password or actual password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
         
         // Recipients
-        $mail->setFrom('payment.majistic@gmail.com', 'maJIStic');
+        $mail->setFrom('payment1.majistic@gmail.com', 'maJIStic');
         $mail->addAddress($data['email'], $data['name']);
         
         // Content

@@ -3,6 +3,9 @@
         <div class="col-lg-3 col-md-6 col-sm-12">
             <img src="https://i.ibb.co/s9pJ72SV/majisticlogo.png" alt="maJIStic Logo">
             <span class="address">JIS College of Engineering, Block A, Phase III, Kalyani, Nadia - 741235, West Bengal.</span>
+            <div class="visitor-counter">
+                <i class="fa-solid fa-chart-line"></i> Total Visits: <span id="visit-count"><?php echo getVisitCount(); ?></span>
+            </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12">
             <h5>About maJIStic</h5>
@@ -36,9 +39,12 @@
     <div class="copyright">
         <div class="container">
             <div class="copyright-content">
-                <span>&#169; <?php echo date("Y"); ?> maJIStic. All rights reserved. &nbsp;&nbsp;
-                <a href="/majistic/contact.php">Terms & Conditions</a> | <a href="/majistic/contact.php">Privacy Policy</a> | <a href="/majistic/contact.php">FAQ</a>
-                </span>
+                <div class="copyright-text">
+                    <span>&#169; <?php echo date("Y"); ?> maJIStic. All rights reserved.</span>
+                </div>
+                <div class="copyright-links">
+                    <a href="/majistic/contact.php">Terms & Conditions</a> | <a href="/majistic/contact.php">Privacy Policy</a> | <a href="/majistic/contact.php">FAQ</a>
+                </div>
             </div>
         </div>
     </div>
@@ -95,7 +101,7 @@
                     </div>
                 </div>
                 <div class="tech-team-card">
-                    <img src="https://i.postimg.cc/N0pKQRBZ/Mohit-Kumar.png" alt="Mohit Kumar">
+                    <img src="https://i.ibb.co/bMsVhyrx/mohit.jpg" alt="Mohit Kumar">
                     <h3>Mohit Kumar</h3>
                     <p>Backend Developer</p>
                     <div class="social-icons">
@@ -124,9 +130,15 @@
 
 .copyright-content {
     display: flex;
-    justify-content: center;
+    flex-direction: row; /* Display in row by default */
+    justify-content: center; /* Center the content instead of space-between */
     align-items: center;
     text-align: center;
+    width: 100%;
+}
+
+.copyright-text, .copyright-links {
+    margin: 3px 10px; /* Add horizontal spacing between elements */
 }
 
 .copyright a {
@@ -136,6 +148,35 @@
 }
 
 .copyright a:hover {
+    color: #e53e3e;
+}
+
+/* Visitor Counter Styles */
+.visitor-counter {
+    margin-top: 15px;
+    padding: 8px 12px;
+    background-color: rgba(229, 62, 62, 0.1);
+    border-radius: 5px;
+    border-left: 3px solid #e53e3e;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.visitor-counter:hover {
+    background-color: rgba(229, 62, 62, 0.2);
+    transform: translateX(5px);
+}
+
+.visitor-counter i {
+    color: #e53e3e;
+    font-size: 1rem;
+}
+
+#visit-count {
+    font-weight: 600;
     color: #e53e3e;
 }
 
@@ -372,6 +413,16 @@
 
     .copyright-content {
         font-size: 0.9rem;
+        flex-direction: column; /* Switch to column on smaller screens */
+    }
+
+    .copyright-text, .copyright-links {
+        margin: 5px 0;
+        width: 100%;
+    }
+
+    .visitor-counter {
+        margin: 15px auto 0;
     }
 
     .footer-container div[class*="col-"] {
@@ -417,8 +468,18 @@
     .copyright-content {
         padding: 0 15px;
         font-size: 0.8rem;
+        flex-direction: column; /* Ensure column layout on very small screens */
     }
     
+    .copyright-text, .copyright-links {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .copyright-links {
+        margin-top: 5px;
+    }
+
     .love-content {
         flex-direction: row; /* Keep it in one line on mobile */
         text-align: center;
@@ -438,6 +499,50 @@
     }
 }
 </style>
+
+<?php
+/**
+ * Get the current visit count from the counter file
+ */
+function getVisitCount() {
+    $counterFile = __DIR__ . '/../data/counter.txt';
+    
+    // Check if the directory exists, if not create it
+    $dir = dirname($counterFile);
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+    
+    // Check if the file exists
+    if (!file_exists($counterFile)) {
+        // Create file with initial count of 1
+        file_put_contents($counterFile, '1');
+        return 1;
+    }
+    
+    // If this is a new page load (not a refresh), increment the counter
+    if (!isset($_SESSION['page_visited'])) {
+        $count = (int)file_get_contents($counterFile);
+        $count++;
+        file_put_contents($counterFile, (string)$count);
+        $_SESSION['page_visited'] = true;
+        return $count;
+    } else {
+        // Return the current count without incrementing
+        return (int)file_get_contents($counterFile);
+    }
+}
+
+// Initialize session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// If this is a new page load, update the counter
+if (!isset($_SESSION['page_visited'])) {
+    getVisitCount();
+}
+?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

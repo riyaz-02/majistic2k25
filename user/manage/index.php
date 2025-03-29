@@ -366,12 +366,17 @@ try {
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link <?php echo $page === 'email_resend' ? 'active' : ''; ?>" href="?page=email_resend">
+                                <i class="bi bi-envelope-check me-2"></i>
+                                Email Resend
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link <?php echo $page === 'admin_users' ? 'active' : ''; ?>" href="?page=admin_users">
                                 <i class="bi bi-person-badge me-2"></i>
                                 Admin Users
                             </a>
                         </li>
-                        <!-- Add other menu items here -->
                     </ul>
                 </div>
             </nav>
@@ -395,6 +400,9 @@ try {
                                 break;
                             case 'all_registrations':
                                 echo 'Manage Registrations';
+                                break;
+                            case 'email_resend':
+                                echo 'Email Resend';
                                 break;
                             case 'admin_users':
                                 echo 'Admin Users';
@@ -420,676 +428,725 @@ try {
                 </div>
                 <?php endif; ?>
 
-                <?php if ($page === 'registration_control'): ?>
-                <!-- Registration Control Page -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Registration Status Control</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert <?php echo $registrationEnabled ? 'alert-success' : 'alert-danger'; ?>">
-                            <strong>Current Status:</strong> 
-                            <?php echo $registrationEnabled ? 
-                                'Registrations are <span class="badge bg-success">OPEN</span>' : 
-                                'Registrations are <span class="badge bg-danger">CLOSED</span>'; ?>
-                        </div>
-                        
-                        <form method="post" action="?page=registration_control">
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="registration_enabled" name="registration_enabled" <?php echo $registrationEnabled ? 'checked' : ''; ?>>
-                                <label class="form-check-label" for="registration_enabled">
-                                    <span class="fs-5">Toggle Registration Status</span>
-                                </label>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <h6>What happens when registrations are closed?</h6>
-                                        <ul>
-                                            <li>Registration buttons will redirect to a message page</li>
-                                            <li>Visitors will see a "Registrations are closed" message</li>
-                                            <li>All registration forms will be inaccessible</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" name="update_registration_status" class="btn btn-primary">
-                                Update Registration Status
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Registration Message Preview</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>When registrations are closed, visitors will see the following page:</p>
-                        <div class="border p-3 mt-3 bg-light">
-                            <div class="text-center mb-3">
-                                <i class="bi bi-exclamation-circle text-warning" style="font-size: 3rem;"></i>
-                            </div>
-                            <h3 class="text-center">We are not accepting Registrations Right Now</h3>
-                            <p class="text-center">It will be resumed shortly. Keep an eye on the portal. Meanwhile, explore the website.</p>
-                        </div>
-                        <div class="mt-3">
-                            <a href="../../src/handlers/registration_closed.php" target="_blank" class="btn btn-secondary">
-                                <i class="bi bi-eye"></i> View Full Message Page
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <?php elseif ($page === 'alumni_settings'): ?>
-                <!-- Alumni Coordinator Settings Page -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Alumni Coordinator Settings</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" action="alumni_coordinator_update.php">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="coordinator_name" class="form-label">Coordinator Name</label>
-                                    <input type="text" class="form-control" id="coordinator_name" name="coordinator_name" value="<?php echo htmlspecialchars($alumni_coordinator_name); ?>" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="coordinator_contact" class="form-label">Contact Number</label>
-                                    <input type="text" class="form-control" id="coordinator_contact" name="coordinator_contact" value="<?php echo htmlspecialchars($alumni_coordinator_contact); ?>" required>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="coordinator_email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="coordinator_email" name="coordinator_email" value="<?php echo htmlspecialchars($alumni_coordinator_email); ?>">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="payment_qr" class="form-label">Payment QR Code URL</label>
-                                <input type="url" class="form-control" id="payment_qr" name="payment_qr" value="<?php echo htmlspecialchars($alumni_payment_qr); ?>">
-                                <small class="form-text text-muted">Enter the direct URL to the payment QR code image (must be a valid URL starting with http:// or https://)</small>
-                            </div>
-                            
-                            <?php if (!empty($alumni_payment_qr)): ?>
-                            <div class="mb-3">
-                                <label class="form-label">Current QR Code Preview</label>
-                                <div class="border p-3 text-center bg-light">
-                                    <img src="<?php echo htmlspecialchars($alumni_payment_qr); ?>" alt="Payment QR Code" style="max-width: 200px; height: auto;">
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            
-                            <div class="mb-3">
-                                <label for="payment_instructions" class="form-label">Payment Instructions</label>
-                                <textarea class="form-control" id="payment_instructions" name="payment_instructions" rows="3" required><?php echo htmlspecialchars($alumni_payment_instructions); ?></textarea>
-                                <small class="form-text text-muted">These instructions will be shown to alumni when making payments.</small>
-                            </div>
-                            
-                            <button type="submit" name="update_alumni_coordinator" class="btn btn-primary">
-                                <i class="bi bi-save me-1"></i> Update Alumni Coordinator Settings
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Alumni Email Preview</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Alumni will receive an email with the following QR code and coordinator information:</p>
-                        
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle me-2"></i> The email will include the coordinator details and payment QR code above.
-                        </div>
-                        
-                        <div class="text-center mt-4">
-                            <a href="../../src/handler/email_preview.php?type=alumni" target="_blank" class="btn btn-secondary">
-                                <i class="bi bi-envelope-fill me-1"></i> Preview Alumni Email
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <?php elseif ($page === 'email_config'): ?>
-                <!-- Email Configuration Page -->
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Email Settings</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" action="?page=email_config">
-                            <div class="mb-3">
-                                <label for="logo_url" class="form-label">Email Logo URL</label>
-                                <input type="text" class="form-control" id="logo_url" name="logo_url" value="<?php echo htmlspecialchars($logoUrl); ?>" required>
-                                <div class="form-text">Enter the full URL for the logo image used in emails.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="base_url" class="form-label">Base URL for Email Links</label>
-                                <input type="text" class="form-control" id="base_url" name="base_url" value="<?php echo htmlspecialchars($baseUrl); ?>" required>
-                                <div class="form-text">Enter the base URL used for all links in emails (e.g., https://majistic.in).</div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Current Logo Preview</label>
-                                <div class="border p-3 text-center bg-dark">
-                                    <?php if (!empty($logoUrl)): ?>
-                                    <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="Current Logo" style="max-height: 100px;">
-                                    <?php else: ?>
-                                    <p class="text-muted">No logo URL set</p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <button type="submit" name="update_email_config" class="btn btn-primary">Update Configuration</button>
-                        </form>
-                    </div>
-                </div>
-                <?php elseif ($page === 'coordinators'): ?>
-                <!-- Department Coordinators Management Page -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="card">
+                <?php
+                // Load the appropriate page based on the selected menu item
+                switch ($page) {
+                    case 'registration_control':
+                        ?>
+                        <!-- Registration Control Page -->
+                        <div class="card mb-4">
                             <div class="card-header">
-                                <h5 class="mb-0">Add New Coordinator</h5>
+                                <h5 class="mb-0">Registration Status Control</h5>
                             </div>
                             <div class="card-body">
-                                <form method="post" action="?page=coordinators">
-                                    <div class="mb-3">
-                                        <label for="department" class="form-label">Department</label>
-                                        <select class="form-select" id="department" name="department" required>
-                                            <option value="">--Select Department--</option>
-                                            <option value="CSE">CSE</option>
-                                            <option value="CSE AI-ML">CSE AI-ML</option>
-                                            <option value="CST">CST</option>
-                                            <option value="IT">IT</option>
-                                            <option value="ECE">ECE</option>
-                                            <option value="EE">EE</option>
-                                            <option value="BME">BME</option>
-                                            <option value="CE">CE</option>
-                                            <option value="ME">ME</option>
-                                            <option value="AGE">AGE</option>
-                                            <option value="BBA">BBA</option>
-                                            <option value="MBA">MBA</option>
-                                            <option value="BCA">BCA</option>
-                                            <option value="MCA">MCA</option>
-                                            <option value="Diploma ME">Diploma ME</option>
-                                            <option value="Diploma CE">Diploma CE</option>
-                                            <option value="Diploma EE">Diploma EE</option>
-                                            <option value="B. Pharmacy">Pharmacy</option>
-                                        </select>
+                                <div class="alert <?php echo $registrationEnabled ? 'alert-success' : 'alert-danger'; ?>">
+                                    <strong>Current Status:</strong> 
+                                    <?php echo $registrationEnabled ? 
+                                        'Registrations are <span class="badge bg-success">OPEN</span>' :
+                                        'Registrations are <span class="badge bg-danger">CLOSED</span>'; ?>
+                                </div>
+                                
+                                <form method="post" action="?page=registration_control">
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="registration_enabled" name="registration_enabled" <?php echo $registrationEnabled ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="registration_enabled">
+                                            <span class="fs-5">Toggle Registration Status</span>
+                                        </label>
                                     </div>
+                                    
                                     <div class="mb-3">
-                                        <label for="coordinator_name" class="form-label">Coordinator Name</label>
-                                        <input type="text" class="form-control" id="coordinator_name" name="coordinator_name" required>
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <h6>What happens when registrations are closed?</h6>
+                                                <ul>
+                                                    <li>Registration buttons will redirect to a message page</li>
+                                                    <li>Visitors will see a "Registrations are closed" message</li>
+                                                    <li>All registration forms will be inaccessible</li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="contact" class="form-label">Contact Number</label>
-                                        <input type="text" class="form-control" id="contact" name="contact" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="available_time" class="form-label">Available Time</label>
-                                        <input type="text" class="form-control" id="available_time" name="available_time" placeholder="e.g., Mon-Fri: 10 AM - 4 PM">
-                                    </div>
-                                    <button type="submit" name="add_coordinator" class="btn btn-primary">Add Coordinator</button>
+                                    
+                                    <button type="submit" name="update_registration_status" class="btn btn-primary">
+                                        Update Registration Status
+                                    </button>
                                 </form>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Department Coordinators</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Department</th>
-                                        <th>Coordinator Name</th>
-                                        <th>Contact</th>
-                                        <th>Available Time</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (empty($coordinators)): ?>
-                                        <tr>
-                                            <td colspan="5" class="text-center">No coordinators found. Add your first coordinator!</td>
-                                        </tr>
-                                    <?php else: ?>
-                                        <?php foreach ($coordinators as $coordinator): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($coordinator['department']); ?></td>
-                                            <td><?php echo htmlspecialchars($coordinator['name']); ?></td>
-                                            <td><?php echo htmlspecialchars($coordinator['contact']); ?></td>
-                                            <td><?php echo htmlspecialchars($coordinator['available_time'] ?? 'Not specified'); ?></td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-primary edit-coordinator" 
-                                                    data-id="<?php echo $coordinator['id']; ?>"
-                                                    data-department="<?php echo htmlspecialchars($coordinator['department']); ?>"
-                                                    data-name="<?php echo htmlspecialchars($coordinator['name']); ?>"
-                                                    data-contact="<?php echo htmlspecialchars($coordinator['contact']); ?>"
-                                                    data-available-time="<?php echo htmlspecialchars($coordinator['available_time'] ?? ''); ?>">
-                                                    <i class="bi bi-pencil"></i> Edit
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-danger delete-coordinator" 
-                                                    data-id="<?php echo $coordinator['id']; ?>"
-                                                    data-name="<?php echo htmlspecialchars($coordinator['name']); ?>">
-                                                    <i class="bi bi-trash"></i> Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Registration Message Preview</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>When registrations are closed, visitors will see the following page:</p>
+                                <div class="border p-3 mt-3 bg-light">
+                                    <div class="text-center mb-3">
+                                        <i class="bi bi-exclamation-circle text-warning" style="font-size: 3rem;"></i>
+                                    </div>
+                                    <h3 class="text-center">We are not accepting Registrations Right Now</h3>
+                                    <p class="text-center">It will be resumed shortly. Keep an eye on the portal. Meanwhile, explore the website.</p>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="../../src/handlers/registration_closed.php" target="_blank" class="btn btn-secondary">
+                                        <i class="bi bi-eye"></i> View Full Message Page
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        break;
+                    case 'alumni_settings':
+                        ?>
+                        <!-- Alumni Coordinator Settings Page -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Alumni Coordinator Settings</h5>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action="alumni_coordinator_update.php">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="coordinator_name" class="form-label">Coordinator Name</label>
+                                            <input type="text" class="form-control" id="coordinator_name" name="coordinator_name" value="<?php echo htmlspecialchars($alumni_coordinator_name); ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="coordinator_contact" class="form-label">Contact Number</label>
+                                            <input type="text" class="form-control" id="coordinator_contact" name="coordinator_contact" value="<?php echo htmlspecialchars($alumni_coordinator_contact); ?>" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="coordinator_email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="coordinator_email" name="coordinator_email" value="<?php echo htmlspecialchars($alumni_coordinator_email); ?>">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="payment_qr" class="form-label">Payment QR Code URL</label>
+                                        <input type="url" class="form-control" id="payment_qr" name="payment_qr" value="<?php echo htmlspecialchars($alumni_payment_qr); ?>">
+                                        <small class="form-text text-muted">Enter the direct URL to the payment QR code image (must be a valid URL starting with http:// or https://)</small>
+                                    </div>
+                                    
+                                    <?php if (!empty($alumni_payment_qr)): ?>
+                                    <div class="mb-3">
+                                        <label class="form-label">Current QR Code Preview</label>
+                                        <div class="border p-3 text-center bg-light">
+                                            <img src="<?php echo htmlspecialchars($alumni_payment_qr); ?>" alt="Payment QR Code" style="max-width: 200px; height: auto;">
+                                        </div>
+                                    </div>
                                     <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Edit Coordinator Modal -->
-                <div class="modal fade" id="editCoordinatorModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edit Coordinator</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form method="post" action="?page=coordinators">
-                                <div class="modal-body">
-                                    <input type="hidden" name="coordinator_id" id="edit_coordinator_id">
+                                    
                                     <div class="mb-3">
-                                        <label for="edit_department" class="form-label">Department</label>
-                                        <select class="form-select" id="edit_department" name="department" required>
-                                            <option value="">--Select Department--</option>
-                                            <option value="CSE">CSE</option>
-                                            <option value="CSE AI-ML">CSE AI-ML</option>
-                                            <option value="CST">CST</option>
-                                            <option value="IT">IT</option>
-                                            <option value="ECE">ECE</option>
-                                            <option value="EE">EE</option>
-                                            <option value="BME">BME</option>
-                                            <option value="CE">CE</option>
-                                            <option value="ME">ME</option>
-                                            <option value="AGE">AGE</option>
-                                            <option value="BBA">BBA</option>
-                                            <option value="MBA">MBA</option>
-                                            <option value="BCA">BCA</option>
-                                            <option value="MCA">MCA</option>
-                                            <option value="Diploma ME">Diploma ME</option>
-                                            <option value="Diploma CE">Diploma CE</option>
-                                            <option value="Diploma EE">Diploma EE</option>
-                                            <option value="B. Pharmacy">Pharmacy</option>
-                                        </select>
+                                        <label for="payment_instructions" class="form-label">Payment Instructions</label>
+                                        <textarea class="form-control" id="payment_instructions" name="payment_instructions" rows="3" required><?php echo htmlspecialchars($alumni_payment_instructions); ?></textarea>
+                                        <small class="form-text text-muted">These instructions will be shown to alumni when making payments.</small>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="edit_coordinator_name" class="form-label">Coordinator Name</label>
-                                        <input type="text" class="form-control" id="edit_coordinator_name" name="coordinator_name" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="edit_contact" class="form-label">Contact Number</label>
-                                        <input type="text" class="form-control" id="edit_contact" name="contact" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="edit_available_time" class="form-label">Available Time</label>
-                                        <input type="text" class="form-control" id="edit_available_time" name="available_time" placeholder="e.g., Mon-Fri: 10 AM - 4 PM">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" name="update_coordinator" class="btn btn-primary">Update</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Delete Coordinator Modal -->
-                <div class="modal fade" id="deleteCoordinatorModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Confirm Delete</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to delete coordinator <span id="delete_coordinator_name" class="fw-bold"></span>?</p>
-                                <p class="text-danger">This action cannot be undone.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <form method="post" action="?page=coordinators">
-                                    <input type="hidden" name="coordinator_id" id="delete_coordinator_id">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" name="delete_coordinator" class="btn btn-danger">Delete</button>
+                                    
+                                    <button type="submit" name="update_alumni_coordinator" class="btn btn-primary">
+                                        <i class="bi bi-save me-1"></i> Update Alumni Coordinator Settings
+                                    </button>
                                 </form>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <?php elseif ($page === 'student_registrations'): ?>
-    <!-- Include the student registration list page -->
-    <?php include 'student_registrations.php'; ?>
-
-<?php elseif ($page === 'alumni_registrations'): ?>
-    <!-- Include the alumni registration list page -->
-    <?php include 'alumni_registrations.php'; ?>
-
-<?php elseif ($page === 'all_registrations'): ?>
-    <!-- Include the unified registrations list page -->
-    <?php include 'all_registrations.php'; ?>
-
-<?php elseif ($page === 'admin_users'): ?>
-                <!-- Admin Users Management Page -->
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">System Admin Users</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>Mobile</th>
-                                        <th>Role</th>
-                                        <th>Department</th>
-                                        <th>Created</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (empty($admin_users)): ?>
-                                        <tr>
-                                            <td colspan="7" class="text-center">No admin users found.</td>
-                                        </tr>
-                                    <?php else: ?>
-                                        <?php foreach ($admin_users as $user): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($user['name']); ?></td>
-                                            <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                            <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                            <td><?php echo htmlspecialchars($user['mobile']); ?></td>
-                                            <td><span class="badge bg-primary"><?php echo htmlspecialchars($user['role']); ?></span></td>
-                                            <td><?php echo $user['role'] === 'Coordinator' ? htmlspecialchars($user['department']) : 'N/A'; ?></td>
-                                            <td><?php echo htmlspecialchars($user['created_at']); ?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Alumni Email Preview</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Alumni will receive an email with the following QR code and coordinator information:</p>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i> The email will include the coordinator details and payment QR code above.
+                                </div>
+                                <div class="text-center mt-4">
+                                    <a href="../../src/handler/email_preview.php?type=alumni" target="_blank" class="btn btn-secondary">
+                                        <i class="bi bi-envelope-fill me-1"></i> Preview Alumni Email
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <?php elseif ($page === 'dashboard'): ?>
-<!-- Dashboard Content -->
-<div class="row">
-    <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card bg-primary text-white h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-uppercase fw-bold mb-1">Student Registrations</h6>
                         <?php
-                        try {
-                            $query = "SELECT COUNT(*) FROM registrations";
-                            $stmt = $db->prepare($query);
-                            $stmt->execute();
-                            $student_count = $stmt->fetchColumn();
-                            
-                            $query = "SELECT COUNT(*) FROM registrations WHERE payment_status = 'Paid'";
-                            $stmt = $db->prepare($query);
-                            $stmt->execute();
-                            $student_paid = $stmt->fetchColumn();
-                        } catch (PDOException $e) {
-                            $student_count = 0;
-                            $student_paid = 0;
-                        }
+                        break;
+                    case 'email_config':
                         ?>
-                        <h2 class="display-4 fw-bold mb-0"><?php echo number_format($student_count); ?></h2>
-                    </div>
-                    <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
-                        <i class="bi bi-people-fill fs-1"></i>
-                    </div>
-                </div>
-                <small class="fw-semibold"><?php echo number_format($student_paid); ?> Paid / <?php echo number_format($student_count - $student_paid); ?> Pending</small>
-            </div>
-            <div class="card-footer bg-primary bg-opacity-75 py-2">
-                <a href="?page=student_registrations" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
-                    <span>View Details</span>
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card bg-info text-white h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-uppercase fw-bold mb-1">Alumni Registrations</h6>
-                        <?php
-                        try {
-                            $query = "SELECT COUNT(*) FROM alumni_registrations";
-                            $stmt = $db->prepare($query);
-                            $stmt->execute();
-                            $alumni_count = $stmt->fetchColumn();
-                            
-                            $query = "SELECT COUNT(*) FROM alumni_registrations WHERE payment_status = 'Paid'";
-                            $stmt = $db->prepare($query);
-                            $stmt->execute();
-                            $alumni_paid = $stmt->fetchColumn();
-                        } catch (PDOException $e) {
-                            $alumni_count = 0;
-                            $alumni_paid = 0;
-                        }
-                        ?>
-                        <h2 class="display-4 fw-bold mb-0"><?php echo number_format($alumni_count); ?></h2>
-                    </div>
-                    <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
-                        <i class="bi bi-mortarboard-fill fs-1"></i>
-                    </div>
-                </div>
-                <small class="fw-semibold"><?php echo number_format($alumni_paid); ?> Paid / <?php echo number_format($alumni_count - $alumni_paid); ?> Pending</small>
-            </div>
-            <div class="card-footer bg-info bg-opacity-75 py-2">
-                <a href="?page=alumni_registrations" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
-                    <span>View Details</span>
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card bg-success text-white h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-uppercase fw-bold mb-1">Payment Status</h6>
-                        <?php
-                        $total_paid = $student_paid + $alumni_paid;
-                        $total_registrations = $student_count + $alumni_count;
-                        $paid_percentage = ($total_registrations > 0) ? round(($total_paid / $total_registrations) * 100) : 0;
-                        ?>
-                        <h2 class="display-4 fw-bold mb-0"><?php echo $paid_percentage; ?>%</h2>
-                    </div>
-                    <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
-                        <i class="bi bi-cash-stack fs-1"></i>
-                    </div>
-                </div>
-                <small class="fw-semibold"><?php echo number_format($total_paid); ?> Paid / <?php echo number_format($total_registrations - $total_paid); ?> Pending</small>
-            </div>
-            <div class="card-footer bg-success bg-opacity-75 py-2">
-                <a href="?page=all_registrations&payment_status=Paid" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
-                    <span>View Paid Registrations</span>
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card bg-warning text-dark h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-uppercase fw-bold mb-1">Department Coordinators</h6>
-                        <?php
-                        try {
-                            $query = "SELECT COUNT(*) FROM department_coordinators";
-                            $stmt = $db->prepare($query);
-                            $stmt->execute();
-                            $coordinator_count = $stmt->fetchColumn();
-                        } catch (PDOException $e) {
-                            $coordinator_count = 0;
-                        }
-                        ?>
-                        <h2 class="display-4 fw-bold mb-0"><?php echo number_format($coordinator_count); ?></h2>
-                    </div>
-                    <div class="icon-shape bg-white bg-opacity-25 text-dark rounded-3 p-3">
-                        <i class="bi bi-person-badge fs-1"></i>
-                    </div>
-                </div>
-                <small class="fw-semibold">Contact information for students</small>
-            </div>
-            <div class="card-footer bg-warning bg-opacity-75 py-2">
-                <a href="?page=coordinators" class="text-dark d-flex justify-content-between align-items-center text-decoration-none">
-                    <span>Manage Coordinators</span>
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header">
-                <h5 class="mb-0">Registration Status</h5>
-            </div>
-            <div class="card-body">
-                < class="mb-4">
-                    <h6>Registration is currently <?php echo $registrationEnabled ? '<span class="badge bg-success">OPEN</span>' : '<span class="badge bg-danger">CLOSED</span>'; ?></h6>
-                    <p class="text-muted">
-                        <?php if ($registrationEnabled): ?>
-                            Students and alumni can currently register for the event.
-                        <?php else: ?>
-                            Registration has been temporarily disabled.
-                        <?php endif; ?>
-                    </p>
-                    <div class="progress" style="height: 25px;">
-                        <div class="progress-bar <?php echo $registrationEnabled ? 'bg-success' : 'bg-danger'; ?>" 
-                             role="progressbar" 
-                             style="width: <?php echo $registrationEnabled ? '100%' : '0%'; ?>;"
-                             aria-valuenow="<?php echo $registrationEnabled ? '100' : '0'; ?>" 
-                             aria-valuemin="0" 
-                             aria-valuemax="100"></div>
-                            <?php echo $registrationEnabled ? 'ENABLED' : 'DISABLED'; ?>
+                        <!-- Email Configuration Page -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Email Settings</h5>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" action="?page=email_config">
+                                    <div class="mb-3">
+                                        <label for="logo_url" class="form-label">Email Logo URL</label>
+                                        <input type="text" class="form-control" id="logo_url" name="logo_url" value="<?php echo htmlspecialchars($logoUrl); ?>" required>
+                                        <div class="form-text">Enter the full URL for the logo image used in emails.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="base_url" class="form-label">Base URL for Email Links</label>
+                                        <input type="text" class="form-control" id="base_url" name="base_url" value="<?php echo htmlspecialchars($baseUrl); ?>" required>
+                                        <div class="form-text">Enter the base URL used for all links in emails (e.g., https://majistic.in).</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Current Logo Preview</label>
+                                        <div class="border p-3 text-center bg-dark">
+                                            <?php if (!empty($logoUrl)): ?>
+                                            <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="Current Logo" style="max-height: 100px;">
+                                            <?php else: ?>
+                                            <p class="text-muted">No logo URL set</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <button type="submit" name="update_email_config" class="btn btn-primary">Update Configuration</button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="d-grid">
-                    <a href="?page=registration_control" class="btn btn-primary"></a>
-                        <i class="bi bi-gear-fill me-2"></i> Configure Registration Settings
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-6 mb-4"></div>
-        <div class="card h-100">
-            <div class="card-header">
-                <h5 class="mb-0">Recent Registrations</h5>
-            </div>
-            <div class="card-body">
-                <?php
-                // Fetch most recent registrations
-                try {
-                    $query = "(SELECT id, 'student' AS type, student_name AS name, jis_id, department, registration_date 
-                              FROM registrations
-                              ORDER BY registration_date DESC LIMIT 5)
-                              UNION ALL
-                              (SELECT id, 'alumni' AS type, alumni_name AS name, jis_id, department, registration_date 
-                              FROM alumni_registrations
-                              ORDER BY registration_date DESC LIMIT 5)
-                              ORDER BY registration_date DESC LIMIT 5";
-                    $stmt = $db->prepare($query);
-                    $stmt->execute();
-                    $recent_registrations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                } catch (PDOException $e) {
-                    $recent_registrations = [];
+                        <?php
+                        break;
+                    case 'coordinators':
+                        ?>
+                        <!-- Department Coordinators Management Page -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Add New Coordinator</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="post" action="?page=coordinators">
+                                            <div class="mb-3">
+                                                <label for="department" class="form-label">Department</label>
+                                                <select class="form-select" id="department" name="department" required>
+                                                    <option value="">--Select Department--</option>
+                                                    <option value="CSE">CSE</option>
+                                                    <option value="CSE AI-ML">CSE AI-ML</option>
+                                                    <option value="CST">CST</option>
+                                                    <option value="IT">IT</option>
+                                                    <option value="ECE">ECE</option>
+                                                    <option value="EE">EE</option>
+                                                    <option value="BME">BME</option>
+                                                    <option value="CE">CE</option>
+                                                    <option value="ME">ME</option>
+                                                    <option value="AGE">AGE</option>
+                                                    <option value="BBA">BBA</option>
+                                                    <option value="MBA">MBA</option>
+                                                    <option value="BCA">BCA</option>
+                                                    <option value="MCA">MCA</option>
+                                                    <option value="Diploma ME">Diploma ME</option>
+                                                    <option value="Diploma CE">Diploma CE</option>
+                                                    <option value="Diploma EE">Diploma EE</option>
+                                                    <option value="B. Pharmacy">Pharmacy</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="coordinator_name" class="form-label">Coordinator Name</label>
+                                                <input type="text" class="form-control" id="coordinator_name" name="coordinator_name" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="contact" class="form-label">Contact Number</label>
+                                                <input type="text" class="form-control" id="contact" name="contact" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="available_time" class="form-label">Available Time</label>
+                                                <input type="text" class="form-control" id="available_time" name="available_time" placeholder="e.g., Mon-Fri: 10 AM - 4 PM">
+                                            </div>
+                                            <button type="submit" name="add_coordinator" class="btn btn-primary">Add Coordinator</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Department Coordinators</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Department</th>
+                                                <th>Coordinator Name</th>
+                                                <th>Contact</th>
+                                                <th>Available Time</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (empty($coordinators)): ?>
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No coordinators found. Add your first coordinator!</td>
+                                                </tr>
+                                            <?php else: ?>
+                                                <?php foreach ($coordinators as $coordinator): ?>
+                                                <tr>
+                                                    <td><?php echo htmlspecialchars($coordinator['department']); ?></td>
+                                                    <td><?php echo htmlspecialchars($coordinator['name']); ?></td>
+                                                    <td><?php echo htmlspecialchars($coordinator['contact']); ?></td>
+                                                    <td><?php echo htmlspecialchars($coordinator['available_time'] ?? 'Not specified'); ?></td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-primary edit-coordinator" 
+                                                            data-id="<?php echo $coordinator['id']; ?>"
+                                                            data-department="<?php echo htmlspecialchars($coordinator['department']); ?>"
+                                                            data-name="<?php echo htmlspecialchars($coordinator['name']); ?>"
+                                                            data-contact="<?php echo htmlspecialchars($coordinator['contact']); ?>"
+                                                            data-available-time="<?php echo htmlspecialchars($coordinator['available_time'] ?? ''); ?>">
+                                                            <i class="bi bi-pencil"></i> Edit
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-danger delete-coordinator" 
+                                                            data-id="<?php echo $coordinator['id']; ?>"
+                                                            data-name="<?php echo htmlspecialchars($coordinator['name']); ?>">
+                                                            <i class="bi bi-trash"></i> Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Edit Coordinator Modal -->
+                        <div class="modal fade" id="editCoordinatorModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit Coordinator</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="post" action="?page=coordinators">
+                                        <div class="modal-body">
+                                            <input type="hidden" name="coordinator_id" id="edit_coordinator_id">
+                                            <div class="mb-3">
+                                                <label for="edit_department" class="form-label">Department</label>
+                                                <select class="form-select" id="edit_department" name="department" required>
+                                                    <option value="">--Select Department--</option>
+                                                    <option value="CSE">CSE</option>
+                                                    <option value="CSE AI-ML">CSE AI-ML</option>
+                                                    <option value="CST">CST</option>
+                                                    <option value="IT">IT</option>
+                                                    <option value="ECE">ECE</option>
+                                                    <option value="EE">EE</option>
+                                                    <option value="BME">BME</option>
+                                                    <option value="CE">CE</option>
+                                                    <option value="ME">ME</option>
+                                                    <option value="AGE">AGE</option>
+                                                    <option value="BBA">BBA</option>
+                                                    <option value="MBA">MBA</option>
+                                                    <option value="BCA">BCA</option>
+                                                    <option value="MCA">MCA</option>
+                                                    <option value="Diploma ME">Diploma ME</option>
+                                                    <option value="Diploma CE">Diploma CE</option>
+                                                    <option value="Diploma EE">Diploma EE</option>
+                                                    <option value="B. Pharmacy">Pharmacy</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit_coordinator_name" class="form-label">Coordinator Name</label>
+                                                <input type="text" class="form-control" id="edit_coordinator_name" name="coordinator_name" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit_contact" class="form-label">Contact Number</label>
+                                                <input type="text" class="form-control" id="edit_contact" name="contact" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit_available_time" class="form-label">Available Time</label>
+                                                <input type="text" class="form-control" id="edit_available_time" name="available_time" placeholder="e.g., Mon-Fri: 10 AM - 4 PM">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" name="update_coordinator" class="btn btn-primary">Update</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delete Coordinator Modal -->
+                        <div class="modal fade" id="deleteCoordinatorModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Delete</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete coordinator <span id="delete_coordinator_name" class="fw-bold"></span>?</p>
+                                        <p class="text-danger">This action cannot be undone.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form method="post" action="?page=coordinators">
+                                            <input type="hidden" name="coordinator_id" id="delete_coordinator_id">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" name="delete_coordinator" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        break;
+                    case 'dashboard':
+                        ?>
+                        <!-- Dashboard Content -->
+                        <div class="row">
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="card bg-primary text-white h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-uppercase fw-bold mb-1">Student Registrations</h6>
+                                                <?php
+                                                try {
+                                                    $query = "SELECT COUNT(*) FROM registrations";
+                                                    $stmt = $db->prepare($query);
+                                                    $stmt->execute();
+                                                    $student_count = $stmt->fetchColumn();
+                                                    
+                                                    $query = "SELECT COUNT(*) FROM registrations WHERE payment_status = 'Paid'";
+                                                    $stmt = $db->prepare($query);
+                                                    $stmt->execute();
+                                                    $student_paid = $stmt->fetchColumn();
+                                                } catch (PDOException $e) {
+                                                    $student_count = 0;
+                                                    $student_paid = 0;
+                                                }
+                                                ?>
+                                                <h2 class="display-4 fw-bold mb-0"><?php echo number_format($student_count); ?></h2>
+                                            </div>
+                                            <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
+                                                <i class="bi bi-people-fill fs-1"></i>
+                                            </div>
+                                        </div>
+                                        <small class="fw-semibold"><?php echo number_format($student_paid); ?> Paid / <?php echo number_format($student_count - $student_paid); ?> Pending</small>
+                                    </div>
+                                    <div class="card-footer bg-primary bg-opacity-75 py-2">
+                                        <a href="?page=all_registrations&type=student" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
+                                            <span>View Details</span>
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="card bg-info text-white h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-uppercase fw-bold mb-1">Alumni Registrations</h6>
+                                                <?php
+                                                try {
+                                                    $query = "SELECT COUNT(*) FROM alumni_registrations";
+                                                    $stmt = $db->prepare($query);
+                                                    $stmt->execute();
+                                                    $alumni_count = $stmt->fetchColumn();
+                                                    
+                                                    $query = "SELECT COUNT(*) FROM alumni_registrations WHERE payment_status = 'Paid'";
+                                                    $stmt = $db->prepare($query);
+                                                    $stmt->execute();
+                                                    $alumni_paid = $stmt->fetchColumn();
+                                                } catch (PDOException $e) {
+                                                    $alumni_count = 0;
+                                                    $alumni_paid = 0;
+                                                }
+                                                ?>
+                                                <h2 class="display-4 fw-bold mb-0"><?php echo number_format($alumni_count); ?></h2>
+                                            </div>
+                                            <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
+                                                <i class="bi bi-mortarboard-fill fs-1"></i>
+                                            </div>
+                                        </div>
+                                        <small class="fw-semibold"><?php echo number_format($alumni_paid); ?> Paid / <?php echo number_format($alumni_count - $alumni_paid); ?> Pending</small>
+                                    </div>
+                                    <div class="card-footer bg-info bg-opacity-75 py-2">
+                                        <a href="?page=all_registrations&type=alumni" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
+                                            <span>View Details</span>
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="card bg-success text-white h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-uppercase fw-bold mb-1">Payment Status</h6>
+                                                <?php
+                                                $total_paid = $student_paid + $alumni_paid;
+                                                $total_registrations = $student_count + $alumni_count;
+                                                $paid_percentage = ($total_registrations > 0) ? round(($total_paid / $total_registrations) * 100) : 0;
+                                                ?>
+                                                <h2 class="display-4 fw-bold mb-0"><?php echo $paid_percentage; ?>%</h2>
+                                            </div>
+                                            <div class="icon-shape bg-white bg-opacity-25 text-white rounded-3 p-3">
+                                                <i class="bi bi-cash-stack fs-1"></i>
+                                            </div>
+                                        </div>
+                                        <small class="fw-semibold"><?php echo number_format($total_paid); ?> Paid / <?php echo number_format($total_registrations - $total_paid); ?> Pending</small>
+                                    </div>
+                                    <div class="card-footer bg-success bg-opacity-75 py-2">
+                                        <a href="?page=all_registrations&payment_status=Paid" class="text-white d-flex justify-content-between align-items-center text-decoration-none">
+                                            <span>View Paid Registrations</span>
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="card bg-warning text-dark h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-uppercase fw-bold mb-1">Department Coordinators</h6>
+                                                <?php
+                                                try {
+                                                    $query = "SELECT COUNT(*) FROM department_coordinators";
+                                                    $stmt = $db->prepare($query);
+                                                    $stmt->execute();
+                                                    $coordinator_count = $stmt->fetchColumn();
+                                                } catch (PDOException $e) {
+                                                    $coordinator_count = 0;
+                                                }
+                                                ?>
+                                                <h2 class="display-4 fw-bold mb-0"><?php echo number_format($coordinator_count); ?></h2>
+                                            </div>
+                                            <div class="icon-shape bg-white bg-opacity-25 text-dark rounded-3 p-3">
+                                                <i class="bi bi-person-badge fs-1"></i>
+                                            </div>
+                                        </div>
+                                        <small class="fw-semibold">Contact information for students</small>
+                                    </div>
+                                    <div class="card-footer bg-warning bg-opacity-75 py-2">
+                                        <a href="?page=coordinators" class="text-dark d-flex justify-content-between align-items-center text-decoration-none">
+                                            <span>Manage Coordinators</span>
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Registration Status</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-4">
+                                            <h6>Registration is currently <?php echo $registrationEnabled ? '<span class="badge bg-success">OPEN</span>' : '<span class="badge bg-danger">CLOSED</span>'; ?></h6>
+                                            <p class="text-muted">
+                                                <?php if ($registrationEnabled): ?>
+                                                    Students and alumni can currently register for the event.
+                                                <?php else: ?>
+                                                    Registration has been temporarily disabled.
+                                                <?php endif; ?>
+                                            </p>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar <?php echo $registrationEnabled ? 'bg-success' : 'bg-danger'; ?>" 
+                                                     role="progressbar" 
+                                                     style="width: <?php echo $registrationEnabled ? '100%' : '0%'; ?>;"
+                                                     aria-valuenow="<?php echo $registrationEnabled ? '100' : '0'; ?>" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                    <?php echo $registrationEnabled ? 'ENABLED' : 'DISABLED'; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-grid">
+                                            <a href="?page=registration_control" class="btn btn-primary">
+                                                <i class="bi bi-gear-fill me-2"></i> Configure Registration Settings
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Recent Registrations</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <?php
+                                        // Fetch most recent registrations
+                                        try {
+                                            $query = "(SELECT id, 'student' AS type, student_name AS name, jis_id, department, registration_date 
+                                                      FROM registrations
+                                                      ORDER BY registration_date DESC LIMIT 5)
+                                                      UNION ALL
+                                                      (SELECT id, 'alumni' AS type, alumni_name AS name, jis_id, department, registration_date 
+                                                      FROM alumni_registrations
+                                                      ORDER BY registration_date DESC LIMIT 5)
+                                                      ORDER BY registration_date DESC LIMIT 5";
+                                            $stmt = $db->prepare($query);
+                                            $stmt->execute();
+                                            $recent_registrations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                        } catch (PDOException $e) {
+                                            $recent_registrations = [];
+                                        }
+                                        
+                                        if (!empty($recent_registrations)):
+                                        ?>
+                                        <div class="list-group">
+                                            <?php foreach ($recent_registrations as $reg): ?>
+                                            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <h6 class="mb-0"><?php echo htmlspecialchars($reg['name']); ?>
+                                                        <small class="ms-2 badge bg-<?php echo $reg['type'] === 'student' ? 'info' : 'secondary'; ?>">
+                                                            <?php echo ucfirst($reg['type']); ?>
+                                                        </small>
+                                                    </h6>
+                                                    <p class="text-muted small mb-0">
+                                                        <?php echo htmlspecialchars($reg['jis_id']); ?> - 
+                                                        <?php echo htmlspecialchars($reg['department']); ?>
+                                                    </p>
+                                                </div>
+                                                <div class="text-muted small">
+                                                    <?php 
+                                                    $date = new DateTime($reg['registration_date']);
+                                                    $now = new DateTime();
+                                                    $diff = $date->diff($now);
+                                                    
+                                                    if ($diff->d == 0) {
+                                                        if ($diff->h == 0) {
+                                                            echo $diff->i . ' min ago';
+                                                        } else {
+                                                            echo $diff->h . ' hours ago';
+                                                        }
+                                                    } elseif ($diff->d == 1) {
+                                                        echo 'Yesterday';
+                                                    } else {
+                                                        echo $date->format('d M Y');
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php else: ?>
+                                        <div class="text-center py-4">
+                                            <i class="bi bi-calendar2-x text-muted" style="font-size: 2rem;"></i>
+                                            <p class="text-muted mt-2">No recent registrations found</p>
+                                        </div>
+                                        <?php endif; ?>
+                                        
+                                        <div class="d-grid mt-3">
+                                            <a href="?page=all_registrations" class="btn btn-outline-primary">
+                                                View All Registrations
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        break;
+                    case 'admin_users':
+                        ?>
+                        <!-- Admin Users Management Page -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">System Admin Users</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Username</th>
+                                                <th>Email</th>
+                                                <th>Mobile</th>
+                                                <th>Role</th>
+                                                <th>Department</th>
+                                                <th>Created</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (empty($admin_users)): ?>
+                                                <tr>
+                                                    <td colspan="8" class="text-center">No admin users found.</td>
+                                                </tr>
+                                            <?php else: ?>
+                                                <?php foreach ($admin_users as $user): ?>
+                                                <tr>
+                                                    <td><?php echo htmlspecialchars($user['name']); ?></td>
+                                                    <td><?php echo htmlspecialchars($user['username']); ?></td>
+                                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
+                                                    <td><?php echo htmlspecialchars($user['mobile']); ?></td>
+                                                    <td><span class="badge bg-primary"><?php echo htmlspecialchars($user['role']); ?></span></td>
+                                                    <td><?php echo $user['role'] === 'Coordinator' ? htmlspecialchars($user['department']) : 'N/A'; ?></td>
+                                                    <td><?php echo htmlspecialchars($user['created_at']); ?></td>
+                                                    <td>
+                                                        <?php if ($user['id'] != $_SESSION['admin_id']): ?>
+                                                        <button type="button" class="btn btn-sm btn-danger delete-admin-user" 
+                                                            data-id="<?php echo $user['id']; ?>"
+                                                            data-name="<?php echo htmlspecialchars($user['name']); ?>">
+                                                            <i class="bi bi-trash"></i> Delete
+                                                        </button>
+                                                        <?php else: ?>
+                                                        <span class="badge bg-secondary">Current User</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delete Admin User Modal -->
+                        <div class="modal fade" id="deleteAdminUserModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Delete Admin User</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete admin user <span id="delete_admin_user_name" class="fw-bold"></span>?</p>
+                                        <p class="text-danger">This action cannot be undone. All access for this user will be revoked immediately.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form method="post" action="delete_admin_user.php">
+                                            <input type="hidden" name="admin_id" id="delete_admin_user_id">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger">Delete User</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        break;
+                    case 'email_resend':
+                        include 'email_resend.php';
+                        break;
+                    case 'all_registrations':
+                        include 'all_registrations.php';
+                        break;
                 }
-                
-                if (!empty($recent_registrations)):
                 ?>
-                <div class="list-group">
-                    <?php foreach ($recent_registrations as $reg): ?>
-                    <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-0"><?php echo htmlspecialchars($reg['name']); ?>
-                                <small class="ms-2 badge bg-<?php echo $reg['type'] === 'student' ? 'info' : 'secondary'; ?>">
-                                    <?php echo ucfirst($reg['type']); ?>
-                                </small>
-                            </h6>
-                            <p class="text-muted small mb-0">
-                                <?php echo htmlspecialchars($reg['jis_id']); ?> - 
-                                <?php echo htmlspecialchars($reg['department']); ?>
-                            </p>
-                        </div>
-                        <div class="text-muted small">
-                            <?php 
-                            $date = new DateTime($reg['registration_date']);
-                            $now = new DateTime();
-                            $diff = $date->diff($now);
-                            
-                            if ($diff->d == 0) {
-                                if ($diff->h == 0) {
-                                    echo $diff->i . ' min ago';
-                                } else {
-                                    echo $diff->h . ' hours ago';
-                                }
-                            } elseif ($diff->d == 1) {
-                                echo 'Yesterday';
-                            } else {
-                                echo $date->format('d M Y');
-                            }
-                            ?>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-                <?php else: ?>
-                <div class="text-center py-4">
-                    <i class="bi bi-calendar2-x text-muted" style="font-size: 2rem;"></i>
-                    <p class="text-muted mt-2">No recent registrations found</p>
-                </div>
-                <?php endif; ?>
-                
-                <div class="d-grid mt-3">
-                    <a href="?page=all_registrations" class="btn btn-outline-primary">
-                        View All Registrations
-                    </a>
-                </div>
-            </div>
+            </main>
         </div>
     </div>
-</div>
-<?php endif; ?>
 
-<!-- Footer -->
-<footer class="mt-4 mb-2 py-3 text-center text-muted">
-    <small>&copy; <?php echo date('Y'); ?> maJIStic Admin Dashboard | JIS College of Engineering</small>
-</footer>
-
+    <!-- Footer -->
+    <footer class="mt-4 mb-2 py-3 text-center text-muted">
+        <small>&copy; <?php echo date('Y'); ?> maJIStic Admin Dashboard | JIS College of Engineering</small>
+    </footer>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // JavaScript for handling modals
@@ -1104,7 +1161,6 @@ try {
                         const name = this.getAttribute('data-name');
                         const contact = this.getAttribute('data-contact');
                         const availableTime = this.getAttribute('data-available-time');
-                        
                         document.getElementById('edit_coordinator_id').value = id;
                         
                         // Set the selected department in dropdown
@@ -1119,7 +1175,6 @@ try {
                         document.getElementById('edit_coordinator_name').value = name;
                         document.getElementById('edit_contact').value = contact;
                         document.getElementById('edit_available_time').value = availableTime || '';
-                        
                         const modal = new bootstrap.Modal(document.getElementById('editCoordinatorModal'));
                         modal.show();
                     });
@@ -1133,30 +1188,23 @@ try {
                     button.addEventListener('click', function() {
                         const id = this.getAttribute('data-id');
                         const name = this.getAttribute('data-name');
-                        
                         document.getElementById('delete_coordinator_id').value = id;
                         document.getElementById('delete_coordinator_name').textContent = name;
-                        
                         const modal = new bootstrap.Modal(document.getElementById('deleteCoordinatorModal'));
                         modal.show();
                     });
                 });
             }
-        });
-    </script>
-</body>
-</html>
-
+            
+            // Delete Admin User Modal
             const deleteAdminButtons = document.querySelectorAll('.delete-admin-user');
             if (deleteAdminButtons) {
                 deleteAdminButtons.forEach(button => {
                     button.addEventListener('click', function() {
                         const id = this.getAttribute('data-id');
                         const name = this.getAttribute('data-name');
-                        
                         document.getElementById('delete_admin_user_id').value = id;
                         document.getElementById('delete_admin_user_name').textContent = name;
-                        
                         const modal = new bootstrap.Modal(document.getElementById('deleteAdminUserModal'));
                         modal.show();
                     });

@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $payment_status = ($student_data['payment_status'] == 'Paid');
                     
                     // Check ticket generation status - if column exists
-                    $ticket_generated = isset($student_data['ticket']) && $student_data['ticket'] == 'generated';
+                    $ticket_generated = isset($student_data['ticket_generated']) && $student_data['ticket_generated'] == 'Yes';
                     
                     // Check check-in status - if columns exist
                     $checkin_day1 = false;
@@ -415,13 +415,13 @@ $days_remaining = $interval->format('%a');
                                 <?php endif; ?>
 
                                 <div class="action-buttons">
-                                    <a href="index.php" class="btn btn-primary">
+                                    <a href="/majistic/index.php" class="btn btn-primary">
                                         <i class="fas fa-home"></i> Back to Home
                                     </a>
-                                    <a href="merchandise.php" class="btn btn-accent" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white;">
+                                    <a href="/majistic/merchandise.php" class="btn btn-accent" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white;">
                                         <i class="fas fa-tshirt"></i> Book Merchandise
                                     </a>
-                                    <a href="check_status.php" class="btn" style="background: linear-gradient(135deg,rgb(96, 93, 97),rgb(46, 34, 51)); color: white;">
+                                    <a href="/majistic/check_status.php" class="btn" style="background: linear-gradient(135deg,rgb(96, 93, 97),rgb(46, 34, 51)); color: white;">
                                         <i class="fas fa-search"></i> New Search
                                     </a>
                                 </div>

@@ -32,61 +32,50 @@ if ($day !== 1 && $day !== 2) {
     exit;
 }
 
-// Convert string ID to MongoDB ObjectId
-try {
-    $objectId = new MongoDB\BSON\ObjectId($id);
-} catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Invalid student ID format']);
-    exit;
-}
-
-// Select collection based on type
-$collection = $type === 'alumni' ? $db->alumni_registrations : $db->registrations;
-
-// Check if the student exists and has paid
-$student = $collection->findOne([
-    '_id' => $objectId,
-    'payment_status' => 'Paid'
-]);
-
-if (!$student) {
-    echo json_encode(['success' => false, 'message' => 'Student not found or payment not complete']);
-    exit;
-}
-
-// Check if already checked in for the specified day
+// Choose the table based on student type
+$table = ($type === 'alumni') ? 'alumni_registrations' : 'registrations';
 $field = 'checkin_' . $day;
-if (isset($student[$field]) && $student[$field] === 'checkedin') {
-    echo json_encode(['success' => false, 'message' => 'Already checked in for day ' . $day]);
-    exit;
-}
 
-// Check if ticket is generated before allowing check-in
-if (!isset($student['ticket']) || $student['ticket'] !== 'generated') {
-    echo json_encode(['success' => false, 'message' => 'Cannot check in: Ticket not generated yet']);
-    exit;
-}
-
-// Update fields to set in database
-$updateFields = [
-    $field => 'checkedin',
-    $field . '_at' => new MongoDB\BSON\UTCDateTime(),
-    $field . '_by' => $_SESSION['admin_username']
-];
-
-// Update the database
 try {
-    $result = $collection->updateOne(
-        ['_id' => $objectId],
-        ['$set' => $updateFields]
-    );
+    // First check if student exists and has paid
+    $stmt = $db->prepare("SELECT * FROM $table WHERE id = :id AND payment_status = 'Paid'");
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $student = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    if ($result->getModifiedCount() === 1) {
+    if (!$student) {
+        echo json_encode(['success' => false, 'message' => 'Student not found or payment not complete']);
+        exit;
+    }
+    
+    // Check if already checked in for the specified day
+    if (isset($student[$field]) && $student[$field] === 'Yes') {
+        echo json_encode(['success' => false, 'message' => 'Already checked in for day ' . $day]);
+        exit;
+    }
+    
+    // Check if ticket is generated before allowing check-in
+    if (!isset($student['ticket_generated']) || $student['ticket_generated'] !== 'Yes') {
+        echo json_encode(['success' => false, 'message' => 'Cannot check in: Ticket not generated yet']);
+        exit;
+    }
+    
+    // Update the check-in status with timestamp
+    $currentTime = date('Y-m-d H:i:s');
+    $timestampField = $field . '_timestamp';
+    
+    $updateStmt = $db->prepare("UPDATE $table SET $field = 'Yes', $timestampField = :time WHERE id = :id");
+    $updateStmt->bindParam(':time', $currentTime);
+    $updateStmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $updateStmt->execute();
+    
+    if ($updateStmt->rowCount() === 1) {
         echo json_encode(['success' => true, 'message' => 'Day ' . $day . ' check-in successful']);
     } else {
         echo json_encode(['success' => false, 'message' => 'No changes were made']);
     }
-} catch (Exception $e) {
+    
+} catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
 ?>

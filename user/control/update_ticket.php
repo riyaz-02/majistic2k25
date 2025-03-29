@@ -25,51 +25,39 @@ if (!isset($_POST['id']) || !isset($_POST['type'])) {
 $id = $_POST['id'];
 $type = $_POST['type'];
 
-// Convert string ID to MongoDB ObjectId
+// Choose the table based on student type
+$table = ($type === 'alumni') ? 'alumni_registrations' : 'registrations';
+
 try {
-    $objectId = new MongoDB\BSON\ObjectId($id);
-} catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Invalid student ID format']);
-    exit;
-}
-
-// Select collection based on type
-$collection = $type === 'alumni' ? $db->alumni_registrations : $db->registrations;
-
-// Check if the student exists and has paid
-$student = $collection->findOne([
-    '_id' => $objectId,
-    'payment_status' => 'Paid'
-]);
-
-if (!$student) {
-    echo json_encode(['success' => false, 'message' => 'Student not found or payment not complete']);
-    exit;
-}
-
-// Check if ticket is already generated
-if (isset($student['ticket']) && $student['ticket'] === 'generated') {
-    echo json_encode(['success' => false, 'message' => 'Ticket already generated']);
-    exit;
-}
-
-// Update the database to set ticket as generated
-try {
-    $result = $collection->updateOne(
-        ['_id' => $objectId],
-        ['$set' => [
-            'ticket' => 'generated',
-            'ticket_generated_at' => new MongoDB\BSON\UTCDateTime(),
-            'ticket_generated_by' => $_SESSION['admin_username']
-        ]]
-    );
+    // First check if student exists and has paid
+    $stmt = $db->prepare("SELECT * FROM $table WHERE id = :id AND payment_status = 'Paid'");
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $student = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    if ($result->getModifiedCount() === 1) {
+    if (!$student) {
+        echo json_encode(['success' => false, 'message' => 'Student not found or payment not complete']);
+        exit;
+    }
+    
+    // Check if ticket is already generated
+    if (isset($student['ticket_generated']) && $student['ticket_generated'] === 'Yes') {
+        echo json_encode(['success' => false, 'message' => 'Ticket already generated']);
+        exit;
+    }
+    
+    // Update only the ticket_generated status
+    $updateStmt = $db->prepare("UPDATE $table SET ticket_generated = 'Yes' WHERE id = :id");
+    $updateStmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $updateStmt->execute();
+    
+    if ($updateStmt->rowCount() === 1) {
         echo json_encode(['success' => true, 'message' => 'Ticket successfully generated']);
     } else {
         echo json_encode(['success' => false, 'message' => 'No changes were made']);
     }
-} catch (Exception $e) {
+    
+} catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
 ?>
