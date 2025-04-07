@@ -963,11 +963,11 @@ body {
     flex-wrap: wrap;
     font-family: sans-serif;
     padding: 20px;
-  }
-  
-  #stats .box {
-    width: 250px;
-    margin: 15px 45px;
+}
+
+#stats .box {
+    width: 220px;
+    margin: 15px 60px; /* Increased from 45px to 60px for more spacing */
     padding: 30px;
     text-align: center;
     border-radius: 20px;
@@ -977,124 +977,124 @@ body {
     backdrop-filter: blur(10px);
     visibility: hidden; /* Initially hidden */
     opacity: 0; /* Initially transparent */
-    transition: visibility 0s, opacity 0.5s linear; /* Smooth transition for visibility and opacity */
-  }
-  
-  #stats .box span {
+    transition: visibility 0s, opacity 0.3s linear; /* Reduced from 0.5s to 0.3s */
+}
+
+#stats .box span {
     font-size: 50px;
     font-weight: bold;
     color: #1bfaef;
-  }
-  
-  #stats .box p {
+}
+
+#stats .box p {
     margin: 10px 0 0 0;
     font-size: 18px;
-  }
-  
+}
+
 /* Bounce-in and bounce-out animations */
 @keyframes bounceIn {
-  0%, 20%, 40%, 60%, 80%, 100% {
-    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-  }
-  0% {
-    opacity: 0;
-    transform: scale3d(0.3, 0.3, 0.3);
-  }
-  20% {
-    transform: scale3d(1.1, 1.1, 1.1);
-  }
-  40% {
-    transform: scale3d(0.9, 0.9, 0.9);
-  }
-  60% {
-    opacity: 1;
-    transform: scale3d(1.03, 1.03, 1.03);
-  }
-  80% {
-    transform: scale3d(0.97, 0.97, 0.97);
-  }
-  100% {
-    opacity: 1;
-    transform: scale3d(1, 1, 1);
-  }
+    0%, 20%, 40%, 60%, 80%, 100% {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+    0% {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+    20% {
+        transform: scale3d(1.05, 1.05, 1.05); /* Reduced from 1.1 to 1.05 */
+    }
+    40% {
+        transform: scale3d(0.95, 0.95, 0.95); /* Increased from 0.9 to 0.95 */
+    }
+    60% {
+        opacity: 1;
+        transform: scale3d(1.02, 1.02, 1.02); /* Reduced from 1.03 to 1.02 */
+    }
+    80% {
+        transform: scale3d(0.98, 0.98, 0.98); /* Increased from 0.97 to 0.98 */
+    }
+    100% {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
 }
 
 @keyframes bounceOut {
-  20% {
-    transform: scale3d(0.9, 0.9, 0.9);
-  }
-  50%, 55% {
-    opacity: 1;
-    transform: scale3d(1.1, 1.1, 1.1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale3d(0.3, 0.3, 0.3);
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
+    20% {
+        transform: scale3d(0.95, 0.95, 0.95); /* Increased from 0.9 to 0.95 */
+    }
+    50%, 55% {
+        opacity: 1;
+        transform: scale3d(1.05, 1.05, 1.05); /* Reduced from 1.1 to 1.05 */
+    }
+    100% {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
 }
 
 .bounce-in {
-  animation: bounceIn 1s forwards;
+    animation: bounceIn 0.7s forwards; /* Reduced from 1s to 0.7s */
 }
 
 .bounce-out {
-  animation: bounceOut 1s forwards;
+    animation: bounceOut 0.7s forwards; /* Reduced from 1s to 0.7s */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .pulse {
-  animation: pulse 2s infinite;
+    animation: pulse 2s infinite;
 }
 
 /* Flip-in and flip-out animations */
 @keyframes flipInX {
-  0% {
-    transform: perspective(400px) rotateX(90deg);
-    opacity: 0;
-  }
-  40% {
-    transform: perspective(400px) rotateX(-10deg);
-  }
-  70% {
-    transform: perspective(400px) rotateX(10deg);
-  }
-  100% {
-    transform: perspective(400px) rotateX(0deg);
-    opacity: 1;
-  }
+    0% {
+        transform: perspective(400px) rotateX(90deg);
+        opacity: 0;
+    }
+    40% {
+        transform: perspective(400px) rotateX(-10deg);
+    }
+    70% {
+        transform: perspective(400px) rotateX(10deg);
+    }
+    100% {
+        transform: perspective(400px) rotateX(0deg);
+        opacity: 1;
+    }
 }
 
 @keyframes flipOutX {
-  0% {
-    transform: perspective(400px) rotateX(0deg);
-    opacity: 1;
-  }
-  30% {
-    transform: perspective(400px) rotateX(-10deg);
-  }
-  100% {
-    transform: perspective(400px) rotateX(90deg);
-    opacity: 0;
-  }
+    0% {
+        transform: perspective(400px) rotateX(0deg);
+        opacity: 1;
+    }
+    30% {
+        transform: perspective(400px) rotateX(-10deg);
+    }
+    100% {
+        transform: perspective(400px) rotateX(90deg);
+        opacity: 0;
+    }
 }
 
 .flip-in {
-  animation: flipInX 1s forwards;
+    animation: flipInX 1s forwards;
 }
 
 .flip-out {
-  animation: flipOutX 1s forwards;
+    animation: flipOutX 1s forwards;
 }
 
 /*------------------- Highlights Section -------------------*/

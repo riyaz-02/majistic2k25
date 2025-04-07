@@ -320,7 +320,7 @@ if (file_exists('src/config/payment_config.php')) {
                                 <label for="email">Email ID:</label>
                                 <input type="email" id="email" name="email" required>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="inhouse_competition">Do you want to take part in event? (optional)</label>
                             </div>
                             <div class="form-group radio-group">
@@ -338,7 +338,8 @@ if (file_exists('src/config/payment_config.php')) {
                                     <option value="The Poetry Slam (Recitation)">The Poetry Slam (Recitation)</option>
                                     <option value="Mic Hunters (Anchoring)">Mic Hunters (Anchoring)</option>
                                 </select>
-                            </div>
+                            </div> -->
+                            <input type="hidden" name="inhouse_competition" value="No">
                             <button type="button" id="registerButton">
                                 <span>Register</span>
                                 <span>Hurry Up!</span>
@@ -588,18 +589,18 @@ if (file_exists('src/config/payment_config.php')) {
             document.querySelector('.content-container').classList.remove('blur');
         }
 
-        document.getElementById('competition_group').style.display = 'none';
-        document.getElementById('inhouse_yes').addEventListener('change', function() {
-            document.getElementById('competition_group').style.display = 'block';
-            // Make the competition field required when "Yes" is selected
-            document.getElementById('competition').setAttribute('required', 'required');
-        });
-        document.getElementById('inhouse_no').addEventListener('change', function() {
-            document.getElementById('competition_group').style.display = 'none';
-            // Remove the required attribute when "No" is selected
-            document.getElementById('competition').removeAttribute('required');
-            document.getElementById('competition').value = '';
-        });
+        // document.getElementById('competition_group').style.display = 'none';
+        // document.getElementById('inhouse_yes').addEventListener('change', function() {
+        //     document.getElementById('competition_group').style.display = 'block';
+        //     // Make the competition field required when "Yes" is selected
+        //     document.getElementById('competition').setAttribute('required', 'required');
+        // });
+        // document.getElementById('inhouse_no').addEventListener('change', function() {
+        //     document.getElementById('competition_group').style.display = 'none';
+        //     // Remove the required attribute when "No" is selected
+        //     document.getElementById('competition').removeAttribute('required');
+        //     document.getElementById('competition').value = '';
+        // });
 
         var modal = document.getElementById('confirmationModal');
         var registerButton = document.getElementById('registerButton');
@@ -663,27 +664,27 @@ if (file_exists('src/config/payment_config.php')) {
             xhr.send("jis_id=" + jis_id);
         }
 
-        document.getElementById('competition').addEventListener('change', function() {
-            var selectedCompetition = this.value;
-            var bannerImage = document.getElementById('bannerImage');
-            switch (selectedCompetition) {
-                case 'Taal Se Taal Mila (Dance)':
-                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
-                    break;
-                case 'Actomania (Drama)':
-                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
-                    break;
-                case 'Jam Room (Band)':
-                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
-                    break;
-                case 'Fashion Fiesta (Fashion Show)':
-                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
-                    break;
-                default:
-                    bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
-                    break;
-            }
-        });
+        // document.getElementById('competition').addEventListener('change', function() {
+        //     var selectedCompetition = this.value;
+        //     var bannerImage = document.getElementById('bannerImage');
+        //     switch (selectedCompetition) {
+        //         case 'Taal Se Taal Mila (Dance)':
+        //             bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
+        //             break;
+        //         case 'Actomania (Drama)':
+        //             bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
+        //             break;
+        //         case 'Jam Room (Band)':
+        //             bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
+        //             break;
+        //         case 'Fashion Fiesta (Fashion Show)':
+        //             bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
+        //             break;
+        //         default:
+        //             bannerImage.src = 'https://i.ibb.co/VWLkTX5j/banner1.png';
+        //             break;
+        //     }
+        // });
 
         // Rules and Regulations modal logic
         document.getElementById('rulesLink').addEventListener('click', function(event) {
@@ -719,16 +720,16 @@ if (file_exists('src/config/payment_config.php')) {
             var email = document.getElementById('email').value.trim();
             var department = document.getElementById('department').value.trim();
             var gender = document.getElementById('gender').value.trim();
-            var inhouseYes = document.getElementById('inhouse_yes').checked;
-            var inhouseNo = document.getElementById('inhouse_no').checked;
-            var competition = document.getElementById('competition').value.trim();
+            // var inhouseYes = document.getElementById('inhouse_yes').checked;
+            // var inhouseNo = document.getElementById('inhouse_no').checked;
+            // var competition = document.getElementById('competition').value.trim();
 
             if (studentName === "" || /\d/.test(studentName)) {
                 errors.push({id: 'student_name', message: 'Student name should not contain numbers'});
                 isValid = false;
             }
 
-            var jisIdPattern = /^JIS\/\d{4}\/\d{4}$/;
+            var jisIdPattern = /^(JISU|JIS)\/\d{4}\/\d{4}$/;
             if (jisId === "" || !jisIdPattern.test(jisId)) {
                 errors.push({id: 'jis_id', message: 'Format should be JIS/20XX/0000'});
                 isValid = false;
@@ -757,16 +758,16 @@ if (file_exists('src/config/payment_config.php')) {
             }
             
             // Check if the user has selected at least one radio button (Yes or No)
-            if (!inhouseYes && !inhouseNo) {
-                errors.push({id: 'inhouse_yes', message: 'Please select whether you want to participate in an event'});
-                isValid = false;
-            }
+            // if (!inhouseYes && !inhouseNo) {
+            //     errors.push({id: 'inhouse_yes', message: 'Please select whether you want to participate in an event'});
+            //     isValid = false;
+            // }
             
-            // If "Yes" is selected, ensure an event is chosen
-            if (inhouseYes && competition === "") {
-                errors.push({id: 'competition', message: 'Please select an event to participate in'});
-                isValid = false;
-            }
+            // // If "Yes" is selected, ensure an event is chosen
+            // if (inhouseYes && competition === "") {
+            //     errors.push({id: 'competition', message: 'Please select an event to participate in'});
+            //     isValid = false;
+            // }
             
             if (errors.length > 0) {
                 errors.forEach((error, index) => {

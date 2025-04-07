@@ -37,6 +37,19 @@ if (file_exists(__DIR__ . '/../../user/adm/email_sender.php')) {
     }
 }
 
+// Get sort parameters (default: sort by registration_date DESC)
+$sort_column = isset($_GET['sort']) ? $_GET['sort'] : 'registration_date';
+$sort_direction = isset($_GET['dir']) ? $_GET['dir'] : 'desc';
+
+// Validate sort column to prevent SQL injection
+$allowed_columns = ['jis_id', 'student_name', 'department', 'mobile', 'email', 'registration_date', 'email_sent'];
+if (!in_array($sort_column, $allowed_columns)) {
+    $sort_column = 'registration_date';
+}
+
+// Validate sort direction
+$sort_direction = strtolower($sort_direction) === 'desc' ? 'desc' : 'asc';
+
 // Initialize variables for pagination
 $current_page = isset($_GET['subpage']) ? (int)$_GET['subpage'] : 1;
 $records_per_page = 15;
@@ -150,7 +163,7 @@ try {
                  UNION ALL
                  (SELECT id, 'alumni' AS reg_type, jis_id, alumni_name AS name, email, department, mobile, registration_date, payment_status 
                   FROM alumni_registrations$search_condition_alumni)
-                 ORDER BY registration_date DESC
+                 ORDER BY $sort_column $sort_direction
                  LIMIT :offset, :limit";
                  
         $stmt = $db->prepare($query);
@@ -170,7 +183,7 @@ try {
         // Get only student registrations
         $query = "SELECT id, 'student' AS reg_type, jis_id, student_name AS name, email, department, mobile, registration_date, payment_status 
                  FROM registrations$search_condition_student
-                 ORDER BY registration_date DESC
+                 ORDER BY $sort_column $sort_direction
                  LIMIT :offset, :limit";
                  
         $stmt = $db->prepare($query);
@@ -190,7 +203,7 @@ try {
         // Get only alumni registrations
         $query = "SELECT id, 'alumni' AS reg_type, jis_id, alumni_name AS name, email, department, mobile, registration_date, payment_status 
                  FROM alumni_registrations$search_condition_alumni
-                 ORDER BY registration_date DESC
+                 ORDER BY $sort_column $sort_direction
                  LIMIT :offset, :limit";
                  
         $stmt = $db->prepare($query);
@@ -262,6 +275,14 @@ unset($_SESSION['email_error']);
         <!-- Search & Filter Form -->
         <form method="get" class="row g-3 mb-4">
             <input type="hidden" name="page" value="email_resend">
+            
+            <!-- Keep sort parameters when search changes -->
+            <?php if(isset($_GET['sort'])): ?>
+                <input type="hidden" name="sort" value="<?php echo htmlspecialchars($_GET['sort']); ?>">
+            <?php endif; ?>
+            <?php if(isset($_GET['dir'])): ?>
+                <input type="hidden" name="dir" value="<?php echo htmlspecialchars($_GET['dir']); ?>">
+            <?php endif; ?>
             
             <div class="col-md-3">
                 <div class="input-group">
@@ -348,11 +369,39 @@ unset($_SESSION['email_error']);
                     <thead>
                         <tr>
                             <th>Type</th>
-                            <th>JIS ID</th>
-                            <th>Name</th>
+                            <th>
+                                <a href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&sort=jis_id&dir=<?php echo ($sort_column == 'jis_id' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    JIS ID
+                                    <?php if($sort_column == 'jis_id'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&sort=name&dir=<?php echo ($sort_column == 'name' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    Name
+                                    <?php if($sort_column == 'name'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
                             <th>Email</th>
-                            <th>Department</th>
-                            <th>Registration Date</th>
+                            <th>
+                                <a href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&sort=department&dir=<?php echo ($sort_column == 'department' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    Department
+                                    <?php if($sort_column == 'department'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&sort=registration_date&dir=<?php echo ($sort_column == 'registration_date' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    Registration Date
+                                    <?php if($sort_column == 'registration_date'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
                             <th>Payment</th>
                             <th width="220px">Actions</th>
                         </tr>
@@ -383,7 +432,14 @@ unset($_SESSION['email_error']);
                             <td><?php echo $name; ?></td>
                             <td><?php echo $email; ?></td>
                             <td><?php echo $department; ?></td>
-                            <td><?php echo $reg_date; ?></td>
+                            <td>
+                                <a href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&sort=registration_date&dir=<?php echo ($sort_column == 'registration_date' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    <?php echo $reg_date; ?>
+                                    <?php if($sort_column == 'registration_date'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </td>
                             <td><span class="badge bg-<?php echo $status_badge; ?>"><?php echo $payment_status; ?></span></td>
                             <td>
                                 <div class="btn-group">
@@ -442,18 +498,27 @@ unset($_SESSION['email_error']);
                 <nav aria-label="Registration pagination">
                     <ul class="pagination justify-content-center">
                         <li class="page-item <?php echo $current_page <= 1 ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&subpage=<?php echo $current_page - 1; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>">Previous</a>
+                            <a class="page-link" href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&subpage=<?php echo $current_page - 1; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?><?php echo isset($_GET['sort']) ? '&sort='.urlencode($_GET['sort']) : ''; ?><?php echo isset($_GET['dir']) ? '&dir='.urlencode($_GET['dir']) : ''; ?>">Previous</a>
                         </li>
                         
                         <?php
                         $start_page = max(1, $current_page - 2);
                         $end_page = min($total_pages, $current_page + 2);
                         
+                        // Helper function to generate pagination URL with all parameters
+                        function getPaginationUrl($page_num, $reg_type, $email_type, $sort_column, $sort_direction) {
+                            global $_GET;
+                            $url = "?page=email_resend&type=" . urlencode($reg_type) . "&email_type=" . urlencode($email_type) . "&subpage=" . $page_num;
+                            if(isset($_GET['search'])) $url .= '&search='.urlencode($_GET['search']);
+                            if(isset($_GET['payment_status'])) $url .= '&payment_status='.urlencode($_GET['payment_status']);
+                            if(isset($_GET['department'])) $url .= '&department='.urlencode($_GET['department']);
+                            if($sort_column) $url .= '&sort='.urlencode($sort_column);
+                            if($sort_direction) $url .= '&dir='.urlencode($sort_direction);
+                            return $url;
+                        }
+                        
                         if ($start_page > 1) {
-                            echo '<li class="page-item"><a class="page-link" href="?page=email_resend&type='.$reg_type.'&email_type='.$email_type.'&subpage=1'.
-                                (isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : '').
-                                (isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : '').
-                                (isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : '').'">1</a></li>';
+                            echo '<li class="page-item"><a class="page-link" href="' . getPaginationUrl(1, $reg_type, $email_type, $sort_column, $sort_direction) . '">1</a></li>';
                             
                             if ($start_page > 2) {
                                 echo '<li class="page-item disabled"><a class="page-link" href="#">...</a></li>';
@@ -462,10 +527,7 @@ unset($_SESSION['email_error']);
                         
                         for ($i = $start_page; $i <= $end_page; $i++) {
                             echo '<li class="page-item '.($i == $current_page ? 'active' : '').'">
-                                <a class="page-link" href="?page=email_resend&type='.$reg_type.'&email_type='.$email_type.'&subpage='.$i.
-                                (isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : '').
-                                (isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : '').
-                                (isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : '').'">'.$i.'</a></li>';
+                                <a class="page-link" href="' . getPaginationUrl($i, $reg_type, $email_type, $sort_column, $sort_direction) . '">'.$i.'</a></li>';
                         }
                         
                         if ($end_page < $total_pages) {
@@ -473,15 +535,12 @@ unset($_SESSION['email_error']);
                                 echo '<li class="page-item disabled"><a class="page-link" href="#">...</a></li>';
                             }
                             
-                            echo '<li class="page-item"><a class="page-link" href="?page=email_resend&type='.$reg_type.'&email_type='.$email_type.'&subpage='.$total_pages.
-                                (isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : '').
-                                (isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : '').
-                                (isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : '').'">'.$total_pages.'</a></li>';
+                            echo '<li class="page-item"><a class="page-link" href="' . getPaginationUrl($total_pages, $reg_type, $email_type, $sort_column, $sort_direction) . '">'.$total_pages.'</a></li>';
                         }
                         ?>
                         
                         <li class="page-item <?php echo $current_page >= $total_pages ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&subpage=<?php echo $current_page + 1; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>">Next</a>
+                            <a class="page-link" href="?page=email_resend&type=<?php echo $reg_type; ?>&email_type=<?php echo $email_type; ?>&subpage=<?php echo $current_page + 1; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?><?php echo isset($_GET['sort']) ? '&sort='.urlencode($_GET['sort']) : ''; ?><?php echo isset($_GET['dir']) ? '&dir='.urlencode($_GET['dir']) : ''; ?>">Next</a>
                         </li>
                     </ul>
                 </nav>
@@ -535,10 +594,6 @@ unset($_SESSION['email_error']);
                     <p class="mb-1"><strong>Name:</strong> <span id="recipientName"></span></p>
                     <p class="mb-0"><strong>Email:</strong> <span id="recipientEmail"></span></p>
                 </div>
-                <div class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    This will send a new copy of the email.
-                </div>
                 <div id="paymentEmailWarning" class="alert alert-danger" style="display: none;">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
                     Registration must be marked as "Paid" to send payment confirmation emails.
@@ -587,7 +642,7 @@ unset($_SESSION['email_error']);
                     });
             });
         });
-        
+
         // Handle Resend Email button
         const resendButtons = document.querySelectorAll('.resend-email-btn');
         resendButtons.forEach(button => {

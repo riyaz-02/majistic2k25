@@ -12,6 +12,19 @@ $offset = ($current_page - 1) * $records_per_page;
 // Set default registration type filter
 $reg_type = isset($_GET['type']) ? $_GET['type'] : 'all';
 
+// Get sort parameters (default: sort by jis_id ASC)
+$sort_column = isset($_GET['sort']) ? $_GET['sort'] : 'jis_id';
+$sort_direction = isset($_GET['dir']) ? $_GET['dir'] : 'asc';
+
+// Validate sort column to prevent SQL injection
+$allowed_columns = ['jis_id', 'name', 'department', 'mobile', 'registration_date', 'payment_status'];
+if (!in_array($sort_column, $allowed_columns)) {
+    $sort_column = 'jis_id';
+}
+
+// Validate sort direction
+$sort_direction = strtolower($sort_direction) === 'desc' ? 'desc' : 'asc';
+
 // Build search condition for both tables
 $search_condition_student = '';
 $search_condition_alumni = '';
@@ -116,7 +129,7 @@ try {
                  UNION ALL
                  (SELECT id, 'alumni' AS reg_type, jis_id, alumni_name AS name, department, mobile, registration_date, payment_status 
                   FROM alumni_registrations$search_condition_alumni)
-                 ORDER BY jis_id ASC
+                 ORDER BY $sort_column $sort_direction
                  LIMIT :offset, :limit";
                  
         $stmt = $db->prepare($query);
@@ -136,7 +149,7 @@ try {
         // Get only student registrations
         $query = "SELECT id, 'student' AS reg_type, jis_id, student_name AS name, department, mobile, registration_date, payment_status 
                  FROM registrations$search_condition_student
-                 ORDER BY jis_id ASC
+                 ORDER BY $sort_column $sort_direction
                  LIMIT :offset, :limit";
                  
         $stmt = $db->prepare($query);
@@ -156,7 +169,7 @@ try {
         // Get only alumni registrations
         $query = "SELECT id, 'alumni' AS reg_type, jis_id, alumni_name AS name, department, mobile, registration_date, payment_status 
                  FROM alumni_registrations$search_condition_alumni
-                 ORDER BY jis_id ASC
+                 ORDER BY $sort_column $sort_direction
                  LIMIT :offset, :limit";
                  
         $stmt = $db->prepare($query);
@@ -301,6 +314,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                 if(isset($_GET['search']) && !empty($_GET['search'])) $params[] = 'search=' . urlencode($_GET['search']);
                 if(isset($_GET['payment_status']) && !empty($_GET['payment_status'])) $params[] = 'payment_status=' . urlencode($_GET['payment_status']);
                 if(isset($_GET['department']) && !empty($_GET['department'])) $params[] = 'department=' . urlencode($_GET['department']);
+                if(isset($_GET['sort']) && !empty($_GET['sort'])) $params[] = 'sort=' . urlencode($_GET['sort']);
+                if(isset($_GET['dir']) && !empty($_GET['dir'])) $params[] = 'dir=' . urlencode($_GET['dir']);
                 echo implode('&', $params);
             ?>" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
@@ -310,6 +325,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
         <!-- Search & Filter Form -->
         <form method="get" class="row g-3 mb-4">
             <input type="hidden" name="page" value="all_registrations">
+            
+            <!-- Keep sort parameters when filters change -->
+            <?php if(isset($_GET['sort'])): ?>
+                <input type="hidden" name="sort" value="<?php echo htmlspecialchars($_GET['sort']); ?>">
+            <?php endif; ?>
+            <?php if(isset($_GET['dir'])): ?>
+                <input type="hidden" name="dir" value="<?php echo htmlspecialchars($_GET['dir']); ?>">
+            <?php endif; ?>
             
             <div class="col-md-3">
                 <div class="input-group">
@@ -377,12 +400,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                                 <input class="form-check-input" type="checkbox" id="selectAll">
                             </th>
                             <th>Type</th>
-                            <th>JIS ID</th>
-                            <th>Name</th>
-                            <th>Department</th>
-                            <th>Mobile</th>
-                            <th>Registration Date</th>
-                            <th>Payment Status</th>
+                            <th>
+                                <a href="?page=all_registrations&type=<?php echo $reg_type; ?>&sort=jis_id&dir=<?php echo ($sort_column == 'jis_id' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    JIS ID
+                                    <?php if($sort_column == 'jis_id'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?page=all_registrations&type=<?php echo $reg_type; ?>&sort=name&dir=<?php echo ($sort_column == 'name' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    Name
+                                    <?php if($sort_column == 'name'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?page=all_registrations&type=<?php echo $reg_type; ?>&sort=department&dir=<?php echo ($sort_column == 'department' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    Department
+                                    <?php if($sort_column == 'department'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?page=all_registrations&type=<?php echo $reg_type; ?>&sort=mobile&dir=<?php echo ($sort_column == 'mobile' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    Mobile
+                                    <?php if($sort_column == 'mobile'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?page=all_registrations&type=<?php echo $reg_type; ?>&sort=registration_date&dir=<?php echo ($sort_column == 'registration_date' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    Registration Date
+                                    <?php if($sort_column == 'registration_date'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="?page=all_registrations&type=<?php echo $reg_type; ?>&sort=payment_status&dir=<?php echo ($sort_column == 'payment_status' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>" class="text-dark text-decoration-none">
+                                    Payment Status
+                                    <?php if($sort_column == 'payment_status'): ?>
+                                        <i class="bi bi-arrow-<?php echo $sort_direction == 'asc' ? 'up' : 'down'; ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
                             <th width="120px">Actions</th>
                         </tr>
                     </thead>
@@ -452,23 +517,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
             </div>
         </form>
             
-        <!-- Pagination -->
+        <!-- Pagination - updated to include sort parameters -->
         <?php if ($total_pages > 1): ?>
             <nav aria-label="Registration pagination">
                 <ul class="pagination justify-content-center">
                     <li class="page-item <?php echo $current_page <= 1 ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page=all_registrations&type=<?php echo $reg_type; ?>&subpage=<?php echo $current_page - 1; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>">Previous</a>
+                        <a class="page-link" href="?page=all_registrations&type=<?php echo $reg_type; ?>&subpage=<?php echo $current_page - 1; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?><?php echo isset($_GET['sort']) ? '&sort='.urlencode($_GET['sort']) : ''; ?><?php echo isset($_GET['dir']) ? '&dir='.urlencode($_GET['dir']) : ''; ?>">Previous</a>
                     </li>
                     
                     <?php
                     $start_page = max(1, $current_page - 2);
                     $end_page = min($total_pages, $current_page + 2);
                     
+                    // Helper function to generate pagination URL with all parameters
+                    function getPaginationUrl($page_num, $reg_type, $sort_column, $sort_direction) {
+                        global $_GET;
+                        $url = "?page=all_registrations&type=" . urlencode($reg_type) . "&subpage=" . $page_num;
+                        if(isset($_GET['search'])) $url .= '&search='.urlencode($_GET['search']);
+                        if(isset($_GET['payment_status'])) $url .= '&payment_status='.urlencode($_GET['payment_status']);
+                        if(isset($_GET['department'])) $url .= '&department='.urlencode($_GET['department']);
+                        if($sort_column) $url .= '&sort='.urlencode($sort_column);
+                        if($sort_direction) $url .= '&dir='.urlencode($sort_direction);
+                        return $url;
+                    }
+                    
                     if ($start_page > 1) {
-                        echo '<li class="page-item"><a class="page-link" href="?page=all_registrations&type='.$reg_type.'&subpage=1'.
-                            (isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : '').
-                            (isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : '').
-                            (isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : '').'">1</a></li>';
+                        echo '<li class="page-item"><a class="page-link" href="' . getPaginationUrl(1, $reg_type, $sort_column, $sort_direction) . '">1</a></li>';
                         
                         if ($start_page > 2) {
                             echo '<li class="page-item disabled"><a class="page-link" href="#">...</a></li>';
@@ -477,10 +551,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                     
                     for ($i = $start_page; $i <= $end_page; $i++) {
                         echo '<li class="page-item '.($i == $current_page ? 'active' : '').'">
-                            <a class="page-link" href="?page=all_registrations&type='.$reg_type.'&subpage='.$i.
-                            (isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : '').
-                            (isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : '').
-                            (isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : '').'">'.$i.'</a></li>';
+                            <a class="page-link" href="' . getPaginationUrl($i, $reg_type, $sort_column, $sort_direction) . '">'.$i.'</a></li>';
                     }
                     
                     if ($end_page < $total_pages) {
@@ -488,15 +559,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                             echo '<li class="page-item disabled"><a class="page-link" href="#">...</a></li>';
                         }
                         
-                        echo '<li class="page-item"><a class="page-link" href="?page=all_registrations&type='.$reg_type.'&subpage='.$total_pages.
-                            (isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : '').
-                            (isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : '').
-                            (isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : '').'">'.$total_pages.'</a></li>';
+                        echo '<li class="page-item"><a class="page-link" href="' . getPaginationUrl($total_pages, $reg_type, $sort_column, $sort_direction) . '">'.$total_pages.'</a></li>';
                     }
                     ?>
                     
                     <li class="page-item <?php echo $current_page >= $total_pages ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page=all_registrations&type=<?php echo $reg_type; ?>&subpage=<?php echo $current_page + 1; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?>">Next</a>
+                        <a class="page-link" href="?page=all_registrations&type=<?php echo $reg_type; ?>&subpage=<?php echo $current_page + 1; ?><?php echo isset($_GET['search']) ? '&search='.urlencode($_GET['search']) : ''; ?><?php echo isset($_GET['payment_status']) ? '&payment_status='.urlencode($_GET['payment_status']) : ''; ?><?php echo isset($_GET['department']) ? '&department='.urlencode($_GET['department']) : ''; ?><?php echo isset($_GET['sort']) ? '&sort='.urlencode($_GET['sort']) : ''; ?><?php echo isset($_GET['dir']) ? '&dir='.urlencode($_GET['dir']) : ''; ?>">Next</a>
                     </li>
                 </ul>
             </nav>

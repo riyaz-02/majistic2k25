@@ -13,12 +13,12 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com'; 
     $mail->SMTPAuth = true;
-    $mail->Username = 'payment1.majistic@gmail.com'; 
-    $mail->Password = 'ccxdljtkjphhgfki';  // Use App Password
+    $mail->Username = 'payment.majistic@gmail.com'; 
+    $mail->Password = 'celrulaellszbjqj';  // Use App Password
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
     $mail->Port = 587;
 
-    $mail->setFrom('payment1.majistic@gmail.com', 'Riyaz');
+    $mail->setFrom('payment.majistic@gmail.com', 'Riyaz');
     $mail->addAddress('skriyaz30092002@gmail.com');
 
     $mail->isHTML(true);

@@ -22,61 +22,63 @@
                 <div class="swiper-slide">
                     <div class="artist-container">
                         <div class="artist-banner">
-                            <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
-                                <div class="artist-overlay">
-                                    <h2 class="artist-name">A Night OF NON STOP DANCE</h2>
-                                    <p class="artist-type">Get Ready for two days of Electrifying Beats!</p>
-                                </div>
+                            <div class="artist-image" style="background-image: url('../images/carousel/distortedchromosomes.png')">
+                                <!-- Empty -->
                             </div>
                         </div>
                         <div class="artist-event-details">
-                            <h3 class="artist-event-name">Revealing Soon</h3>
+                            <!-- Replaced headline with attractive artist name -->
+                            <div class="artist-title-container">
+                                <h2 class="artist-name">DISTORTED CHROMOSOMES</h2>
+                                <div class="artist-name-underline"></div>
+                                <p class="artist-type">Experience an electrifying lineup featuring 4 incredible artists over two days!</p>
+                            </div>
+                            
                             <div class="artist-event-info">
                                 <div class="artist-info-item artist-date-info">
                                     <i class="fas fa-calendar-alt"></i>
-                                    <span>11th, 12th April, 2025</span>
+                                    <span>11th April, 2025</span>
                                 </div>
                                 <div class="artist-info-item artist-time-info">
                                     <i class="fas fa-clock"></i>
-                                    <span>10:00 AM - 8:00 PM</span>
+                                    <span>Day 1 - 1st Show</span>
                                 </div>
                                 <div class="artist-info-item artist-location-info">
                                     <i class="fas fa-map-marker-alt"></i>
                                     <span>JISCE Main Ground</span>
                                 </div>
                             </div>
-                            <!-- <p class="artist-event-description">
-                                "The bass is about to drop, and the crowd is about to go wild! A renowned DJ is taking over Majistic 2K25, bringing high-energy electronic beats, pulsating rhythms, and a night of non-stop dancing. Brace yourself for an unforgettable audio-visual spectacle, where music and madness collide!"
-                            </p> -->
                             <p class="artist-event-description">
-                            The energy is building, and the excitement is off the charts! Majistic 2K25 at our college cultural fest is about to light up with an incredible performance that will keep you on your feet all night long. Expect heart-pounding beats, mesmerizing vibes, and a breathtaking show that blends sound and visuals into pure magic. Get ready for an epic evening of celebration and thrill that you won’t forget!
-                            </p>
+                            Brace yourself for a power-packed performance as Distorted Chromosomes take the stage! With their raw energy and electrifying presence, they will kick off Majistic 2K25 with an explosive set. Get ready to headbang, sing along, and lose yourself in the rhythm of pure musical adrenaline!                            </p>
                             <button class="artist-register-btn" onclick="registerForEvent('Neon Beats Night')">Register Now</button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Artist 2 -->
-                <!-- <div class="swiper-slide">
+                <div class="swiper-slide">
                     <div class="artist-container">
                         <div class="artist-banner">
-                            <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
-                                <div class="artist-overlay">
-                                    <h2 class="artist-name">Band Night</h2>
-                                    <p class="artist-type">A High-Octane Band is Coming to Shake Majistic 2K25!</p>
-                                </div>
+                            <div class="artist-image" style="background-image: url('../images/carousel/ua.png')">
+                                <!-- Empty -->
                             </div>
                         </div>
                         <div class="artist-event-details">
-                            <h3 class="artist-event-name">Revealing Soon</h3>
+                            <!-- Replaced headline with attractive artist name -->
+                            <div class="artist-title-container">
+                                <h2 class="artist-name">Underground Authority X Shrestha Das</h2>
+                                <div class="artist-name-underline"></div>
+                                <p class="artist-type">Get Ready for two days of Electrifying Beats!</p>
+                            </div>
+                            
                             <div class="artist-event-info">
                                 <div class="artist-info-item artist-date-info">
                                     <i class="fas fa-calendar-alt"></i>
-                                    <span>12 April, 2025</span>
+                                    <span>11th April, 2025</span>
                                 </div>
                                 <div class="artist-info-item artist-time-info">
                                     <i class="fas fa-clock"></i>
-                                    <span>7:30 PM - 10:30 PM</span>
+                                    <span>Day 1 - 2nd Show</span>
                                 </div>
                                 <div class="artist-info-item artist-location-info">
                                     <i class="fas fa-map-marker-alt"></i>
@@ -84,34 +86,36 @@
                                 </div>
                             </div>
                             <p class="artist-event-description">
-                                "Loud guitars, thunderous drums, and an unstoppable wave of energy—a legendary band is set to take the Majistic 2K25 stage by storm! Whether you’re a fan of rock, fusion, or headbanging anthems, this night will be pure musical madness. Prepare for powerful performances, soul-stirring solos, and a crowd that roars along!"
-                            </p>
-                            <button class="artist-register-btn" onclick="registerForEvent('Rock Revolution')">Register Now</button>
+                            Get ready to witness an unforgettable fusion of rap-rock and soulful melodies as Underground Authority joins forces with the sensational Shrestha Das! Their high-energy beats, powerful lyrics, and captivating stage presence will make Day 1 of Majistic 2K25 an experience to remember. Don't miss this dynamic performance!                            </p>
+                            <button class="artist-register-btn" onclick="registerForEvent('Neon Beats Night')">Register Now</button>
                         </div>
                     </div>
-                </div> -->
-                
+                </div>
+
                 <!-- Artist 3 -->
-                <!-- <div class="swiper-slide">
+                <div class="swiper-slide">
                     <div class="artist-container">
                         <div class="artist-banner">
-                            <div class="artist-image" style="background-image: url('https://i.ibb.co/8nvdsMHd/REVEALING-20250319-040742-0000.png')">
-                                <div class="artist-overlay">
-                                    <h2 class="artist-name">Solo Singer Concert</h2>
-                                    <p class="artist-type">One Voice, One Stage, Infinite Emotions!</p>
-                                </div>
+                            <div class="artist-image" style="background-image: url('../images/carousel/annaya.png')">
+                                <!-- Empty -->
                             </div>
                         </div>
                         <div class="artist-event-details">
-                            <h3 class="artist-event-name">Revealing Soon</h3>
+                            <!-- Replaced headline with attractive artist name -->
+                            <div class="artist-title-container">
+                                <h2 class="artist-name">Annaya Chakraborty & THE BOHEMIAN BAUL</h2>
+                                <div class="artist-name-underline"></div>
+                                <p class="artist-type">Experience an electrifying lineup featuring 4 incredible artists over two days!</p>
+                            </div>
+                            
                             <div class="artist-event-info">
                                 <div class="artist-info-item artist-date-info">
                                     <i class="fas fa-calendar-alt"></i>
-                                    <span>12 April, 2025</span>
+                                    <span>12th April, 2025</span>
                                 </div>
                                 <div class="artist-info-item artist-time-info">
                                     <i class="fas fa-clock"></i>
-                                    <span>6:00 PM - 9:00 PM</span>
+                                    <span>Day 2 - 1st Show</span>
                                 </div>
                                 <div class="artist-info-item artist-location-info">
                                     <i class="fas fa-map-marker-alt"></i>
@@ -119,12 +123,49 @@
                                 </div>
                             </div>
                             <p class="artist-event-description">
-                                "A voice that melts hearts, gives chills, and lights up the night—a mystery artist is set to take the Majistic 2K25 stage for an unforgettable solo concert! Whether it's soulful melodies, foot-tapping hits, or powerful ballads, this artist will leave you spellbound. Get ready to sing along, sway to the rhythm, and witness magic unfold under the stars!"
-                            </p>
-                            <button class="artist-register-btn" onclick="registerForEvent('Melodies Under Moonlight')">Register Now</button>
+                            Immerse yourself in a soul-stirring musical journey with Annaya Chakraborty & The Bohemian Baul. Blending the mysticism of Baul with modern beats, their performance will create an enchanting atmosphere that will leave you mesmerized. Let the melodies take over and transport you into a world of musical magic!                            </p>
+                            <button class="artist-register-btn" onclick="registerForEvent('Neon Beats Night')">Register Now</button>
                         </div>
                     </div>
-                </div> -->
+                </div>
+
+                <!-- Artist 4 -->
+                <div class="swiper-slide">
+                    <div class="artist-container">
+                        <div class="artist-banner">
+                            <div class="artist-image" style="background-image: url('../images/carousel/djkoyel.png')">
+                                <!-- Empty -->
+                            </div>
+                        </div>
+                        <div class="artist-event-details">
+                            <!-- Replaced headline with attractive artist name -->
+                            <div class="artist-title-container">
+                                <h2 class="artist-name">DJ KOYEL</h2>
+                                <div class="artist-name-underline"></div>
+                                <p class="artist-type">Get Ready for two days of Electrifying Beats!</p>
+                            </div>
+                            
+                            <div class="artist-event-info">
+                                <div class="artist-info-item artist-date-info">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>12th April, 2025</span>
+                                </div>
+                                <div class="artist-info-item artist-time-info">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Day 2 - 2nd Show</span>
+                                </div>
+                                <div class="artist-info-item artist-location-info">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>JISCE Main Ground</span>
+                                </div>
+                            </div>
+                            <p class="artist-event-description">
+                            Turn up the volume and hit the dance floor as DJ Koyel takes over the final act of Majistic 2K25! With pulsating beats, electrifying drops, and an energy that will keep you moving all night, this DJ set will be the ultimate celebration of music, dance, and unforgettable memories!                            </p>
+                            <button class="artist-register-btn" onclick="registerForEvent('Neon Beats Night')">Register Now</button>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
             
             <!-- Add Navigation -->
@@ -172,14 +213,59 @@
                         // Update swiper height after initialization
                         setTimeout(() => {
                             this.updateAutoHeight(10);
+                            adjustImageSizing();
                         }, 100);
                     },
                     slideChangeTransitionEnd: function() {
                         // Update height after slide changes
                         this.updateAutoHeight(10);
+                        adjustImageSizing();
+                    },
+                    resize: function() {
+                        // Adjust sizes when window is resized
+                        adjustImageSizing();
                     }
                 }
             });
+
+            // Function to dynamically adjust image sizing based on screen size
+            function adjustImageSizing() {
+                const banners = document.querySelectorAll('.artist-banner');
+                const containers = document.querySelectorAll('.artist-container');
+                
+                banners.forEach((banner) => {
+                    const image = banner.querySelector('.artist-image');
+                    const container = banner.closest('.artist-container');
+                    
+                    // Adjust background-size based on screen width
+                    if (window.innerWidth > 1600) {
+                        image.style.backgroundSize = 'contain';
+                    } else if (window.innerWidth <= 992) {
+                        // Force 'cover' on mobile screens
+                        image.style.backgroundSize = 'cover';
+                    } else {
+                        image.style.backgroundSize = 'cover';
+                    }
+                    
+                    // Ensure container height adjusts to banner
+                    if (window.innerWidth <= 992) {
+                        // Mobile layout (vertical)
+                        container.style.height = 'auto';
+                        
+                        // Ensure the artist-title-container is visible
+                        const titleContainer = container.querySelector('.artist-title-container');
+                        if (titleContainer) {
+                            titleContainer.style.display = 'block';
+                        }
+                    }
+                });
+            }
+            
+            // Initial adjustment
+            adjustImageSizing();
+            
+            // Resize listener
+            window.addEventListener('resize', adjustImageSizing);
 
             // Fade-in animation on scroll
             const artistSection = document.querySelector('#artists-carousel');
@@ -245,9 +331,10 @@
         }
         
         .artist-swiper-container {
-            width: 90%;
-            height: auto; /* Changed from fixed height to auto */
-            overflow: visible; /* Changed from hidden to visible */
+            width: 85%;
+            max-width: 1600px; /* Added max-width for very large screens */
+            height: auto;
+            overflow: visible;
             position: relative;
             z-index: 1;
             margin: 0 auto;
@@ -261,18 +348,24 @@
             overflow: hidden;
             background-color: rgba(0, 0, 0, 0.9);
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-            min-height: 500px; /* Changed from fixed height to min-height */
-            height: auto; /* Added to allow container to grow based on content */
+            height: auto;
             border-radius: 20px;
+            max-height: 90vh; /* Ensures it doesn't exceed viewport height */
         }
         
         .artist-banner {
-            flex: 2;
+            flex: 0.8;
             position: relative;
             border-top-left-radius: 20px;
             border-bottom-left-radius: 20px;
             overflow: hidden;
-            min-height: 500px; /* Added minimum height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40%;
+            max-width: 40%;
+            aspect-ratio: 4/5;
+            max-height: 90vh; /* Ensures image container doesn't exceed viewport height */
         }
         
         .artist-image {
@@ -281,64 +374,105 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: cover;
+            background-size: contain; /* Changed from cover to contain for full image view */
             background-position: center;
+            background-repeat: no-repeat; /* Prevent repeating */
             transition: all 0.5s ease;
             background-color: #000;
         }
         
-        .artist-image:hover {
-            transform: scale(1.03);
-        }
-        
-        .artist-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 40px;
-            background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
+        /* Replace event headline with attractive artist name styling */
+        .artist-title-container {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 0 0 15px 0;
+            text-align: center;
         }
         
         .artist-name {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            color: #ffffff;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff 30%, #aa83ff 70%, #4a00e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: shimmer 3s infinite alternate;
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .artist-name-underline {
+            height: 3px;
+            width: 80px;
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            margin: 15px auto 20px;
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .artist-name-underline:before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #8e2de2;
+            border-radius: 50%;
+            bottom: -3.5px;
+            right: -5px;
+            box-shadow: 0 0 10px #8e2de2;
+        }
+        
+        .artist-name-underline:after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #4a00e0;
+            border-radius: 50%;
+            bottom: -3.5px;
+            left: -5px;
+            box-shadow: 0 0 10px #4a00e0;
         }
         
         .artist-type {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 400;
             color: #ffffff;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+            font-style: italic;
         }
         
         .artist-event-details {
-            flex: 1;
-            padding: 40px;
+            flex: 1.2;
+            padding: 40px 50px;
             display: flex;
             flex-direction: column;
             background: rgba(18, 18, 20, 0.6);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-left: 1px solid rgba(255, 255, 255, 0.1);
-            overflow-y: visible; /* Changed from auto to visible to prevent scrollbars */
+            overflow-y: auto; /* Changed from visible to auto to handle overflow */
             border-top-right-radius: 20px;
             border-bottom-right-radius: 20px;
-        }
-        
-        .artist-event-name {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #4a00e0, #8e2de2);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            justify-content: center;
+            align-items: stretch;
+            max-width: 100%;
+            box-sizing: border-box;
+            max-height: 90vh; /* Match container max-height */
         }
         
         .artist-event-info {
@@ -348,6 +482,10 @@
             padding: 25px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .artist-info-item {
@@ -400,10 +538,16 @@
             color: #ffffff;
             flex-grow: 1;
             font-size: 1.1rem;
-            padding: 0 10px;
+            padding: 10px 20px;
             border-left: 3px solid #8e2de2;
             font-style: italic;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0 15px 15px 0;
         }
         
         .artist-register-btn {
@@ -421,6 +565,8 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             width: 80%;
+            max-width: 300px;
+            margin: 0 auto;
         }
         
         .artist-register-btn:hover {
@@ -434,7 +580,7 @@
         
         /* Swiper navigation and pagination with unique selectors */
         #artists-carousel .swiper-slide {
-            height: auto; /* Allow slide to adjust based on content height */
+            height: auto;
             opacity: 0;
             transition: opacity 0.3s ease;
             border-radius: 20px;
@@ -517,19 +663,31 @@
         /* Responsive design */
         @media (max-width: 1200px) {
             .artist-banner {
-                flex: 3;
+                flex: 0.8;
+                min-width: 40%;
+                max-width: 40%;
+                aspect-ratio: 4/5;
+            }
+            
+            .artist-name {
+                font-size: 2.4rem;
             }
             
             .artist-event-details {
-                flex: 2;
+                flex: 1.2;
+                padding: 35px 40px;
+            }
+            
+            .artist-name {
+                font-size: 2rem;
             }
             
             .artist-container {
-                min-height: 450px; /* Changed from fixed height to min-height */
+                min-height: 450px;
             }
             
-            .artist-swiper-container {
-                height: auto; /* Allow container to adjust based on content */
+            .artist-title-container {
+                margin-top: 10px;
             }
         }
         
@@ -537,76 +695,47 @@
             .artist-container {
                 flex-direction: column;
                 height: auto;
+                max-height: none; /* Remove max-height constraint for mobile */
             }
             
             .artist-banner {
-                min-height: 350px;
+                min-height: auto;
+                min-width: 100%;
+                max-width: 100%;
+                width: 100%;
                 position: relative;
                 border-radius: 20px 20px 0 0;
+                aspect-ratio: 4/5;
+                max-height: none; /* Remove max-height constraint for mobile */
             }
             
             .artist-image {
-                position: absolute;
-            }
-            
-            .artist-event-name {
-                font-size: 1.8rem;
-            }
-            
-            .artist-name {
-                font-size: 2rem;
-            }
-            
-            .artist-event-info {
-                padding: 20px;
-            }
-            
-            .artist-swiper-container {
-                height: auto;
+                background-size: cover !important; /* Force cover on mobile for better display */
             }
             
             .artist-event-details {
                 border-radius: 0 0 20px 20px;
+                width: 100%;
+                padding: 30px 35px;
+                max-height: none; /* Remove max-height constraint to prevent scrolling */
+                overflow-y: visible; /* Prevent scrollbars on mobile */
+            }
+            
+            .artist-title-container {
+                margin-top: 0; /* Ensure proper spacing */
+                display: block; /* Ensure visibility */
             }
         }
         
         @media (max-width: 768px) {
-            .artist-section-title {
-                font-size: 2.2rem;
-            }
-            
-            .artist-banner {
-                min-height: 300px;
-            }
-            
             .artist-event-details {
-                padding: 25px;
+                padding: 25px 30px;
+                overflow-y: visible; /* Ensure no scrollbars */
             }
             
-            .artist-event-name {
-                font-size: 1.6rem;
+            .artist-title-container {
+                display: block; /* Ensure it's shown */
                 margin-bottom: 20px;
-            }
-            
-            .artist-info-item {
-                font-size: 1rem;
-                margin-bottom: 15px;
-            }
-            
-            .artist-info-item i {
-                font-size: 1.3rem;
-                width: 35px;
-                height: 35px;
-            }
-            
-            .artist-event-description {
-                font-size: 1rem;
-                line-height: 1.6;
-            }
-            
-            .artist-register-btn {
-                padding: 15px 30px;
-                font-size: 1.1rem;
             }
         }
         
@@ -624,59 +753,46 @@
             }
             
             .artist-banner {
-                min-height: 250px;
-            }
-            
-            .artist-name {
-                font-size: 1.5rem;
-            }
-            
-            .artist-type {
-                font-size: 0.9rem;
+                aspect-ratio: 4/5; /* Maintain the 4:5 aspect ratio */
+                min-height: auto; /* Let the aspect ratio determine the height */
             }
             
             .artist-event-details {
-                padding: 20px 15px;
+                padding: 20px;
+                overflow-y: visible; /* No scrollbars on mobile */
             }
             
-            .artist-event-name {
-                font-size: 1.4rem;
+            .artist-title-container {
                 margin-bottom: 15px;
+                padding: 0; /* Reduce padding to save space */
             }
             
-            .artist-event-info {
-                padding: 15px;
-                margin-bottom: 20px;
+            /* Override any styles that might hide title container on small screens */
+            .artist-title-container {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* Viewport height adjustments */
+        @media (max-height: 700px) {
+            .artist-container {
+                max-height: none; /* Remove max-height constraint for shorter screens */
             }
             
-            .artist-info-item {
-                margin-bottom: 12px;
+            .artist-banner {
+                max-height: none; /* Remove max-height constraint */
             }
             
-            .artist-info-item i {
-                font-size: 1.2rem;
-                width: 30px;
-                height: 30px;
-                margin-right: 10px;
+            .artist-event-details {
+                max-height: none; /* Remove max-height constraint */
+                overflow-y: visible; /* Prevent scrollbars */
             }
             
             .artist-event-description {
-                padding: 0 5px;
-                border-left: 2px solid #8e2de2;
-                margin-bottom: 20px;
-            }
-            
-            .artist-register-btn {
-                width: 100%;
-                text-align: center;
-                padding: 12px 20px;
-                font-size: 1rem;
-            }
-            
-            .artist-swiper-button-next,
-            .artist-swiper-button-prev {
-                width: 40px;
-                height: 40px;
+                max-height: none; /* Remove max-height */
+                overflow-y: visible; /* Prevent scrollbars */
             }
         }
     </style>
