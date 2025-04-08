@@ -9,16 +9,15 @@ $mail = new PHPMailer(true);
 try {
     $mail->SMTPDebug = 2;  // Enable debug for troubleshooting
     $mail->Debugoutput = 'html';
-    
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com'; 
     $mail->SMTPAuth = true;
-    $mail->Username = 'payment.majistic@gmail.com'; 
-    $mail->Password = 'celrulaellszbjqj';  // Use App Password
+    $mail->Username = 'register@majistic.org'; 
+    $mail->Password = 'xejqfqgsdjijlejz';  // Use App Password
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
     $mail->Port = 587;
 
-    $mail->setFrom('payment.majistic@gmail.com', 'Riyaz');
+    $mail->setFrom('register@majistic.org', 'Riyaz');
     $mail->addAddress('skriyaz30092002@gmail.com');
 
     $mail->isHTML(true);
