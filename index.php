@@ -42,6 +42,335 @@ if (session_status() === PHP_SESSION_NONE) {
         color:white;
         text-weight:bold;
         }
+        
+        /* Commented out Live Event Banner Styles 
+        .live-banner {
+            background: linear-gradient(135deg, #ff3e00, #ff8300);
+            color: white;
+            text-align: center;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 62, 0, 0.3);
+            max-width: 600px;
+            width: 90%; 
+        }
+        
+        .live-banner::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            animation: glare 6s linear infinite;
+        }
+        
+        .live-badge {
+            display: inline-block;
+            background-color: #fff;
+            color: #ff3e00;
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 30px;
+            margin-bottom: 10px;
+            position: relative;
+            animation: blink 1.5s infinite;
+        }
+        
+        .live-badge::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #ff3e00;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse-dot 1.5s infinite;
+        }
+        
+        .live-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .live-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        */
+        
+        /* Completion Banner Styles */
+        .completion-banner {
+            background: linear-gradient(135deg, #3a1c71,rgb(240, 86, 101),rgb(255, 144, 70));
+            color: white;
+            text-align: center;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 5px auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(58, 28, 113, 0.4);
+            max-width: 900px;
+            width: 90%;
+            z-index: 1;
+            animation: gradient-shift 5s ease infinite;
+            background-size: 300% 300%;
+        }
+        
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .completion-banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 0 L100 50 L50 100 L0 50Z" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+            opacity: 0.3;
+            z-index: -1;
+            animation: pattern-move 30s linear infinite;
+        }
+        
+        .completion-banner::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            animation: shimmer 8s linear infinite;
+            z-index: -1;
+        }
+        
+        .completion-badge {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #3a1c71;
+            font-weight: bold;
+            padding: 6px 18px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .completion-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #ffffff, #e0e0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .completion-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .stats-highlight {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffde59;
+            margin: 5px 0;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            position: relative;
+            padding: 0 10px;
+        }
+        
+        .stats-highlight::before,
+        .stats-highlight::after {
+            content: "★";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .stats-highlight::before {
+            left: -15px;
+        }
+        
+        .stats-highlight::after {
+            right: -15px;
+        }
+        
+        .completion-message {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin: 20px auto;
+            max-width: 80%;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.85);
+            color: #3a1c71;
+            font-weight: 600;
+            padding: 10px 25px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-btn:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            color:rgb(233, 86, 101);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            opacity: 0.8;
+            pointer-events: none; /* Prevent confetti from blocking interaction */
+            animation: confettiFall linear forwards; /* Changed to forwards to stop at end */
+            z-index: 0; /* Keep confetti behind content */
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(500px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        #confetti-container {
+            position: absolute;
+            top: -15px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pattern-move {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+        
+        /* Responsive styles for completion banner */
+        @media (max-width: 992px) {
+            .completion-title {
+                font-size: 2.4rem;
+            }
+            
+            .completion-subtitle,
+            .stats-highlight {
+                font-size: 1.2rem;
+            }
+            
+            .completion-banner {
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .completion-title {
+                font-size: 2rem;
+                letter-spacing: 1px;
+            }
+            
+            .completion-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .stats-highlight {
+                font-size: 1.8rem;
+            }
+            
+            .completion-banner {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .action-btn {
+                width: 80%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .completion-title {
+                font-size: 1.8rem;
+                letter-spacing: 0.5px;
+            }
+            
+            .completion-subtitle {
+                font-size: 1rem;
+            }
+            
+            .stats-highlight {
+                font-size: 1.6rem;
+            }
+            
+            .completion-badge {
+                padding: 5px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .completion-banner {
+                padding: 15px;
+                width: 95%;
+            }
+        }
     </style>   
 </head>
 
@@ -65,39 +394,68 @@ if (session_status() === PHP_SESSION_NONE) {
                         <!-- <h2 class="mt-2"><i class="bi bi-geo-alt-fill"></i> JIS College of Engineering</h2> -->
                     </div><!-- .event-dates -->
 
+                    <!-- Commented out countdown section - keeping for future use -->
+                    <!--
                     <div class="countdown flex flex-wrap justify-content-center" data-date="2018/06/06">
                         <div class="countdown-holder text-center">
                             <div class="dday">0</div>
                             <label>Days</label>
-                        </div><!-- .countdown-holder -->
+                        </div>
 
                         <div class="countdown-holder text-center">
                             <div class="dhour">0</div>
                             <label>Hours</label>
-                        </div><!-- .countdown-holder -->
+                        </div>
 
                         <div class="countdown-holder text-center">
                             <div class="dmin">0</div>
                             <label>Minutes</label>
-                        </div><!-- .countdown-holder -->
+                        </div>
 
                         <div class="countdown-holder text-center">
                             <div class="dsec">0</div>
                             <label>Seconds</label>
-                        </div><!-- .countdown-holder -->
-                    </div><!-- .countdown -->
+                        </div>
+                    </div>
+                    -->
+
+                    <!-- Commented out live event banner 
+                    <div class="live-banner">
+                        <div class="live-badge">LIVE NOW</div>
+                        <h2 class="live-title">maJIStic 2k25 IS HAPPENING!</h2>
+                        <p class="live-subtitle">Join us for an incredible experience at JISCE</p>
+                    </div>
+                    -->
+                    
+                    <!-- Completion & Thank You Banner -->
+                    <div class="completion-banner">
+                        <!-- <div class="completion-badge">Event Completed</div> -->
+                        <h2 class="completion-title">Thank You for the Magic!</h2>
+                        <p class="completion-subtitle">maJIStic 2k25 was an incredible journey thanks to YOU</p>
+                        <div class="stats-highlight">2500+ Attendees</div>
+                        <p class="completion-message">We're overwhelmed by your participation and enthusiasm. Stay tuned for photos and aftermovies. See you next year for an even bigger celebration!</p>
+                        
+                        <!-- Action buttons -->
+                        <div class="action-buttons">
+                            <button class="action-btn" id="exploreBtn">Explore</button>
+                            <a href="check_status.php" class="action-btn">Check Status</a>
+                        </div>
+                        
+                        <!-- Confetti container -->
+                        <div id="confetti-container"></div>
+                    </div>
                 </div><!-- .col-12 -->
             </div><!-- row -->
 
-            <div class="row">
+            <!--<div class="row">
                 <div class="col-12 ">
                     <div class="entry-footer">
-                         <!-- Register Button -->
-                         <button class="btn mb-5" id="registerBtn">Register</button>
-                        <!-- <a href="#" class="btn current">Explore</a> -->
+                         <!-- Register Button - Commented out 
+                         <!-- <button class="btn mb-5" id="registerBtn">Register</button> 
+                        <!-- <a href="#" class="btn current">Explore</a> 
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div><!-- .container -->
     </div><!-- .hero-content -->
 
@@ -137,7 +495,7 @@ if (session_status() === PHP_SESSION_NONE) {
         // Get the modal and related elements
         var modal = document.getElementById("registerModal");
         var closeBtn = document.getElementById("close-btn");
-        var registerBtn = document.getElementById("registerBtn");
+        var exploreBtn = document.getElementById("exploreBtn");
         
         // Track how many times the modal has been shown
         var modalShownCount = parseInt(sessionStorage.getItem('modalShownCount') || '0');
@@ -145,11 +503,9 @@ if (session_status() === PHP_SESSION_NONE) {
         
         // Function to open the modal
         function openModal() {
-            if (modalShownCount < maxShowCount) {
-                modal.style.display = "block";
-                modalShownCount++;
-                sessionStorage.setItem('modalShownCount', modalShownCount);
-            }
+            modal.style.display = "block";
+            modalShownCount++;
+            sessionStorage.setItem('modalShownCount', modalShownCount);
         }
 
         // Function to close the modal
@@ -157,9 +513,16 @@ if (session_status() === PHP_SESSION_NONE) {
             modal.style.display = "none";
         }
 
-        // Event listeners for the register button and close button
-        registerBtn.addEventListener("click", openModal);
-        closeBtn.addEventListener("click", closeModal);
+        // Event listeners for the buttons
+        if (exploreBtn) {
+            exploreBtn.addEventListener("click", function() {
+                openModal();
+            });
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener("click", closeModal);
+        }
 
         // Close modal when clicking outside of it
         window.addEventListener("click", function(event) {
@@ -174,21 +537,84 @@ if (session_status() === PHP_SESSION_NONE) {
             entries.forEach(entry => {
                 if (entry.isIntersecting && modalShownCount < maxShowCount) {
                     // Show the modal when footer section is visible
-                    // and modal hasn't been shown the maximum number of times
                     openModal();
                 }
             });
-        }, { threshold: 0.2 }); // Trigger when 20% of the footer section is visible
+        }, { threshold: 0.2 });
 
         // Start observing the footer section
         if (footerSection) {
             footerObserver.observe(footerSection);
         }
+        
+        // Improved confetti animation
+        let confettiInterval;
+        
+        function generateConfetti() {
+            const container = document.getElementById('confetti-container');
+            if (!container) return;
+            
+            // Clear existing confetti to prevent buildup
+            container.innerHTML = '';
+            
+            const colors = ['#FFDE59', '#D76D77', '#3A1C71', '#FF9D6C', '#FF7C7C', '#FFFFFF'];
+            const confettiCount = 40; // Reduced count for better performance
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random styling
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const width = Math.random() * 8 + 3;
+                const height = Math.random() * 10 + 5;
+                const animationDuration = Math.random() * 3 + 2;
+                const animationDelay = Math.random() * 2; // Reduced delay
+                
+                // Apply styles
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${left}%`;
+                confetti.style.width = `${width}px`;
+                confetti.style.height = `${height}px`;
+                confetti.style.animationDuration = `${animationDuration}s`;
+                confetti.style.animationDelay = `${animationDelay}s`;
+                confetti.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                // Add to container
+                container.appendChild(confetti);
+                
+                // Auto-remove confetti after animation completes
+                setTimeout(() => {
+                    if (confetti.parentNode === container) {
+                        container.removeChild(confetti);
+                    }
+                }, (animationDuration + animationDelay) * 1000 + 100);
+            }
+        }
+        
+        // Initial confetti generation
+        generateConfetti();
+        
+        // Clear any existing interval
+        if (confettiInterval) {
+            clearInterval(confettiInterval);
+        }
+        
+        // Set new interval for confetti generation
+        confettiInterval = setInterval(generateConfetti, 3500);
+        
+        // Clean up interval when page is unloaded
+        window.addEventListener('beforeunload', function() {
+            if (confettiInterval) {
+                clearInterval(confettiInterval);
+            }
+        });
     });
 </script>
 
 <div class="heading-container flip-in" id="artist">
-            <h1 class="text-center display-4 font-weight-bold section-title">Majistic 2K25: The Big Reveal</h1>
+    <h1 class="text-center display-4 font-weight-bold section-title">Majistic 2K25: The Big Reveal</h1>
 </div>
 <?php include 'artist/index.php'; ?>
 
@@ -215,7 +641,6 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 </section>
 
-
     <section id="stats">
     <div class="heading-container flip-in" id="highlights">
             <h1 class="text-center display-4 font-weight-bold section-title">IMPACT AT A GLANCE</h1>
@@ -236,7 +661,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <div class="box" data-start="0" data-end="5000" data-duration="1000">
     <span class="counter">5000+</span>
     <p>Registrations</p>
-    </div>
+  </div>
   </div>
 </section>
 
@@ -319,90 +744,13 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div class="gallery__item">
                     <img src="https://i.postimg.cc/NFKb4dxk/si14-gallery.jpg" alt="">
                 </div>
-
-                
-
             </div>
         </div>
-
-        <!--
-        <div class="container">
-            <div class="gallery">
-                <!-- Original items --
-                <div class="gallery__item gallery__item--hor"> <!-- Horizontal image 1--
-                    <img src="images/gallery/hi1.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si5.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si6.webp" alt="">
-                </div>
-                <div class="gallery__item gallery__item--hor"> <!-- Horizontal image 2--
-                    <img src="images/gallery/hi2.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si7.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si8.webp" alt="">
-                </div>
-                <div class="gallery__item gallery__item--vert"> <!-- Vertical image 1--
-                    <img src="images/gallery/vi1.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si9.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si10.webp" alt="">
-                </div>
-                <div class="gallery__item gallery__item--vert"> <!-- Vertical image 2--
-                    <img src="images/gallery/vi2.webp" alt="">
-                </div>
-                <div class="gallery__item gallery__item--lg"> <!-- Large image 1--
-                    <img src="images/gallery/li1.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si1.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si2.webp" alt="">
-                </div>
-                <div class="gallery__item gallery__item--lg"> <!-- Large image 2--
-                    <img src="images/gallery/li2.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si2.webp" alt="">
-                </div>
-                <div class="gallery__item gallery__item--vert"> <!-- Vertical image 2--
-                    <img src="images/gallery/vi2.webp" alt="">
-                </div>
-                <div class="gallery__item gallery__item--lg"> <!-- Large image 3--
-                    <img src="images/gallery/li3.webp" alt="">
-                </div>
-                <div class="gallery__item gallery__item--lg"> <!-- Large image 4--
-                    <img src="https://unsplash.it/500/300/?random" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si1.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si9.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si10.webp" alt="">
-                </div>
-                <div class="gallery__item">
-                    <img src="images/gallery/si7.webp" alt="">
-                </div>
-
-            </div>
-        </div>-->
     </section>
 
     <div class="heading-container flip-in" id="sponsors">
-            <h1 class="text-center display-4 font-weight-bold section-title">Thank You to Our Previous Sponsors</h1>
-        </div>
+        <h1 class="text-center display-4 font-weight-bold section-title">Thank You to Our Previous Sponsors</h1>
+    </div>
     <!-- Sponsors Section -->
     <!-- <section class="base-template">
     
@@ -427,7 +775,6 @@ if (session_status() === PHP_SESSION_NONE) {
                         <div class="swiper-slide horizontal-ticker__slide">
                             <img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
                             <img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
-
                         </div>
                         <div class="swiper-slide horizontal-ticker__slide">
                             <img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
@@ -454,7 +801,7 @@ if (session_status() === PHP_SESSION_NONE) {
 							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
 						</div>
-
+                        </div>
 						<!-- slides copies 
 
 						<div class="swiper-slide horizontal-ticker__slide">
@@ -462,42 +809,38 @@ if (session_status() === PHP_SESSION_NONE) {
 							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
 
 						</div>
-                        <div class="swiper-slide horizontal-ticker__slide">
-                            <img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-                            <img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-
-                        </div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
-
 						</div>
                         <div class="swiper-slide horizontal-ticker__slide">
-                            <img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
-                            <img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
                         </div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
-
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
 						</div>
                         <div class="swiper-slide horizontal-ticker__slide">
-                            <img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
-                            <img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
+                            <img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
                         </div>
-                        <div class="swiper-slide horizontal-ticker__slide">
+						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
 						</div>
                         <div class="swiper-slide horizontal-ticker__slide">
-                            <img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
-                            <img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
-                        </div>
-
+							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
+						</div>
+                        <div class="swiper-slide horizontal-ticker__slide">
+							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
+						</div>
 					</div>
 				</div>
 
@@ -509,22 +852,18 @@ if (session_status() === PHP_SESSION_NONE) {
                     <div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
-
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
-
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
-
 						</div>
 						<div class="swiper-slide horizontal-ticker__slide">
 							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
@@ -546,59 +885,12 @@ if (session_status() === PHP_SESSION_NONE) {
 							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
 							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
 						</div>
-
-						<!-- slides copies 
-
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/DZ52Rb0q/1-1.png" alt="Tochiba">
-
-						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/L5bm8Kz5/2-1.png" alt="Tochiba">
-
-						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/Pr0tGHXF/3-1.png" alt="Tochiba">
-
-						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/SKfVf1q3/10.png" alt="Tochiba">
-
-						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/L5nM7Crp/5-1.png" alt="Tochiba">
-						</div>
-						<div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/Gm017jKW/6-1.png" alt="Tochiba">
-						</div>
-                        <div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/nh73CcWH/7.png" alt="Tochiba">
-						</div>
-                        <div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/bvh3bfX1/8.png" alt="Tochiba">
-						</div>
-                        <div class="swiper-slide horizontal-ticker__slide">
-							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
-							<img src="https://i.postimg.cc/LX4DCk8X/9.png" alt="Tochiba">
-						</div>
-
-
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
 </section> -->
-
 
 <?php include 'sponsors/index.php'; ?>
 
@@ -659,7 +951,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
         // Variable to store the YouTube player instance
         var player;
-        
+
         // Function called when YouTube API is ready
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
@@ -688,7 +980,6 @@ if (session_status() === PHP_SESSION_NONE) {
         function onPlayerReady(event) {
             // Set up Intersection Observer once the player is ready
             const videoSection = document.getElementById('aftermovie-section');
-            
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -704,7 +995,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     }
                 });
             }, { threshold: 0.3 }); // Trigger when 30% of the section is visible
-            
+
             observer.observe(videoSection);
             
             // Set up click handler for mute/unmute functionality

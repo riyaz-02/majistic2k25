@@ -238,28 +238,28 @@ body {
 # Hero Section
 ------------------------------------------------------------*/
 .hero-content {
-    padding: 15vh 0;
+    padding: 8vh 0 5vh; /* Reduced from 10vh 0 to 8vh 0 5vh */
     background-size: cover;
     background-attachment: fixed;
     position: relative;
-    min-height: 100vh;
+    min-height: auto; /* Changed from 110vh to auto to prevent fixed height issues */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to visible to prevent content clipping */
     z-index: 1;
     top: 3vh;
+    margin-bottom: 2vh; /* Reduced from 5vh to 2vh */
 }
 
 .hero-content .container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
+    position: relative; /* Changed from absolute to relative */
     width: 90%;
     max-width: 90vw;
+    transform: none; /* Remove transform that was causing positioning issues */
+    margin: 0 auto; /* Center the container */
+    padding: 3vh 0; /* Add padding for spacing */
 }
 
 .hero-content .entry-header {
@@ -405,7 +405,7 @@ body {
 /* Tablet (max-width: 1024px) */
 @media (max-width: 1024px) {
     .hero-content {
-        padding: 12vh 0;
+        padding: 6vh 0 4vh; /* Further reduced padding */
     }
     .entry-header img {
         max-height: 25vh;
@@ -528,7 +528,8 @@ body {
         font-size: 20px;
     }
     .hero-content {
-        padding: 10vh 0;
+        padding: 6vh 0 3vh; /* Reduced padding */
+        margin-bottom: 0; /* Remove bottom margin */
     }
     .hero-content .entry-header {
         top: 1vh;
@@ -547,11 +548,11 @@ body {
         font-size: 2vh;
     }
     .event-dates {
-        margin: 20px 0;
-        margin-top: 12vh;
+        margin: 10px 0; /* Reduced margin */
+        margin-top: 8vh; /* Reduced from 12vh */
     }
     .event-dates p {
-        margin-top: 8vh;
+        margin-top: 3vh; /* Reduced from 8vh */
     }
     .countdown {
         order: 2; /* Ensure countdown is displayed second */
@@ -646,22 +647,29 @@ body {
         font-size: 18px;
     }
     .hero-content {
-        padding: 8vh 0;
+        padding: 5vh 0 2vh; /* Reduced top and bottom padding */
         min-height: 90vh;
+        margin-bottom: 0; /* Remove bottom margin */
     }
     .hero-content .entry-header {
-        margin-top: 3vh;
+        margin-top: 0; /* Reduced from 3vh to 0 */
+        padding-top: 0; /* Removed top padding */
+        top: 0; /* Reset top position */
     }
     .entry-header img {
-        max-height: 15vh;
-        width: 90%;
+        height: 100%;
+        width: auto;
+        margin-top: 2vh; /* Added margin to create some space at the top */
     }
-    #registerBtn {
-        padding: 1.5vh 3vh;
-        font-size: 1.8vh;
+    .hero-content .entry-footer {
+        margin-top: 1.5vh;
+        margin-bottom: 6vh;
     }
     .event-dates {
-        margin-top: 5vh;
+        margin-top: 3vh; /* Reduced from 5vh */
+    }
+    .event-dates p {
+        margin-top: 0; /* Removed top margin */
     }
     .countdown {
         flex-wrap: wrap;
@@ -678,6 +686,27 @@ body {
 
 /* Extra Small Mobile (max-width: 375px) */
 @media (max-width: 375px) {
+    .hero-content {
+        padding: 3vh 0 1vh; /* Minimal padding */
+        margin-bottom: 0;
+    }
+    
+    .hero-content .entry-header {
+        padding-top: 0; /* Removed padding-top */
+        margin-top: 0; /* No margin top */
+    }
+    
+    .event-dates {
+        margin-top: 2vh; /* Further reduced */
+    }
+    
+    .completion-banner {
+        padding: 12px;
+    }
+    
+    .action-buttons {
+        margin-top: 15px;
+    }
     .countdown {
         flex-wrap: nowrap; /* Force no wrapping at 375px */
     }
@@ -1521,10 +1550,15 @@ body {
         padding-bottom: 50px;
     }
     .hero-content {
-        padding: 100px 0;
-        min-height: 100vh;
+        padding: 80px 0 20px; /* Reduced bottom padding */
+        min-height: auto; /* Changed from 100vh to auto */
     }
 
+    .hero-content .entry-header {
+        padding-top: 0; /* Removed padding-top */
+        margin-top: 0; /* No margin top */
+    }
+    
     .hero-content .entry-header span {
         font-size: 80px;
     }
@@ -1658,7 +1692,8 @@ body {
     }
 
     .hero-content .entry-header {
-        padding-top: 100px;
+        padding-top: 0; /* Removed 100px padding */
+        top: 0; /* Removed top position */
     }
     
     .hero-content .entry-header span {
@@ -1691,6 +1726,12 @@ body {
         font-size: 16px;
         margin-right: 10px;
     }
+    .entry-header img {
+        width: 90%; /* Increased from 85% to 90% */
+        max-height: 22vh; /* Increased height to make image more prominent */
+        margin: 1vh auto; /* Center the image */
+        display: block; /* Ensure it's a block element for margin auto to work */
+    }
 }
 
 @media (max-width: 480px) {
@@ -1699,7 +1740,8 @@ body {
     }
 
     .hero-content .entry-header {
-        padding-top: 100px;
+        padding-top: 0; /* Removed padding-top */
+        margin-top: 0; /* No margin top */
     }
 
     .hero-content .entry-header span {
@@ -1731,6 +1773,11 @@ body {
         padding: 8px 16px;
         font-size: 14px;
         margin-right: 5px;
+    }
+    .entry-header img {
+        max-height: 18vh; /* Increased from 15vh to 18vh */
+        width: 90%;
+        margin-top: 2vh; /* Added margin to create some space at the top */
     }
 }
 
@@ -1903,8 +1950,9 @@ body {
 
 @media (max-width: 600px) {
     .hero-content {
-        padding: 0 0; /* Reduce padding */
+        padding: 0 0 0; /* Minimal padding */
         min-height: 60vh;
+        margin-bottom: 0; /* Remove bottom margin */
     }
 
     .hero-content .entry-header span {
@@ -1917,7 +1965,7 @@ body {
     }
 
     .event-dates {
-        margin: 20px 0; /* Reduce margin */
+        margin: 10px 0; /* Reduced margin */
     }
 
     .event-dates h2 {

@@ -9,7 +9,10 @@ require_once __DIR__ . '/../includes/db_config.php';
 // If already logged in, redirect
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
     if (isset($_SESSION['admin_role'])) {
-        if ($_SESSION['admin_role'] === 'website manager') {
+        if ($_SESSION['admin_role'] === 'Super Admin') {
+            // Super Admin can access any page, default to admin dashboard
+            header('Location: adm/madm.php');
+        } elseif ($_SESSION['admin_role'] === 'website manager') {
             header('Location: management.php');
         } elseif ($_SESSION['admin_role'] === 'Manage Website') {
             header('Location: manage/index.php');
@@ -26,14 +29,14 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 
 $error = '';
 $success = '';
-$departments = ['CSE', 'BME', 'ECE', 'EE', 'CE', 'ME', 'MCA', 'MBA', 'BBA'];
-$roles = ['Admin', 'Core Team Member', 'Coordinator', 'Manage Website', 'Controller'];
+$departments = ['CSE', 'CSE AI-ML', 'CST', 'IT', 'ECE', 'EE', 'BME', 'CE', 'ME', 'AGE', 'BBA', 'MBA', 'BCA', 'MCA', 'Diploma ME', 'Diploma CE', 'Diploma EE', 'B. Pharmacy'];
+$roles = ['Super Admin', 'Admin', 'Core Team Member', 'Department Coordinator', 'Convenor', 'Manage Website', 'Controller', 'CheckIn'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
     $name = trim($_POST['name']);
     $mobile = trim($_POST['mobile']);
-    $email = trim($_POST['email']);
+    $email = trim($_POST['email']); // Email now optional
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
@@ -41,18 +44,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $department = isset($_POST['department']) ? $_POST['department'] : null;
 
     // Validate form data
-    if (empty($name) || empty($mobile) || empty($email) || empty($username) || empty($password) || empty($role)) {
-        $error = "All fields are required";
+    if (empty($name) || empty($mobile) || empty($username) || empty($password) || empty($role)) {
+        $error = "Required fields must be filled";
     } elseif ($password !== $confirm_password) {
         $error = "Passwords do not match";
     } elseif (strlen($password) < 6) {
         $error = "Password must be at least 6 characters long";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } elseif (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format";
     } elseif (!preg_match("/^[0-9]{10}$/", $mobile)) {
         $error = "Mobile number must be 10 digits";
-    } elseif ($role === 'Coordinator' && empty($department)) {
-        $error = "Department is required for Coordinator role";
+    } elseif (($role === 'Department Coordinator' || $role === 'Convenor') && empty($department)) {
+        $error = "Department is required for Coordinator/Convenor role";
     } else {
         try {
             // Check if username already exists
@@ -71,15 +74,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $user_data = [
                     'name' => $name,
                     'mobile' => $mobile,
-                    'email' => $email,
                     'username' => $username,
                     'password' => $hashed_password,
                     'role' => $role,
                     'created_at' => date('Y-m-d H:i:s')
                 ];
                 
-                // Add department if coordinator
-                if ($role === 'Coordinator') {
+                // Add email if provided
+                if (!empty($email)) {
+                    $user_data['email'] = $email;
+                }
+                
+                // Add department if coordinator or convenor
+                if ($role === 'Department Coordinator' || $role === 'Convenor') {
                     $user_data['department'] = $department;
                 }
                 
@@ -369,8 +376,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     
                     <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                        <label for="email">Email Address (Optional)</label>
+                        <input type="email" id="email" name="email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                         <i class="fas fa-envelope icon"></i>
                     </div>
                 </div>
@@ -408,9 +415,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <i class="fas fa-user-shield icon"></i>
                 </div>
                 
-                <div class="form-group department-section" id="department-section" style="display: <?php echo isset($_POST['role']) && $_POST['role'] === 'Coordinator' ? 'block' : 'none'; ?>;">
+                <div class="form-group department-section" id="department-section" style="display: <?php echo isset($_POST['role']) && ($_POST['role'] === 'Department Coordinator' || $_POST['role'] === 'Convenor') ? 'block' : 'none'; ?>;">
                     <label for="department">Department</label>
-                    <select id="department" name="department" <?php echo isset($_POST['role']) && $_POST['role'] === 'Coordinator' ? 'required' : ''; ?>>
+                    <select id="department" name="department" <?php echo isset($_POST['role']) && ($_POST['role'] === 'Department Coordinator' || $_POST['role'] === 'Convenor') ? 'required' : ''; ?>>
                         <option value="" selected disabled>Select Department</option>
                         <?php foreach ($departments as $dept): ?>
                             <option value="<?php echo htmlspecialchars($dept); ?>" <?php echo isset($_POST['department']) && $_POST['department'] === $dept ? 'selected' : ''; ?>>
@@ -440,7 +447,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         const departmentSection = document.getElementById('department-section');
         
         roleSelect.addEventListener('change', function() {
-            if (this.value === 'Coordinator') {
+            if (this.value === 'Department Coordinator' || this.value === 'Convenor') {
                 departmentSection.style.display = 'block';
                 document.getElementById('department').setAttribute('required', 'required');
             } else {
@@ -449,8 +456,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         });
         
-        // If form is resubmitted and role was Coordinator, show department section
-        <?php if (isset($role) && $role === 'Coordinator'): ?>
+        // If form is resubmitted and role was Coordinator or Convenor, show department section
+        <?php if (isset($role) && ($role === 'Department Coordinator' || $role === 'Convenor')): ?>
         document.addEventListener('DOMContentLoaded', function() {
             departmentSection.style.display = 'block';
             document.getElementById('department').setAttribute('required', 'required');

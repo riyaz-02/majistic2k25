@@ -1,21 +1,30 @@
 <?php
 // db_config.php
 
-// MySQL database configuration
-//$host = 'localhost';          // Replace with your MySQL host
-//$dbname = 'majistic2k25';     // Database name
-//$username = 'root';           // Replace with your MySQL username
-//$password = '';               // Replace with your MySQL password
+// Database configuration
+// $db_host = "localhost";  // Your database host
+// $db_user = "root";       // Your database username
+// $db_pass = "";           // Your database password
+// $db_name = "majistic2k25"; // Your database name
 
 // MySQL database configuration
-$host = 'srv1834.hstgr.io';          // Replace with your MySQL host
-$dbname = 'u901957751_majistic2k25';     // Database name
-$username = 'u901957751_majistic2k25';           // Replace with your MySQL username
-$password = '0!MyCmOOd4CA';               // Replace with your MySQL password
+$db_host = 'srv1834.hstgr.io';          // Replace with your MySQL host
+$db_name = 'u901957751_majistic2025';     // Database name
+$db_user = 'u901957751_majistic';           // Replace with your MySQL username
+$db_pass = '#4Szt|/DYj';               // Replace with your MySQL password
+
+
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
 try {
     // Establish PDO connection
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $db = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Set timezone
@@ -323,6 +332,26 @@ function createRequiredTables() {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         UNIQUE INDEX (config_key)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    
+    // Create login_sessions table to track user login activities
+    $db->exec("CREATE TABLE IF NOT EXISTS login_sessions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        user_name VARCHAR(100) NOT NULL,
+        username VARCHAR(50) NOT NULL,
+        role VARCHAR(50) NOT NULL,
+        ip_address VARCHAR(45) NOT NULL,
+        user_agent VARCHAR(255) NOT NULL,
+        login_time DATETIME NOT NULL,
+        logout_time DATETIME NULL,
+        session_status ENUM('active', 'ended', 'timeout') DEFAULT 'active',
+        session_id VARCHAR(255) NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        INDEX (user_id),
+        INDEX (username),
+        INDEX (session_status),
+        INDEX (login_time)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 

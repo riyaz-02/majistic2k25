@@ -7,9 +7,9 @@ if (session_status() === PHP_SESSION_NONE) {
 // Set the content type to JSON
 header('Content-Type: application/json');
 
-// Check if user is logged in with Controller role
+// Check if user is logged in with Controller or Super Admin role
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true || 
-    !isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'Controller') {
+    !isset($_SESSION['admin_role']) || ($_SESSION['admin_role'] !== 'Controller' && $_SESSION['admin_role'] !== 'Super Admin')) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit;
 }

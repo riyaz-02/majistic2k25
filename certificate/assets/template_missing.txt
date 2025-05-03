@@ -1,0 +1,2 @@
+Fallback template is missing. Please create a template manually.
+Required path: F:\maJIStic\majistic2k25\certificate/assets/fallback_template.jpg

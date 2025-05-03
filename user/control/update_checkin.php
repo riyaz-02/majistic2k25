@@ -7,13 +7,18 @@ if (session_status() === PHP_SESSION_NONE) {
 // Set the content type to JSON
 header('Content-Type: application/json');
 
-// Check if user is logged in with Controller role
+// Check if user is logged in with Controller or Super Admin role
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true || 
-    !isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'Controller') {
+    !isset($_SESSION['admin_role']) || ($_SESSION['admin_role'] !== 'Controller' && $_SESSION['admin_role'] !== 'Super Admin')) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit;
 }
 
+// Disabled check-in functionality
+echo json_encode(['success' => false, 'message' => 'Check-in functionality is currently disabled']);
+exit;
+
+// The rest of the code below will not be executed due to the exit above
 require_once __DIR__ . '/../../includes/db_config.php';
 
 // Check if required parameters are provided
@@ -60,7 +65,10 @@ try {
         exit;
     }
     
-    // Update the check-in status with timestamp
+    // Set timezone to UTC for consistent timestamp storage
+    date_default_timezone_set('UTC');
+    
+    // Update the check-in status with current timestamp in UTC
     $currentTime = date('Y-m-d H:i:s');
     $timestampField = $field . '_timestamp';
     

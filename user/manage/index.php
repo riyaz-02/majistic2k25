@@ -18,7 +18,8 @@ if (isset($_SESSION['redirect_url'])) {
 }
 
 // Check if user is logged in with admin privileges
-if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'Manage Website') {
+if (!isset($_SESSION['admin_logged_in']) || !isset($_SESSION['admin_role']) || 
+    ($_SESSION['admin_role'] !== 'Manage Website' && $_SESSION['admin_role'] !== 'Super Admin')) {
     // Fix the redirect path to avoid potential loops
     header('Location: ../login.php');
     exit;
@@ -363,6 +364,12 @@ try {
                             <a class="nav-link <?php echo $page === 'all_registrations' ? 'active' : ''; ?>" href="?page=all_registrations">
                                 <i class="bi bi-list-check me-2"></i>
                                 All Registrations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo $page === 'all_registrations' ? 'active' : ''; ?>" href="paid_registrations.php">
+                                <i class="bi bi-list-check me-2"></i>
+                                Paid Registrations
                             </a>
                         </li>
                         <li class="nav-item">

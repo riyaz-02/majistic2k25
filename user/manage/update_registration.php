@@ -3,8 +3,10 @@ session_start();
 require_once '../../includes/db_config.php';
 
 // Check if user is logged in with admin privileges
-if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'Manage Website') {
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
+if (!isset($_SESSION['admin_id']) || !isset($_SESSION['admin_role']) || 
+    ($_SESSION['admin_role'] !== 'Manage Website' && $_SESSION['admin_role'] !== 'Super Admin')) {
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit;
 }
 

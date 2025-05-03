@@ -197,26 +197,10 @@ $days_remaining = $interval->format('%a');
             <div class="card-header">
                 <img src="images/majisticlogo.png" alt="maJIStic Logo" class="logo">
                 
-                <div class="countdown-container">
-                    <h3 class="countdown-title">maJIStic 2k25 Begins In</h3>
-                    <div class="countdown" id="countdown">
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="days"><?php echo $days_remaining; ?></div>
-                            <div class="countdown-label">Days</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="hours">00</div>
-                            <div class="countdown-label">Hours</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="minutes">00</div>
-                            <div class="countdown-label">Minutes</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="seconds">00</div>
-                            <div class="countdown-label">Seconds</div>
-                        </div>
-                    </div>
+                <!-- Remove ribbon and action buttons from event completion message -->
+                <div class="event-completion-banner">
+                    <h3 class="completion-title">maJIStic 2k25 Successfully Concluded!</h3>
+                    <p>Thank you to everyone who participated and made this cultural fest a grand success.</p>
                 </div>
             </div>
             
@@ -667,26 +651,7 @@ $days_remaining = $interval->format('%a');
             
             // JIS ID formatting code removed
             
-            // Countdown timer
-            const eventDate = new Date("April 11, 2025 00:00:00").getTime();
-            
-            function updateCountdown() {
-                const now = new Date().getTime();
-                const timeLeft = eventDate - now;
-                
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                
-                document.getElementById("days").innerHTML = days;
-                document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
-                document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
-                document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
-            }
-            
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
+            // Removed countdown timer code
             
             // Highlight active step with pulsing effect
             const activeStep = document.querySelector('.step.active');
@@ -783,6 +748,151 @@ $days_remaining = $interval->format('%a');
 
         .whatsapp-btn i {
             font-size: 1.2rem;
+        }
+        
+        /* Add styles for event completion banner */
+        .event-completion-banner {
+            max-width: 800px;
+            margin: 20px auto 0;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.8), rgba(41, 128, 185, 0.8));
+            border-radius: 16px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .event-completion-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('images/pattern.png');
+            opacity: 0.1;
+            z-index: 0;
+            animation: patternMove 40s linear infinite;
+        }
+        
+        @keyframes patternMove {
+            0% { transform: translateX(0) translateY(0); }
+            50% { transform: translateX(-10px) translateY(-10px); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+        
+        .ribbon {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            transform: rotate(45deg);
+            background: rgba(231, 76, 60, 0.9);
+            padding: 5px 40px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+        
+        .completion-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .event-completion-banner p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .completion-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        
+        .completion-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .completion-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .completion-btn.photos {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.7), rgba(41, 128, 185, 0.7));
+        }
+        
+        .completion-btn.videos {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.7), rgba(192, 57, 43, 0.7));
+        }
+        
+        @media (max-width: 768px) {
+            .completion-title {
+                font-size: 20px;
+            }
+            
+            .event-completion-banner p {
+                font-size: 14px;
+            }
+            
+            .ribbon {
+                font-size: 12px;
+                padding: 4px 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .completion-title {
+                font-size: 18px;
+            }
+            
+            .event-completion-banner {
+                padding: 20px 15px;
+            }
+            
+            .completion-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .completion-btn {
+                width: 80%;
+                margin: 0 auto;
+            }
         }
     </style>
 </body>

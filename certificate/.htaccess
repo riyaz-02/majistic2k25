@@ -1,0 +1,27 @@
+# Prevent directory listing
+Options -Indexes
+
+# Protect the templates directory
+<FilesMatch "\.(pdf)$">
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+</FilesMatch>
+
+# Allow access to PHP files
+<FilesMatch "\.(php)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Protect the vendor directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^vendor/.*$ - [F,L]
+</IfModule>
+
+# Handle 404 errors
+ErrorDocument 404 /certificate/index.php?error=Page%20not%20found
+
+# Set default index page
+DirectoryIndex index.php

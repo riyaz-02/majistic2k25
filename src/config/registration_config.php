@@ -7,5 +7,5 @@
  */
 
 // Set to false to disable new registrations temporarily
-define('REGISTRATION_ENABLED', true);
+define('REGISTRATION_ENABLED', false);
 ?>

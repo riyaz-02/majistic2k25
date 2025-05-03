@@ -297,7 +297,71 @@ for (let i = 0; i < totalOriginalElements * 2; i++) {
   marqueeContent.appendChild(marqueeContent.children[i % totalOriginalElements].cloneNode(true));
 }
 
+window.addEventListener("click", function(event) {
+    if (event.target == modal) {
+        closeModal();
+    }
+});
 
+// Create Intersection Observer for the footer section
+const footerSection = document.querySelector('footer');
+const footerObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && modalShownCount < maxShowCount) {
+            // Show the modal when footer section is visible
+            // and modal hasn't been shown the maximum number of times
+            openModal();
+        }
+    });
+}, { threshold: 0.2 }); // Trigger when 20% of the footer section is visible
 
+// Start observing the footer section
+if (footerSection) {
+    footerObserver.observe(footerSection);
+}
 
+// Generate confetti for the thank you banner
+function generateConfetti() {
+    const container = document.getElementById('confetti-container');
+    if (!container) return;
+    
+    const colors = ['#FF5757', '#47A0FF', '#FFDE59', '#7ED957', '#FF57E4', '#5D5FEF'];
+    const confettiCount = 50;
+    
+    // Clear existing confetti
+    container.innerHTML = '';
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        
+        // Random styling
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const left = Math.random() * 100;
+        const width = Math.random() * 8 + 3;
+        const height = Math.random() * 10 + 5;
+        const animationDuration = Math.random() * 3 + 2;
+        const animationDelay = Math.random() * 5;
+        
+        // Apply styles
+        confetti.style.backgroundColor = color;
+        confetti.style.left = `${left}%`;
+        confetti.style.width = `${width}px`;
+        confetti.style.height = `${height}px`;
+        confetti.style.animationDuration = `${animationDuration}s`;
+        confetti.style.animationDelay = `${animationDelay}s`;
+        confetti.style.opacity = Math.random() * 0.7 + 0.3;
+        
+        // Add to container
+        container.appendChild(confetti);
+    }
+}
+
+// Call once on page load
+document.addEventListener('DOMContentLoaded', function() {
+    generateConfetti();
+    
+    // Regenerate confetti periodically
+    setInterval(generateConfetti, 10000);
+});
 </script>

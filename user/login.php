@@ -9,12 +9,24 @@ require_once __DIR__ . '/../includes/db_config.php';
 // If already logged in, redirect to admin panel
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
     if (isset($_SESSION['admin_role'])) {
-        if ($_SESSION['admin_role'] === 'website manager') {
+        if ($_SESSION['admin_role'] === 'Super Admin') {
+            // Super Admin can access any page, default to admin dashboard
+            header('Location: adm/madm.php');
+        } elseif ($_SESSION['admin_role'] === 'website manager') {
             header('Location: management.php');
         } elseif ($_SESSION['admin_role'] === 'Manage Website') {
             header('Location: manage/index.php');
         } elseif ($_SESSION['admin_role'] === 'Controller') {
             header('Location: control/index.php');
+        } elseif ($_SESSION['admin_role'] === 'CheckIn') {
+            header('Location: /checkin');
+        } elseif ($_SESSION['admin_role'] === 'Convenor') {
+            // Convenor redirects to control page with All departments filter
+            header('Location: control/index.php?filter=All');
+        } elseif ($_SESSION['admin_role'] === 'Department Coordinator') {
+            // Department Coordinator redirects to control page with their department filter
+            $dept = isset($_SESSION['admin_department']) ? urlencode($_SESSION['admin_department']) : 'All';
+            header("Location: control/index.php?filter=$dept");
         } else {
             header('Location: adm/madm.php');
         }
@@ -30,6 +42,25 @@ $logout_message = '';
 
 // Check for logout message
 if (isset($_GET['logout']) && $_GET['logout'] == 'success') {
+    // Update logout time if session_id is available
+    if (isset($_SESSION['login_session_id'])) {
+        try {
+            // Get current time in IST (relies on timezone set in db_config.php)
+            $now = date('Y-m-d H:i:s');
+            
+            $updateLogout = $db->prepare("UPDATE login_sessions SET 
+                logout_time = :now, 
+                session_status = 'ended' 
+                WHERE id = :session_id");
+            $updateLogout->execute([
+                ':now' => $now,
+                ':session_id' => $_SESSION['login_session_id']
+            ]);
+        } catch (PDOException $e) {
+            error_log("Failed to update logout time: " . $e->getMessage());
+        }
+    }
+    
     $logout_message = "You have been successfully logged out.";
 }
 
@@ -53,18 +84,75 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($user) {
             // Check password
             if (password_verify($password, $user['password']) || $password === $user['password']) {
+                // Start session and set session variables
                 $_SESSION['admin_logged_in'] = true;
                 $_SESSION['admin_id'] = $user['id'];
                 $_SESSION['admin_username'] = $user['username'];
                 $_SESSION['admin_role'] = $user['role'];
+                $_SESSION['admin_name'] = $user['name'];
+                
+                // Store department in session for Department Coordinator role
+                if ($user['role'] === 'Department Coordinator' && isset($user['department'])) {
+                    $_SESSION['admin_department'] = $user['department'];
+                }
+                
+                // Record login session
+                $ip_address = $_SERVER['REMOTE_ADDR'];
+                $user_agent = $_SERVER['HTTP_USER_AGENT'];
+                $session_id = session_id();
+                
+                // Get current time in IST (relies on timezone set in db_config.php)
+                $now = date('Y-m-d H:i:s');
+                
+                try {
+                    $insertSession = $db->prepare("INSERT INTO login_sessions 
+                        (user_id, user_name, username, role, ip_address, user_agent, login_time, session_id) 
+                        VALUES (:user_id, :user_name, :username, :role, :ip_address, :user_agent, :now, :session_id)");
+                    
+                    $insertSession->execute([
+                        ':user_id' => $user['id'],
+                        ':user_name' => $user['name'],
+                        ':username' => $user['username'],
+                        ':role' => $user['role'],
+                        ':ip_address' => $ip_address,
+                        ':user_agent' => $user_agent,
+                        ':now' => $now,
+                        ':session_id' => $session_id
+                    ]);
+                    
+                    // Store the login session ID in the session for logout tracking
+                    $_SESSION['login_session_id'] = $db->lastInsertId();
+                    
+                    // Update last_login in admin_users table
+                    $updateLastLogin = $db->prepare("UPDATE admin_users SET last_login = :now WHERE id = :user_id");
+                    $updateLastLogin->execute([
+                        ':now' => $now,
+                        ':user_id' => $user['id']
+                    ]);
+                    
+                } catch (PDOException $e) {
+                    error_log("Failed to record login session: " . $e->getMessage());
+                }
                 
                 // Redirect based on role
-                if ($user['role'] === 'website manager') {
+                if ($user['role'] === 'Super Admin') {
+                    // Super Admin can access any page, default to admin dashboard
+                    header('Location: adm/madm.php');
+                } elseif ($user['role'] === 'website manager') {
                     header('Location: management.php');
                 } elseif ($user['role'] === 'Manage Website') {
                     header('Location: manage/index.php');
                 } elseif ($user['role'] === 'Controller') {
                     header('Location: control/index.php');
+                } elseif ($user['role'] === 'CheckIn') {
+                    header('Location: /checkin/');
+                } elseif ($user['role'] === 'Convenor') {
+                    // Convenor redirects to control page with All departments filter
+                    header('Location: control/index.php?filter=All');
+                } elseif ($user['role'] === 'Department Coordinator') {
+                    // Department Coordinator redirects to control page with their department filter
+                    $dept = isset($user['department']) ? urlencode($user['department']) : 'All';
+                    header("Location: control/index.php?filter=$dept");
                 } else {
                     header('Location: adm/madm.php');
                 }
@@ -106,7 +194,7 @@ try {
     <style>
         :root {
             --primary: #2c3e50;
-            --secondary: #3498db;
+            --secondary:rgb(35, 35, 36);
             --accent: #e74c3c;
             --light: #ecf0f1;
             --white: #ffffff;
@@ -157,13 +245,13 @@ try {
         }
         
         .login-logo {
-            width: 80px;
+            width: 140px;
             height: auto;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
         }
         
         .login-form {
-            padding: 30px;
+            padding: 15px;
         }
         
         .form-group {
@@ -310,7 +398,6 @@ try {
     <div class="login-container <?php echo $login_attempt && $error ? 'shake' : ''; ?>">
         <div class="login-header">
             <img src="../images/majisticlogo.png" alt="MaJIStic Logo" class="login-logo">
-            <h1>MaJIStic 2K25</h1>
             <p>Admin Panel Login</p>
         </div>
         
@@ -361,7 +448,7 @@ try {
             </form>
             
             <div class="login-footer">
-                &copy; <?php echo date('Y'); ?> MaJIStic 2K25 - All Rights Reserved
+                &copy; <?php echo date('Y'); ?> maJIStic - All Rights Reserved
             </div>
         </div>
     </div>
