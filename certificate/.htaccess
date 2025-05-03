@@ -25,3 +25,19 @@ ErrorDocument 404 /certificate/index.php?error=Page%20not%20found
 
 # Set default index page
 DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Ensure the request isn't already going to an existing file or directory
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # For URLs that start with /generate_certificate.php, rewrite to ./generate_certificate.php
+    RewriteRule ^/generate_certificate.php$ ./generate_certificate.php [L]
+</IfModule>
+
+# Set proper MIME type for PHP files
+<Files "*.php">
+    ForceType application/x-httpd-php
+</Files>

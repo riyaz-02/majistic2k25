@@ -49,4 +49,28 @@ function certificateErrorHandler($errno, $errstr, $errfile, $errline) {
 
 // Set the custom error handler
 set_error_handler("certificateErrorHandler");
+
+// Certificate generation configuration
+
+// Set certificate generation options
+$config = [
+    // Whether to enforce payment status check
+    'enforce_payment' => true,
+    
+    // Certificate templates directory
+    'templates_dir' => __DIR__ . '/templates',
+    
+    // Temporary storage directory
+    'temp_dir' => __DIR__ . '/temp',
+    
+    // Default certificate sizing
+    'default_font_size' => 34,
+    'default_font_family' => 'Times',
+    'default_font_style' => 'BI', // Bold Italic
+    
+    // Certificate text color (RGB)
+    'text_color' => [0, 51, 102] // Dark Navy Blue
+];
+
+return $config;
 ?>
