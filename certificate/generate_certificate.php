@@ -3,6 +3,9 @@ require_once __DIR__ . '/../includes/db_config.php';
 require_once 'config.php';
 require_once 'certificate_functions.php';
 
+// Start session for secure error handling
+session_start();
+
 // Enable debugging
 $debug = isset($_POST['debug_mode']) && $_POST['debug_mode'] == '1';
 
@@ -47,37 +50,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Clean inputs
             $jis_id = trim($_POST['jis_id']);
             $input_name = trim($_POST['student_name']);
-            consoleDebug('Input data', ['jis_id' => $jis_id, 'name' => $input_name]);
             
-            // Debug: Log the JIS ID being searched for
-            error_log("Looking up JIS ID: $jis_id");
+            // Only log in debug mode
+            if ($debug) {
+                consoleDebug('Input data', ['jis_id' => $jis_id, 'name' => $input_name]);
+            }
             
             // Verify database connection
             if (!$db) {
-                consoleDebug('Database connection', 'Failed', 'error');
                 throw new Exception("Database connection not established");
             }
-            consoleDebug('Database connection', 'Successful');
             
-            // Verify registrations table exists
-            try {
-                $checkTable = $db->query("SHOW TABLES LIKE 'registrations'");
-                $tableExists = $checkTable->rowCount() > 0;
-                consoleDebug('Table check', ['table' => 'registrations', 'exists' => $tableExists]);
-                
-                if (!$tableExists) {
-                    throw new Exception("registrations table does not exist");
+            // Verify registrations table exists (only in debug mode)
+            if ($debug) {
+                try {
+                    $checkTable = $db->query("SHOW TABLES LIKE 'registrations'");
+                    $tableExists = $checkTable->rowCount() > 0;
+                    consoleDebug('Table check', ['table' => 'registrations', 'exists' => $tableExists]);
+                    
+                    if (!$tableExists) {
+                        throw new Exception("registrations table does not exist");
+                    }
+                } catch (Exception $e) {
+                    consoleDebug('Table check error', $e->getMessage(), 'error');
+                    throw $e;
                 }
-            } catch (Exception $e) {
-                consoleDebug('Table check error', $e->getMessage(), 'error');
-                throw $e;
             }
             
             // Get registration data from database
             $registration = getRegistrationByJisId($db, $jis_id);
-            
-            // Debug: Log the database query result
-            error_log("Registration lookup result: " . ($registration ? "Found" : "Not found"));
             
             if (!$registration) {
                 // In debug mode, try a direct query to see the results
@@ -110,135 +111,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $input_name_lower = strtolower($input_name);
                 $db_name_lower = strtolower($db_name);
                 
-                consoleDebug('Name validation', [
-                    'input_name' => $input_name,
-                    'db_name' => $db_name,
-                    'input_lower' => $input_name_lower,
-                    'db_lower' => $db_name_lower,
-                    'match' => ($input_name_lower === $db_name_lower)
-                ]);
+                if ($debug) {
+                    consoleDebug('Name validation', [
+                        'input_name' => $input_name,
+                        'db_name' => $db_name,
+                        'match' => ($input_name_lower === $db_name_lower)
+                    ]);
+                }
                 
                 if ($input_name_lower !== $db_name_lower) {
                     $error = "The provided name doesn't match our records for this JIS ID. Please check your spelling.";
-                    error_log("Name mismatch for JIS ID: $jis_id - Input: '$input_name', DB: '$db_name'");
-                    consoleDebug('Name mismatch', ['input' => $input_name, 'db' => $db_name], 'warn');
                 } else {
                     // Check payment status first
                     $paymentStatus = $registration['payment_status'] ?? '';
                     
-                    // Log payment status
-                    if (function_exists('consoleDebug')) {
-                        consoleDebug('Payment Status Check', [
-                            'status' => $paymentStatus,
-                            'jis_id' => $jis_id,
-                            'student_name' => $registration['student_name'] ?? 'Unknown'
-                        ]);
-                    }
-                    
                     if (strtolower($paymentStatus) === 'not paid') {
                         $error = "Certificate cannot be issued as Payment Pending/Not Updated. Please Contact Team.";
-                        error_log("Certificate denied - Payment pending for JIS ID: $jis_id, Name: " . ($registration['student_name'] ?? 'Unknown'));
                     } else {
-                        // Check if competition_name is empty
+                        // Initialize roles array to track certificate types to generate
+                        $rolesToGenerate = [];
+                        
+                        // Check competition_name for participant role
                         $competitionName = $registration['competition_name'] ?? '';
                         
-                        if (empty(trim($competitionName))) {
-                            $error = "No event participation recorded for your JIS ID. Certificates are only issued for event participants.";
-                            error_log("Certificate denied - No competition/event found for JIS ID: $jis_id, Name: " . ($registration['student_name'] ?? 'Unknown'));
-                            consoleDebug('Certificate eligibility', ['error' => 'No competition name found', 'jis_id' => $jis_id], 'error');
+                        // Check the dedicated role column in the database
+                        $staffRole = $registration['role'] ?? '';
+                        
+                        // Flag to track if we have at least one role
+                        $hasRole = false;
+                        
+                        // Check for participant role through competition_name
+                        if (!empty(trim($competitionName))) {
+                            $hasRole = true;
+                            $rolesToGenerate[] = 'Participant';
+                        }
+                        
+                        // Check for staff role from the role column
+                        if (!empty(trim($staffRole))) {
+                            $hasRole = true;
+                            
+                            // Check which staff role they have
+                            if (stripos($staffRole, 'volunteer') !== false) {
+                                $rolesToGenerate[] = 'Volunteer';
+                            } 
+                            
+                            if (stripos($staffRole, 'crew') !== false) {
+                                $rolesToGenerate[] = 'Crew Member';
+                            }
+                        }
+                        
+                        // If no roles detected, show error message
+                        if (!$hasRole) {
+                            $error = "No event participation or staff role found for your JIS ID. Certificates are only issued for participants, volunteers, or crew members.";
                         } else {
                             // Get student's name from student_name column
                             $studentName = $registration['student_name'] ?? '';
-                            consoleDebug('Student name', $studentName);
                             
                             // Generate a unique certificate ID for verification
                             $certificateId = generateCertificateId($jis_id);
-                            consoleDebug('Certificate ID', $certificateId);
                             
                             // Record certificate generation in database for future verification
                             $token = recordCertificateGeneration($db, $jis_id, $registration);
-                            if (!$token) {
-                                consoleDebug('Certificate recording', 'Failed to record in database', 'warn');
-                            } else {
-                                consoleDebug('Certificate token', ['created' => true, 'length' => strlen($token)]);
-                            }
                             
                             if (empty($studentName)) {
                                 $error = "Student name not found in registration data";
-                                consoleDebug('Error', $error, 'error');
                             } else {
-                                // Determine the appropriate role based on competition_name
-                                $role = '';
-                                
-                                // Competition name from database
-                                $competitionName = $registration['competition_name'] ?? '';
-                                consoleDebug('Competition name', $competitionName);
-                                
-                                // Convert to lowercase for case-insensitive matching
-                                $competitionString = strtolower($competitionName);
-                                
-                                // Check for Crew Member first
-                                if (strpos($competitionString, 'crew member') !== false) {
-                                    $role = 'Crew Member';
-                                    consoleDebug('Role match', [
-                                        'matched' => 'Crew Member',
-                                        'pattern' => 'crew member',
-                                        'found_at' => strpos($competitionString, 'crew member')
-                                    ]);
-                                } 
-                                // Then check for Volunteer
-                                else if (strpos($competitionString, 'volunteer') !== false) {
-                                    $role = 'Volunteer';
-                                    consoleDebug('Role match', [
-                                        'matched' => 'Volunteer',
-                                        'pattern' => 'volunteer',
-                                        'found_at' => strpos($competitionString, 'volunteer')
-                                    ]);
-                                } 
-                                // Otherwise, check for participant events
-                                else {
-                                    $participantEvents = [
-                                        'jam room', 'band', 'taal se taal mila', 'dance', 
-                                        'fashion fiesta', 'fashion show', 'actomania', 'drama', 
-                                        'poetry slam', 'recitation', 'mic hunters', 'anchoring'
-                                    ];
-                                    
-                                    $matchDetails = ['matched' => false, 'event' => '', 'search_string' => $competitionString];
-                                    
-                                    foreach ($participantEvents as $event) {
-                                        if (strpos($competitionString, $event) !== false) {
-                                            $role = 'Participant';
-                                            $matchDetails = [
-                                                'matched' => true,
-                                                'event' => $event,
-                                                'pattern' => $event,
-                                                'found_at' => strpos($competitionString, $event)
-                                            ];
-                                            break;
-                                        }
-                                    }
-                                    
-                                    // If no specific event is found but payment is made, consider as Participant
-                                    if (empty($role) && isset($registration['payment_status']) && $registration['payment_status'] === 'Paid') {
-                                        $role = 'Participant';
-                                        $matchDetails = [
-                                            'matched' => true,
-                                            'via' => 'payment_status',
-                                            'payment_status' => $registration['payment_status']
-                                        ];
-                                    }
-                                    
-                                    consoleDebug('Event matching', $matchDetails);
-                                }
-                                
-                                consoleDebug('Final role determination', ['role' => $role]);
-                                
-                                if (empty($role)) {
-                                    $error = "Could not determine eligibility for certificate. Please contact the organizers.";
-                                    consoleDebug('Role error', 'No eligible role found', 'warn');
+                                // Handle multiple certificates if needed
+                                if (count($rolesToGenerate) > 1) {
+                                    // Multiple roles - generate combined certificate
+                                    $certificate_path = generateMultipleRoleCertificates($studentName, $jis_id, $token, $rolesToGenerate);
                                 } else {
-                                    // Generate certificate based on role
-                                    consoleDebug('Generating certificate', ['type' => $role, 'for' => $studentName]);
+                                    // Single role - normal certificate generation
+                                    $role = $rolesToGenerate[0];
                                     
                                     switch ($role) {
                                         case 'Participant':
@@ -251,26 +195,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             $certificate_path = generateCrewCertificate($studentName, $jis_id, $token);
                                             break;
                                     }
-                                    
-                                    consoleDebug('Certificate generation result', [
-                                        'success' => !empty($certificate_path),
-                                        'path' => $certificate_path
-                                    ]);
-                                    
-                                    if ($certificate_path) {
-                                        // Serve file for download
-                                        $file_name = "maJIStic_certificate_" . str_replace(' ', '_', $studentName) . ".pdf";
-                                        consoleDebug('Serving file', [
-                                            'filename' => $file_name,
-                                            'content_type' => 'application/pdf',
-                                            'filesize' => filesize($certificate_path)
-                                        ]);
+                                }
+                                
+                                if ($certificate_path) {
+                                    // Serve file for download
+                                    $extension = pathinfo($certificate_path, PATHINFO_EXTENSION);
+    
+                                    // Use different handling for ZIP files vs PDF files
+                                    if ($extension === 'zip') {
+                                        $file_name = "maJIStic_certificates_" . str_replace(' ', '_', $studentName) . ".zip";
                                         
                                         if ($debug) {
+                                            consoleDebug('Serving ZIP file', [
+                                                'filename' => $file_name,
+                                                'content_type' => 'application/zip',
+                                                'filesize' => filesize($certificate_path),
+                                                'type' => 'Multiple certificates'
+                                            ]);
+                                            
+                                            echo "<div style='padding:20px;background:#e8f5e9;margin:20px;border-radius:5px;'>";
+                                            echo "<h3>Certificate Generation Success</h3>";
+                                            echo "<p>Multiple certificates have been generated for: <strong>{$studentName}</strong></p>";
+                                            echo "<p>Roles: <strong>" . implode(", ", $rolesToGenerate) . "</strong></p>";
+                                            echo "<p><em>Your certificates have been bundled into a ZIP file because each role has a separate certificate.</em></p>";
+                                            echo "<p>Certificate path: <code>{$certificate_path}</code></p>";
+                                            echo "<a href='{$certificate_path}' download='{$file_name}' style='padding:10px;background:#4caf50;color:#fff;text-decoration:none;border-radius:4px;display:inline-block;margin-top:10px;'>Download ZIP</a>";
+                                            echo "<a href='index.php' style='padding:10px;background:#2196f3;color:#fff;text-decoration:none;border-radius:4px;display:inline-block;margin-top:10px;margin-left:10px;'>Back to Form</a>";
+                                            echo "</div>";
+                                            echo "<script>console.groupEnd();</script>";
+                                            echo "</body></html>";
+                                            exit;
+                                        } else {
+                                            header('Content-Type: application/zip');
+                                            header('Content-Disposition: attachment; filename="' . $file_name . '"');
+                                            header('Content-Length: ' . filesize($certificate_path));
+                                            readfile($certificate_path);
+                                            
+                                            // Cleanup - delete temp file after download
+                                            @unlink($certificate_path);
+                                            exit;
+                                        }
+                                    } else {
+                                        // Standard PDF handling
+                                        $file_name = "maJIStic_certificate_" . str_replace(' ', '_', $studentName) . ".pdf";
+                                        
+                                        if ($debug) {
+                                            consoleDebug('Serving file', [
+                                                'filename' => $file_name,
+                                                'content_type' => 'application/pdf',
+                                                'filesize' => filesize($certificate_path)
+                                            ]);
+                                            
                                             echo "<div style='padding:20px;background:#e8f5e9;margin:20px;border-radius:5px;'>";
                                             echo "<h3>Certificate Generation Success</h3>";
                                             echo "<p>Certificate has been generated for: <strong>{$studentName}</strong></p>";
-                                            echo "<p>Role: <strong>{$role}</strong></p>";
+                                            
+                                            if (count($rolesToGenerate) > 1) {
+                                                // Show all roles when multiple certificates are generated
+                                                echo "<p>Roles: <strong>" . implode(", ", $rolesToGenerate) . "</strong></p>";
+                                                echo "<p><em>A combined certificate with all your roles has been generated.</em></p>";
+                                            } else {
+                                                // Single role
+                                                echo "<p>Role: <strong>{$rolesToGenerate[0]}</strong></p>";
+                                            }
+                                            
                                             echo "<p>Certificate path: <code>{$certificate_path}</code></p>";
                                             echo "<a href='generate_certificate.php?jis_id={$jis_id}&download=1' style='padding:10px;background:#4caf50;color:#fff;text-decoration:none;border-radius:4px;display:inline-block;margin-top:10px;'>Download Certificate</a>";
                                             echo "<a href='index.php' style='padding:10px;background:#2196f3;color:#fff;text-decoration:none;border-radius:4px;display:inline-block;margin-top:10px;margin-left:10px;'>Back to Form</a>";
@@ -288,10 +276,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             @unlink($certificate_path);
                                             exit;
                                         }
-                                    } else {
-                                        $error = "Error generating certificate. Please try again later.";
-                                        consoleDebug('Certificate error', 'Generation failed', 'error');
                                     }
+                                } else {
+                                    $error = "Error generating certificate. Please try again later.";
                                 }
                             }
                         }
@@ -300,10 +287,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } catch (Exception $e) {
             $error = "An error occurred: " . $e->getMessage();
-            consoleDebug('Exception', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ], 'error');
+            if ($debug) {
+                consoleDebug('Exception', [
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ], 'error');
+            }
         }
     }
     
@@ -319,9 +308,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    // If there's an error, redirect back to the form
+    // If there's an error, store in session instead of URL parameter
     if ($error) {
-        header("Location: index.php?error=" . urlencode($error));
+        $_SESSION['certificate_error'] = $error;
+        header("Location: index.php");
         exit;
     }
 }
@@ -333,5 +323,6 @@ if (isset($_GET['download']) && $_GET['download'] == '1' && isset($_GET['jis_id'
 }
 
 // If script execution reaches here without redirection, show error page
-header("Location: index.php?error=Invalid request");
+$_SESSION['certificate_error'] = "Invalid request";
+header("Location: index.php");
 exit;

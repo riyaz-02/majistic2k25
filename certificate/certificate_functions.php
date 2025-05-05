@@ -83,53 +83,25 @@ function getRegistrationByJisId($db, $jis_id) {
  * @return bool True if eligible, false otherwise
  */
 function isEligibleForRole($registrationData, $role) {
-    // If data not found or competition_name is not set
-    if (!$registrationData || !isset($registrationData['competition_name'])) {
+    // If data not found
+    if (!$registrationData) {
         return false;
     }
     
-    // Get the competition string and convert to lowercase for case-insensitive matching
-    $competitionString = strtolower($registrationData['competition_name']);
-    
     switch ($role) {
         case 'Participant':
-            // Define participant events (lowercase for case-insensitive matching)
-            $participantEvents = [
-                'jam room',
-                'band',
-                'taal se taal mila',
-                'dance',
-                'fashion fiesta',
-                'fashion show',
-                'actomania',
-                'drama',
-                'poetry slam',
-                'recitation',
-                'mic hunters',
-                'anchoring'
-            ];
-            
-            // Check if any participant event keyword is in the competition string
-            foreach ($participantEvents as $event) {
-                if (strpos($competitionString, $event) !== false) {
-                    return true;
-                }
-            }
-            
-            // Also check if user has paid (they qualify as participants even without a specific event)
-            if (isset($registrationData['payment_status']) && $registrationData['payment_status'] === 'Paid') {
-                return true;
-            }
-            
-            return false;
+            // Check if competition_name has a value
+            return !empty(trim($registrationData['competition_name'] ?? ''));
             
         case 'Crew Member':
-            // Check for "Crew Member" in competition_name (case insensitive)
-            return (strpos($competitionString, 'crew member') !== false);
+            // Check for "Crew Member" in dedicated role column
+            $dbRole = strtolower($registrationData['role'] ?? '');
+            return (strpos($dbRole, 'crew') !== false);
             
         case 'Volunteer':
-            // Check for "Volunteer" in competition_name (case insensitive)
-            return (strpos($competitionString, 'volunteer') !== false);
+            // Check for "Volunteer" in dedicated role column
+            $dbRole = strtolower($registrationData['role'] ?? '');
+            return (strpos($dbRole, 'volunteer') !== false);
             
         default:
             return false;
@@ -320,11 +292,11 @@ function generateCertificate($name, $role, $jis_id = '', $token = null) {
             // Log the student name being added to certificate
             certLog("Adding name to certificate: $name", 'INFO');
             
-            // Determine positions based on orientation
+            // Determine positions based on orientation, with adjusted positioning (shifted right and up by 5 units)
             if ($orientation === 'L') {
                 // Position for name - for landscape certificate
-                $nameX = $templateSize['width'] / 2; // Center horizontally
-                $nameY = ($templateSize['height'] / 2) - 10; // Move slightly up from center
+                $nameX = ($templateSize['width'] / 2) + 37; // Shifted right by 5 units
+                $nameY = ($templateSize['height'] / 2) - 13; // Moved up by 5 more units (was -10)
                 
                 // Set position and center text
                 $pdf->SetXY($nameX - 100, $nameY);
@@ -333,8 +305,8 @@ function generateCertificate($name, $role, $jis_id = '', $token = null) {
             // For portrait certificates
             else {
                 // Position for name - for portrait certificate
-                $nameX = $templateSize['width'] / 2; // Center horizontally
-                $nameY = ($templateSize['height'] / 2) - 10; // Move slightly up from center
+                $nameX = ($templateSize['width'] / 2) + 37; // Shifted right by 5 units
+                $nameY = ($templateSize['height'] / 2) - 13; // Moved up by 5 more units (was -10)
                 
                 // Set position and center text
                 $pdf->SetXY($nameX - 100, $nameY);
@@ -349,33 +321,37 @@ function generateCertificate($name, $role, $jis_id = '', $token = null) {
                 
                 if ($qrPath && file_exists($qrPath)) {
                     try {
-                        // Log QR code details before placing on certificate
-                        certLog("Adding QR code to certificate from path: $qrPath", 'INFO');
-                        certLog("QR file size: " . filesize($qrPath) . " bytes", 'INFO');
-                        
-                        // Add QR code to the PDF at bottom left with REDUCED SIZE
+                        // Add white background rectangle for QR code (creates a visible border)
                         if ($orientation === 'L') {
-                            // Landscape - bottom left corner
-                            $qrX = 15;
-                            $qrY = $templateSize['height'] - 40; // Move higher up (was 30)
-                            $qrSize = 20; // Same size as before
+                            // Landscape - bottom left corner with border
+                            $qrX = 15 + 16; // Shifted right by 5 units
+                            $qrY = $templateSize['height'] - 40; // Same vertical position
+                            $qrSize = 20; // QR code size
+                            $borderSize = 0.1; // Border size in points
+                            
+                            // Draw white rectangle as background for QR code (creates border effect)
+                            $pdf->SetFillColor(255, 255, 255); // White fill
+                            $pdf->Rect($qrX - $borderSize, $qrY - $borderSize, 
+                                  $qrSize + ($borderSize * 2), $qrSize + ($borderSize * 2), 'F');
                             
                             // Add image with error handling
                             $pdf->Image($qrPath, $qrX, $qrY, $qrSize, $qrSize);
-                            certLog("QR code added at X: $qrX, Y: $qrY, size: $qrSize", 'INFO');
-                            
-                            // Remove verification text - no JIS ID or verify URL text shown
+                            certLog("QR code added with white border at X: $qrX, Y: $qrY, size: $qrSize", 'INFO');
                         } else {
-                            // Portrait - bottom left corner
-                            $qrX = 15;
-                            $qrY = $templateSize['height'] - 40; // Move higher up (was 30)
-                            $qrSize = 20; // Same size as before
+                            // Portrait - bottom left corner with border
+                            $qrX = 15 + 16; // Shifted right by 5 units
+                            $qrY = $templateSize['height'] - 40; // Same vertical position
+                            $qrSize = 20; // QR code size
+                            $borderSize = 0.1; // Border size in points
+                            
+                            // Draw white rectangle as background for QR code (creates border effect)
+                            $pdf->SetFillColor(255, 255, 255); // White fill
+                            $pdf->Rect($qrX - $borderSize, $qrY - $borderSize, 
+                                  $qrSize + ($borderSize * 2), $qrSize + ($borderSize * 2), 'F');
                             
                             // Add image with error handling
                             $pdf->Image($qrPath, $qrX, $qrY, $qrSize, $qrSize);
-                            certLog("QR code added at X: $qrX, Y: $qrY, size: $qrSize", 'INFO');
-                            
-                            // Remove verification text - no JIS ID or verify URL text shown
+                            certLog("QR code added with white border at X: $qrX, Y: $qrY, size: $qrSize", 'INFO');
                         }
                     } catch (Exception $e) {
                         certLog("Error adding QR to PDF: " . $e->getMessage(), 'ERROR', $e);
@@ -542,13 +518,12 @@ function recordCertificateGeneration($db, $jis_id, $registration) {
                     student_name VARCHAR(255) NOT NULL,
                     role VARCHAR(50) NOT NULL,
                     generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    verification_count INT DEFAULT 0,
                     ip_address VARCHAR(45) NULL,
                     user_agent TEXT NULL,
                     referer TEXT NULL,
                     device_info TEXT NULL,
+                    download_count INT DEFAULT 1,
                     INDEX (jis_id),
-                    UNIQUE (jis_id),
                     UNIQUE (token)
                 )
             ");
@@ -557,10 +532,11 @@ function recordCertificateGeneration($db, $jis_id, $registration) {
             // Check for tracking columns and add them if they don't exist
             $requiredColumns = [
                 'token' => "ALTER TABLE certificate_records ADD COLUMN token VARCHAR(255) NOT NULL AFTER jis_id",
-                'ip_address' => "ALTER TABLE certificate_records ADD COLUMN ip_address VARCHAR(45) NULL AFTER verification_count",
+                'ip_address' => "ALTER TABLE certificate_records ADD COLUMN ip_address VARCHAR(45) NULL",
                 'user_agent' => "ALTER TABLE certificate_records ADD COLUMN user_agent TEXT NULL AFTER ip_address",
                 'referer' => "ALTER TABLE certificate_records ADD COLUMN referer TEXT NULL AFTER user_agent",
-                'device_info' => "ALTER TABLE certificate_records ADD COLUMN device_info TEXT NULL AFTER referer"
+                'device_info' => "ALTER TABLE certificate_records ADD COLUMN device_info TEXT NULL AFTER referer",
+                'download_count' => "ALTER TABLE certificate_records ADD COLUMN download_count INT DEFAULT 1 AFTER device_info"
             ];
             
             foreach ($requiredColumns as $column => $sql) {
@@ -574,6 +550,13 @@ function recordCertificateGeneration($db, $jis_id, $registration) {
                     }
                 }
             }
+            
+            // Check for verification_count and remove if exists
+            $checkColumn = $db->query("SHOW COLUMNS FROM certificate_records LIKE 'verification_count'");
+            if ($checkColumn->rowCount() > 0) {
+                $db->exec("ALTER TABLE certificate_records DROP COLUMN verification_count");
+                certLog("Removed verification_count column from certificate_records table", 'INFO');
+            }
         }
         
         // Determine role based on competition name
@@ -583,6 +566,14 @@ function recordCertificateGeneration($db, $jis_id, $registration) {
         if (strpos($competitionString, 'crew member') !== false) {
             $role = 'Crew Member';
         } elseif (strpos($competitionString, 'volunteer') !== false) {
+            $role = 'Volunteer';
+        }
+        
+        // If specific roles are set in the role column, use those
+        $staffRole = strtolower($registration['role'] ?? '');
+        if (strpos($staffRole, 'crew') !== false) {
+            $role = 'Crew Member';
+        } elseif (strpos($staffRole, 'volunteer') !== false) {
             $role = 'Volunteer';
         }
         
@@ -612,49 +603,75 @@ function recordCertificateGeneration($db, $jis_id, $registration) {
         $isMobile = preg_match('/(mobile|android|iphone|ipad|phone)/i', $userAgent);
         $deviceInfo['is_mobile'] = $isMobile ? 'Yes' : 'No';
         
+        // Add a device fingerprint to better track unique devices
+        $fingerprint = md5($ipAddress . $userAgent);
+        $deviceInfo['fingerprint'] = $fingerprint;
+        
         $deviceInfoJson = json_encode($deviceInfo);
         
-        // Log the tracking information
-        certLog("Certificate download tracking", [
-            'ip' => $ipAddress,
-            'user_agent' => substr($userAgent, 0, 50) . '...',
-            'device' => $deviceInfo
-        ], 'INFO');
+        // Check if this IP has downloaded a certificate for this JIS ID before
+        $hasDownloaded = false;
+        $downloadId = 0;
         
-        // Insert record with IST timestamp and tracking info
-        $stmt = $db->prepare("
-            INSERT INTO certificate_records 
-                (jis_id, token, student_name, role, generated_at, ip_address, user_agent, referer, device_info)
-            VALUES 
-                (:jis_id, :token, :student_name, :role, :generated_at, :ip_address, :user_agent, :referer, :device_info)
-            ON DUPLICATE KEY UPDATE 
-                token = :token,
-                student_name = :student_name,
-                role = :role,
-                generated_at = :generated_at,
-                verification_count = verification_count + 1,
-                ip_address = :ip_address,
-                user_agent = :user_agent,
-                referer = :referer,
-                device_info = :device_info
+        $checkStmt = $db->prepare("
+            SELECT id, download_count 
+            FROM certificate_records 
+            WHERE jis_id = :jis_id AND ip_address = :ip_address 
+            ORDER BY generated_at DESC
+            LIMIT 1
         ");
-        
-        $result = $stmt->execute([
+        $checkStmt->execute([
             ':jis_id' => $jis_id,
-            ':token' => $token,
-            ':student_name' => $registration['student_name'] ?? '',
-            ':role' => $role,
-            ':generated_at' => $istTimestamp,
-            ':ip_address' => $ipAddress,
-            ':user_agent' => $userAgent,
-            ':referer' => $referer,
-            ':device_info' => $deviceInfoJson
+            ':ip_address' => $ipAddress
         ]);
         
-        certLog("Certificate recorded with tracking info for JIS ID: $jis_id", 'INFO');
+        $existingRecord = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        if ($existingRecord) {
+            $hasDownloaded = true;
+            $downloadId = $existingRecord['id'];
+            $downloadCount = (int)$existingRecord['download_count'] + 1;
+            
+            // Update the existing record's download count and timestamp
+            $updateStmt = $db->prepare("
+                UPDATE certificate_records 
+                SET download_count = :download_count,
+                    generated_at = :generated_at
+                WHERE id = :id
+            ");
+            $updateStmt->execute([
+                ':download_count' => $downloadCount,
+                ':generated_at' => $istTimestamp,
+                ':id' => $downloadId
+            ]);
+            
+            certLog("Updated certificate download record for JIS ID: $jis_id, IP: $ipAddress, Count: $downloadCount", 'INFO');
+        } else {
+            // Insert a new record - this is a new download from this IP address
+            $stmt = $db->prepare("
+                INSERT INTO certificate_records 
+                    (jis_id, token, student_name, role, generated_at, ip_address, user_agent, referer, device_info, download_count)
+                VALUES 
+                    (:jis_id, :token, :student_name, :role, :generated_at, :ip_address, :user_agent, :referer, :device_info, 1)
+            ");
+            
+            $stmt->execute([
+                ':jis_id' => $jis_id,
+                ':token' => $token,
+                ':student_name' => $registration['student_name'] ?? '',
+                ':role' => $role,
+                ':generated_at' => $istTimestamp,
+                ':ip_address' => $ipAddress,
+                ':user_agent' => $userAgent,
+                ':referer' => $referer,
+                ':device_info' => $deviceInfoJson
+            ]);
+            
+            certLog("New certificate download record created for JIS ID: $jis_id, IP: $ipAddress", 'INFO');
+        }
+        
         return $token;
     } catch (Exception $e) {
-        certLog("Failed to record certificate", 'ERROR', $e);
+        certLog("Failed to record certificate download: " . $e->getMessage(), 'ERROR', $e);
         return false;
     }
 }
@@ -691,16 +708,17 @@ function generateQRCode($jis_id, $token = null) {
         $safeJisId = preg_replace('/[^a-zA-Z0-9]/', '', $jis_id); // Remove special characters
         $qrPath = $qrDir . "/" . $safeJisId . "_" . uniqid() . ".png";
         
-        // Try to use Google Chart API for QR generation
-        $googleChartUrl = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' . urlencode($verifyUrl) . '&choe=UTF-8';
-        certLog("Attempting to generate QR code using Google Chart API", 'INFO');
+        // Try to use Google Chart API for QR generation with added padding and white border
+        // chld=M|4 - M is error correction level, 4 is the size of the white border (increased from 2)
+        $googleChartUrl = 'https://chart.googleapis.com/chart?chs=350x350&cht=qr&chl=' . urlencode($verifyUrl) . '&choe=UTF-8&chld=M|4'; 
+        certLog("Attempting to generate QR code using Google Chart API with white border", 'INFO');
         
         $imageData = @file_get_contents($googleChartUrl);
         if ($imageData === false) {
             certLog("Failed to get QR code from Google Chart API, trying alternative", 'WARNING');
             
-            // Try alternative QR code service
-            $altUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($verifyUrl);
+            // Try alternative QR code service with margin parameter for white border
+            $altUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($verifyUrl) . '&margin=20&bgcolor=FFFFFF';
             $imageData = @file_get_contents($altUrl);
             
             if ($imageData === false) {
@@ -711,7 +729,7 @@ function generateQRCode($jis_id, $token = null) {
         
         // Save the QR code image to file
         if (file_put_contents($qrPath, $imageData)) {
-            certLog("QR code saved to: $qrPath", 'INFO');
+            certLog("QR code with white border saved to: $qrPath", 'INFO');
             return $qrPath;
         }
         
@@ -719,6 +737,301 @@ function generateQRCode($jis_id, $token = null) {
         return false;
     } catch (Exception $e) {
         certLog("QR code generation error: " . $e->getMessage(), 'ERROR', $e);
+        return false;
+    }
+}
+
+/**
+ * Merge multiple PDF files using PHP/FPDI without shell commands
+ * 
+ * @param array $pdfFiles Array of PDF file paths to merge
+ * @param string $outputPath Path where merged PDF should be saved
+ * @return boolean Success or failure
+ */
+function mergePdfs($pdfFiles, $outputPath) {
+    try {
+        // Find PDF libraries in multiple possible locations
+        $fpdfPaths = [
+            __DIR__ . '/../vendor/fpdf/fpdf.php',
+            __DIR__ . '/../vendor/setasign/fpdf/fpdf.php',
+            __DIR__ . '/vendor/setasign/fpdf/fpdf.php'
+        ];
+        
+        $fpdiPaths = [
+            __DIR__ . '/../vendor/fpdi/src/autoload.php',
+            __DIR__ . '/../vendor/setasign/fpdi/src/autoload.php',
+            __DIR__ . '/vendor/setasign/fpdi/src/autoload.php',
+            __DIR__ . '/../vendor/autoload.php',
+            __DIR__ . '/vendor/autoload.php'
+        ];
+        
+        $fpdfPath = null;
+        $fpdiPath = null;
+        
+        // Find first existing FPDF path
+        foreach ($fpdfPaths as $path) {
+            if (file_exists($path)) {
+                $fpdfPath = $path;
+                certLog("Using FPDF from: $path", 'INFO');
+                break;
+            }
+        }
+        
+        // Find first existing FPDI path
+        foreach ($fpdiPaths as $path) {
+            if (file_exists($path)) {
+                $fpdiPath = $path;
+                certLog("Using FPDI from: $path", 'INFO');
+                break;
+            }
+        }
+        
+        if (!$fpdfPath || !$fpdiPath) {
+            certLog("Required PDF libraries not found", 'ERROR');
+            return false;
+        }
+        
+        // Load libraries
+        if (!class_exists('FPDF', false)) {
+            require_once $fpdfPath;
+        }
+        require_once $fpdiPath;
+        
+        // Initialize FPDI object
+        $pdf = new \setasign\Fpdi\Fpdi();
+        
+        // Add pages from each certificate file
+        foreach ($pdfFiles as $file) {
+            if (!file_exists($file)) {
+                certLog("Input file not found: $file", 'WARNING');
+                continue;
+            }
+            
+            try {
+                $pageCount = $pdf->setSourceFile($file);
+                certLog("Processing file: $file with $pageCount pages", 'INFO');
+                
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    // Import page
+                    $templateId = $pdf->importPage($pageNo);
+                    $size = $pdf->getTemplateSize($templateId);
+                    
+                    // Determine orientation
+                    $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+                    
+                    // Add page with same orientation and size
+                    $pdf->AddPage($orientation, [$size['width'], $size['height']]);
+                    
+                    // Use the imported page
+                    $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
+                }
+            } catch (Exception $e) {
+                certLog("Error processing file $file: " . $e->getMessage(), 'WARNING');
+                // Continue with next file
+            }
+        }
+        
+        // Save the combined PDF
+        $pdf->Output('F', $outputPath);
+        
+        if (file_exists($outputPath)) {
+            certLog("Successfully merged " . count($pdfFiles) . " PDF files to: $outputPath", 'INFO');
+            return true;
+        } else {
+            certLog("Failed to save merged PDF to: $outputPath", 'ERROR');
+            return false;
+        }
+    } catch (Exception $e) {
+        certLog("PDF merge error: " . $e->getMessage(), 'ERROR', $e);
+        return false;
+    }
+}
+
+/**
+ * Generate multiple certificates and combine them into a single PDF
+ * 
+ * @param string $studentName
+ * @param string $jis_id JIS ID for QR code
+ * @param string $token Encrypted verification token
+ * @param array $roles Array of roles to generate certificates for
+ * @return string|false Path to combined certificate or false on failure
+ */
+function generateMultipleRoleCertificates($studentName, $jis_id = '', $token = null, $roles = []) {
+    try {
+        // Debug log the input parameters
+        certLog("generateMultipleRoleCertificates called with roles: " . implode(", ", $roles), 'INFO');
+        
+        // Check for PDF libraries in multiple possible locations
+        $fpdfPaths = [
+            __DIR__ . '/../vendor/fpdf/fpdf.php',
+            __DIR__ . '/../vendor/setasign/fpdf/fpdf.php',
+            __DIR__ . '/vendor/setasign/fpdf/fpdf.php'
+        ];
+        
+        $fpdiPaths = [
+            __DIR__ . '/../vendor/fpdi/src/autoload.php',
+            __DIR__ . '/../vendor/setasign/fpdi/src/autoload.php',
+            __DIR__ . '/vendor/setasign/fpdi/src/autoload.php',
+            __DIR__ . '/../vendor/autoload.php'
+        ];
+        
+        $fpdfPath = null;
+        $fpdiPath = null;
+        
+        // Find the first existing FPDF path
+        foreach ($fpdfPaths as $path) {
+            if (file_exists($path)) {
+                $fpdfPath = $path;
+                certLog("Found FPDF at: $path", 'INFO');
+                break;
+            }
+        }
+        
+        // Find the first existing FPDI path
+        foreach ($fpdiPaths as $path) {
+            if (file_exists($path)) {
+                $fpdiPath = $path;
+                certLog("Found FPDI at: $path", 'INFO');
+                break;
+            }
+        }
+        
+        $hasLibraries = ($fpdfPath !== null && $fpdiPath !== null);
+        certLog("PDF libraries status: " . ($hasLibraries ? "Found" : "Not found"), 'INFO');
+        
+        // Generate individual certificate files first
+        $certificateFiles = [];
+        foreach ($roles as $role) {
+            $tempPath = '';
+            
+            switch ($role) {
+                case 'Participant':
+                    $tempPath = generateParticipantCertificate($studentName, $jis_id, $token);
+                    break;
+                case 'Volunteer':
+                    $tempPath = generateVolunteerCertificate($studentName, $jis_id, $token);
+                    break;
+                case 'Crew Member':
+                    $tempPath = generateCrewCertificate($studentName, $jis_id, $token);
+                    break;
+            }
+            
+            if ($tempPath && file_exists($tempPath)) {
+                $certificateFiles[] = $tempPath;
+                certLog("Generated individual certificate for role: $role, path: $tempPath", 'INFO');
+            } else {
+                certLog("Failed to generate certificate for role: $role", 'ERROR');
+            }
+        }
+        
+        // Log the generated certificate files for debugging
+        certLog("Generated certificates array: " . print_r($certificateFiles, true), 'INFO');
+        
+        // If no certificates were generated, return false
+        if (empty($certificateFiles)) {
+            certLog("No individual certificates were generated", 'ERROR');
+            return false;
+        }
+        
+        // If only one certificate was generated, return it directly
+        if (count($certificateFiles) === 1) {
+            certLog("Only one certificate generated, returning it directly", 'INFO');
+            return $certificateFiles[0];
+        }
+        
+        // Create a combined output file path
+        $outputPath = __DIR__ . "/temp/" . uniqid('combined_') . ".pdf";
+        
+        // Use pure PHP approach for merging PDFs
+        if ($hasLibraries) {
+            // Use our mergePdfs function that doesn't rely on shell commands
+            $mergeSuccess = mergePdfs($certificateFiles, $outputPath);
+            
+            if ($mergeSuccess && file_exists($outputPath)) {
+                certLog("Successfully merged PDFs using PHP FPDI", 'INFO');
+                
+                // Clean up individual certificate files
+                foreach ($certificateFiles as $file) {
+                    @unlink($file);
+                }
+                
+                return $outputPath;
+            } else {
+                certLog("PHP FPDI merge failed, trying alternative methods", 'WARNING');
+            }
+        } else {
+            certLog("PDF libraries not available for merging", 'WARNING');
+        }
+        
+        // If the PHP FPDI merge failed or libraries aren't available, create ZIP as fallback
+        try {
+            certLog("Attempting to create ZIP archive as fallback", 'INFO');
+            $zipPath = __DIR__ . "/temp/" . uniqid('certificates_') . ".zip";
+            
+            if (class_exists('ZipArchive')) {
+                $zip = new ZipArchive();
+                
+                if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+                    $i = 1;
+                    foreach ($certificateFiles as $index => $file) {
+                        if (!file_exists($file)) {
+                            certLog("Certificate file not found when creating ZIP: $file", 'WARNING');
+                            continue;
+                        }
+                        
+                        $role = $roles[$index] ?? "Role_$i";
+                        $extension = pathinfo($file, PATHINFO_EXTENSION);
+                        $filename = "maJIStic_certificate_{$studentName}_{$role}.$extension";
+                        $filename = str_replace(' ', '_', $filename);
+                        $filename = preg_replace('/[^a-zA-Z0-9._-]/', '', $filename);
+                        
+                        $zip->addFile($file, $filename);
+                        $i++;
+                    }
+                    
+                    $zip->close();
+                    certLog("Created ZIP archive with " . count($certificateFiles) . " certificates", 'INFO');
+                    
+                    // Clean up individual certificate files after adding to ZIP
+                    foreach ($certificateFiles as $file) {
+                        @unlink($file);
+                    }
+                    
+                    return $zipPath;
+                } else {
+                    certLog("Failed to create ZIP archive", 'ERROR');
+                }
+            } else {
+                certLog("ZipArchive class not available", 'WARNING');
+            }
+        } catch (Exception $e) {
+            certLog("ZIP creation error: " . $e->getMessage(), 'ERROR');
+        }
+        
+        // As a last resort, just return the first certificate
+        certLog("Fallback: returning first certificate only", 'WARNING');
+        $firstCert = $certificateFiles[0];
+        
+        // Clean up other certificate files
+        for ($i = 1; $i < count($certificateFiles); $i++) {
+            if (isset($certificateFiles[$i]) && file_exists($certificateFiles[$i])) {
+                @unlink($certificateFiles[$i]);
+            }
+        }
+        
+        return $firstCert;
+    } catch (Exception $e) {
+        certLog("Failed to combine certificates: " . $e->getMessage(), 'ERROR', $e);
+        
+        // Return the first valid certificate as fallback
+        if (isset($certificateFiles) && is_array($certificateFiles)) {
+            foreach ($certificateFiles as $file) {
+                if (file_exists($file)) {
+                    return $file;
+                }
+            }
+        }
+        
         return false;
     }
 }

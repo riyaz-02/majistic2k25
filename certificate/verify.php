@@ -298,5 +298,17 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <div class="footer">
         &copy; <?php echo date('Y'); ?> maJIStic - All Rights Reserved
     </div>
+    
+    <!-- Add debug information for troubleshooting 500 errors -->
+    <?php if(isset($_GET['debug']) && $_GET['debug'] == '1'): ?>
+    <div style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px; color: #666; font-size: 12px;">
+        <h4>Debug Information</h4>
+        <p>PHP Version: <?php echo phpversion(); ?></p>
+        <p>Date: <?php echo date('Y-m-d H:i:s'); ?></p>
+        <p>Server: <?php echo $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown'; ?></p>
+        <p>Certificate Parameters: ID=<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : 'Not provided'; ?>, 
+           JIS=<?php echo isset($_GET['jis']) ? htmlspecialchars($_GET['jis']) : 'Not provided'; ?></p>
+    </div>
+    <?php endif; ?>
 </body>
 </html>

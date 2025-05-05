@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Handle clean URL for verification codes
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?token=$1 [QSA,L]
+</IfModule>
+
+# Set default index file
+DirectoryIndex index.php

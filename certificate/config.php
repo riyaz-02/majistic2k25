@@ -50,9 +50,35 @@ function certificateErrorHandler($errno, $errstr, $errfile, $errline) {
 // Set the custom error handler
 set_error_handler("certificateErrorHandler");
 
-// Certificate generation configuration
+// Detect if we're in a production environment
+$isProduction = (stripos($_SERVER['SERVER_NAME'] ?? '', 'majistic.org') !== false || 
+                stripos($_SERVER['HTTP_HOST'] ?? '', 'majistic.org') !== false || 
+                stripos($_SERVER['SERVER_NAME'] ?? '', 'hostinger') !== false);
 
-// Set certificate generation options
+// Specific error handling for production vs development
+if ($isProduction) {
+    // In production: hide errors from users but log them
+    ini_set('display_errors', 0);
+    ini_set('log_errors', 1);
+    error_reporting(E_ALL);
+    
+    // Create a writable error log file
+    $errorLogFile = __DIR__ . '/error_log.txt';
+    if (!file_exists($errorLogFile)) {
+        @touch($errorLogFile);
+        @chmod($errorLogFile, 0666);
+    }
+    
+    if (is_writable($errorLogFile)) {
+        ini_set('error_log', $errorLogFile);
+    }
+} else {
+    // In development: show all errors
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+}
+
+// Certificate generation configuration
 $config = [
     // Whether to enforce payment status check
     'enforce_payment' => true,
@@ -69,7 +95,10 @@ $config = [
     'default_font_style' => 'BI', // Bold Italic
     
     // Certificate text color (RGB)
-    'text_color' => [0, 51, 102] // Dark Navy Blue
+    'text_color' => [0, 51, 102], // Dark Navy Blue
+    
+    // Environment setting
+    'is_production' => $isProduction
 ];
 
 return $config;

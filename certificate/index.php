@@ -1,4 +1,7 @@
 <?php
+// Start session for secure error handling
+session_start();
+
 require_once __DIR__ . '/../includes/db_config.php';
 require_once 'config.php';
 
@@ -12,8 +15,11 @@ if (isset($_GET['status']) && $_GET['status'] == 'success') {
     $success = "Certificate generated successfully!";
 }
 
-if (isset($_GET['error'])) {
-    $error = htmlspecialchars($_GET['error']);
+// Get error from session instead of URL parameter
+if (isset($_SESSION['certificate_error'])) {
+    $error = $_SESSION['certificate_error'];
+    // Clear the error after displaying it once
+    unset($_SESSION['certificate_error']);
 }
 ?>
 <!DOCTYPE html>
@@ -21,7 +27,12 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaJIStic 2K25 - Certificate Download</title>
+    <title>Certificate | maJIStic 2k25</title>
+    <!-- Add favicon/icon -->
+    <link rel="icon" href="../images/majisticlogo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../images/majisticlogo.png" type="image/x-icon">
+    <!-- Alternative icon source using the logo image (as backup) -->
+    <link rel="apple-touch-icon" href="../images/majisticlogo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <?php include '../includes/links.php'; ?>
@@ -38,9 +49,33 @@ if (isset($_GET['error'])) {
         }
 
         /* Specific overrides for certificate page */
+        .card-header {
+            padding: 20px 15px; /* Reduced from 35px 20px */
+        }
+        
+        .logo {
+            width: 120px; /* Slightly reduced from 140px */
+            margin-bottom: 10px; /* Reduced from 20px */
+        }
+        
+        .event-completion-banner {
+            padding: 15px; /* Reduced from 25px */
+            margin: 10px auto 0; /* Reduced top margin from 20px to 10px */
+        }
+        
+        .completion-title {
+            font-size: 20px; /* Reduced from 24px */
+            margin-bottom: 10px; /* Reduced from 15px */
+        }
+        
+        .event-completion-banner p {
+            margin-bottom: 0; /* Remove bottom margin */
+            font-size: 14px; /* Reduced from 16px */
+        }
+
         .page-title {
             color: white;
-            margin: 20px 0 25px;
+            margin: 15px 0 20px; /* Reduced from 20px 0 25px */
             text-shadow: 0 3px 10px rgba(0,0,0,0.5);
             letter-spacing: 1px;
         }
@@ -98,6 +133,135 @@ if (isset($_GET['error'])) {
 
         .form-container {
             animation: fadeIn 0.8s ease;
+        }
+
+        /* Fix error message positioning and animation */
+        .message-box {
+            padding: 18px;
+            margin: 25px auto; /* Keep it centered with auto margins */
+            max-width: 90%;
+            width: 100%;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            z-index: 5;
+            top: 0;
+            transition: none; /* Remove any transitions that might cause sliding */
+            transform: none; /* Ensure no transform is applied */
+            left: 0; /* Explicitly set left to 0 */
+            right: 0; /* Explicitly set right to 0 */
+            animation: none; /* Remove any default animations */
+        }
+
+        /* Replace highlight animation with a fade-in animation that doesn't change position */
+        @keyframes highlight-fixed {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4); }
+            100% { opacity: 1; }
+        }
+        
+        /* Improved message box styles with better responsiveness */
+        .message-box {
+            padding: 18px;
+            margin: 25px auto;
+            max-width: 90%;
+            width: 100%;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            z-index: 5;
+            top: 0;
+        }
+
+        .card-header {
+            z-index: 10;
+            position: relative;
+        }
+
+        .message-box.error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .message-box.success {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid #2ecc71;
+            color: #2ecc71;
+        }
+        
+        .message-box.system {
+            background-color: rgba(241, 196, 15, 0.2);
+            border-left: 4px solid #f1c40f;
+            color: #f1c40f;
+        }
+        
+        /* Icons in message boxes */
+        .message-box i {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        /* Add additional styling for better visibility */
+        .card-body {
+            position: relative;
+            z-index: 1;
+            padding-top: 30px;
+        }
+        
+        /* Ensure form is above message boxes */
+        .form-container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Responsive styles for message boxes */
+        @media (max-width: 768px) {
+            .message-box {
+                padding: 15px;
+                margin: 20px auto;
+                font-size: 15px;
+            }
+            
+            .message-box i {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .message-box {
+                padding: 12px 15px;
+                margin: 15px auto;
+                font-size: 14px;
+                max-width: 95%;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .message-box i {
+                font-size: 22px;
+                margin-bottom: 5px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .message-box {
+                padding: 10px;
+                margin: 10px auto;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
@@ -184,9 +348,8 @@ if (isset($_GET['error'])) {
                 </div>
                 
                 <!-- Important notes for users -->
-                <div class="note" style="background-color: rgba(52, 152, 219, 0.15); border-left: 4px solid #3498db; padding: 15px; margin: 20px 0; text-align: left; border-radius: 4px;">
-                    <p><strong>Note:</strong> Certificate generation requires exact matching of your JIS ID and registered name.</p>
-                    <p>The certificate will be generated only for registered participants who attended the event.</p>
+                <div class="note" style="background-color: rgba(52, 152, 219, 0.15); border-left: 4px solid #3498db; padding: 10px; margin: 15px 0; text-align: left; border-radius: 4px;">
+                    <p style="margin: 0;"><strong>Note:</strong> Certificate generation requires exact matching of your JIS ID and registered name. The certificate will be generated only for registered participants who attended the event.</p>
                 </div>
 
                 <!-- Support section -->
@@ -558,24 +721,25 @@ if (isset($_GET['error'])) {
                 downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
                 downloadBtn.style.opacity = '0.7';
                 
-                // After 2 seconds, change to "Generating..."
+                // After 2 seconds, change to "Generating..." (unchanged)
                 setTimeout(() => {
                     downloadBtn.innerHTML = '<i class="fas fa-cog fa-spin"></i> Generating...';
                 }, 2000);
                 
-                // After 4 seconds, change to "Downloading...(3s)"
+                // After 6 seconds (increased from 4), change to "Downloading...(5s)" (increased from 3s)
                 setTimeout(() => {
-                    downloadBtn.innerHTML = '<i class="fas fa-file-download"></i> Downloading...(3s)';
-                }, 4000);
+                    downloadBtn.innerHTML = '<i class="fas fa-file-download"></i> Downloading...(5s)';
+                }, 6000);
                 
                 // Set timeout to revert button state if the form submission takes too long
+                // Increased from 5000 to 9000 to account for longer animation
                 setTimeout(() => {
                     if (downloadBtn.disabled) {
                         downloadBtn.disabled = false;
                         downloadBtn.innerHTML = originalBtnText;
                         downloadBtn.style.opacity = '1';
                     }
-                }, 5000); // 5 seconds timeout
+                }, 9000); // 9 seconds timeout (increased from 5)
             });
             
             // Check for URL error parameters and display appropriate messages
@@ -586,10 +750,10 @@ if (isset($_GET['error'])) {
                 if (errorElement) {
                     errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     
-                    // Add highlight animation
+                    // Add highlight animation that doesn't change position
                     errorElement.style.animation = 'none';
                     setTimeout(() => {
-                        errorElement.style.animation = 'highlight 1.5s ease';
+                        errorElement.style.animation = 'highlight-fixed 1.5s ease';
                     }, 10);
                 }
             }

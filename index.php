@@ -114,7 +114,7 @@ if (session_status() === PHP_SESSION_NONE) {
             text-align: center;
             border-radius: 20px;
             padding: 30px;
-            margin: 5px auto;
+            margin: auto;
             position: relative;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(58, 28, 113, 0.4);
@@ -303,6 +303,15 @@ if (session_status() === PHP_SESSION_NONE) {
         }
         
         /* Responsive styles for completion banner */
+        @media (max-width: 2500px) {
+            .completion-banner {
+                margin-top: 100px;
+            }
+            .hero-content{
+                padding-top: 0px;
+            }
+        }
+
         @media (max-width: 992px) {
             .completion-title {
                 font-size: 2.4rem;
@@ -387,12 +396,12 @@ if (session_status() === PHP_SESSION_NONE) {
                     </div>
                     <!-- .entry-header -->
 
-                    <div class="event-dates">
-                        <!--<h2>DATES REVEALING SOON</h2> -->
+                    <!-- <div class="event-dates">
+                        <!--<h2>DATES REVEALING SOON</h2>
                         <p></i> 11 <sup>th</sup> & 12 <sup>th</sup> April 2025</p> 
                         
-                        <!-- <h2 class="mt-2"><i class="bi bi-geo-alt-fill"></i> JIS College of Engineering</h2> -->
-                    </div><!-- .event-dates -->
+                        <!-- <h2 class="mt-2"><i class="bi bi-geo-alt-fill"></i> JIS College of Engineering</h2> 
+                    </div>.event-dates 
 
                     <!-- Commented out countdown section - keeping for future use -->
                     <!--
@@ -437,6 +446,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         
                         <!-- Action buttons -->
                         <div class="action-buttons">
+                            <a href="/certificate" class="action-btn">Download Certificate</a>
                             <button class="action-btn" id="exploreBtn">Explore</button>
                             <a href="check_status.php" class="action-btn">Check Status</a>
                         </div>

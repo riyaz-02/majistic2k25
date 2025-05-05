@@ -1,263 +1,654 @@
 <?php
-require_once __DIR__ . '/../includes/db_config.php';
+// Start session for secure error handling
+session_start();
 
-// Capture token if available
-$token = isset($_GET['token']) ? $_GET['token'] : '';
+require_once __DIR__ . '/../includes/db_config.php';
+require_once __DIR__ . '/../certificate/certificate_functions.php';
+
+// Initialize variables
+$error = '';
+$success = '';
+$certificateData = null;
+$token = '';
+$debugLogs = [];
+
+// Debug function for tracking verification steps
+function debugLog($message, $data = null, $level = 'info') {
+    global $debugLogs;
+    $debugLogs[] = [
+        'timestamp' => microtime(true),
+        'level' => $level,
+        'message' => $message,
+        'data' => $data
+    ];
+    
+    // Also log to PHP error log for server-side tracking
+    $logMessage = "[Certificate Verification] $message";
+    if ($data !== null) {
+        $logMessage .= ": " . json_encode($data);
+    }
+    error_log($logMessage);
+}
+
+// Start verification process logs
+debugLog('Verification page loaded', ['session_id' => session_id(), 'time' => date('Y-m-d H:i:s')]);
+debugLog('Client info', [
+    'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
+    'referer' => $_SERVER['HTTP_REFERER'] ?? 'direct'
+]);
+
+// Check if a token is provided
+if (isset($_GET['token']) && !empty($_GET['token'])) {
+    $token = trim($_GET['token']);
+    debugLog('Token received', ['token' => substr($token, 0, 10) . '...']);
+    
+    try {
+        // Decrypt the verification token
+        debugLog('Attempting to decrypt token');
+        $tokenData = decryptVerificationToken($token);
+        
+        if ($tokenData === false) {
+            $error = "Invalid verification code. This certificate cannot be verified.";
+            debugLog('Token decryption failed', null, 'error');
+        } else {
+            debugLog('Token decrypted successfully', ['jis_id' => $tokenData['jis'], 'timestamp' => date('Y-m-d H:i:s', $tokenData['time'])]);
+            
+            // Extract JIS ID from token data
+            $jis_id = $tokenData['jis'];
+            
+            // Check database for certificate record matching this token
+            debugLog('Querying database for certificate record');
+            $stmt = $db->prepare("SELECT * FROM certificate_records WHERE token = :token LIMIT 1");
+            $stmt->execute([':token' => $token]);
+            $certificateData = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($certificateData) {
+                debugLog('Certificate record found', [
+                    'id' => $certificateData['id'],
+                    'student_name' => $certificateData['student_name'],
+                    'role' => $certificateData['role'],
+                    'issue_date' => $certificateData['generated_at']
+                ]);
+                
+                // No longer updating verification count in DB as requested
+                $success = "Certificate verified successfully!";
+                
+                // Get student data for additional verification
+                debugLog('Fetching student registration data');
+                $studentStmt = $db->prepare("SELECT * FROM registrations WHERE jis_id = :jis_id LIMIT 1");
+                $studentStmt->execute([':jis_id' => $jis_id]);
+                $studentData = $studentStmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($studentData) {
+                    debugLog('Student registration data found', ['jis_id' => $jis_id]);
+                } else {
+                    debugLog('No student registration found for JIS ID', ['jis_id' => $jis_id], 'warning');
+                }
+            } else {
+                debugLog('No certificate record found with token, trying JIS ID fallback');
+                // Try to find by JIS ID instead of token as a fallback
+                $stmt = $db->prepare("SELECT * FROM certificate_records WHERE jis_id = :jis_id ORDER BY generated_at DESC LIMIT 1");
+                $stmt->execute([':jis_id' => $jis_id]);
+                $certificateData = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($certificateData) {
+                    debugLog('Certificate record found via JIS ID fallback', [
+                        'id' => $certificateData['id'],
+                        'student_name' => $certificateData['student_name']
+                    ]);
+                    
+                    $success = "Certificate verified successfully!";
+                    
+                    // Get student data
+                    debugLog('Fetching student registration data');
+                    $studentStmt = $db->prepare("SELECT * FROM registrations WHERE jis_id = :jis_id LIMIT 1");
+                    $studentStmt->execute([':jis_id' => $jis_id]);
+                    $studentData = $studentStmt->fetch(PDO::FETCH_ASSOC);
+                    
+                    if ($studentData) {
+                        debugLog('Student registration data found', ['jis_id' => $jis_id]);
+                    } else {
+                        debugLog('No student registration found for JIS ID', ['jis_id' => $jis_id], 'warning');
+                    }
+                } else {
+                    $error = "Certificate record not found. This may not be an authentic certificate.";
+                    debugLog('No certificate record found', ['jis_id' => $jis_id], 'error');
+                }
+            }
+        }
+    } catch (Exception $e) {
+        $error = "Verification error. Please try again later.";
+        debugLog('Exception during verification', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 'error');
+    }
+} else {
+    $error = "No verification code provided. Please scan the QR code on the certificate.";
+    debugLog('No token provided in request', $_GET, 'warning');
+}
+
+debugLog('Verification process completed', [
+    'success' => !empty($success),
+    'error' => $error,
+    'has_certificate_data' => !empty($certificateData)
+]);
+
+// Helper function to format date for display
+function formatDate($dateString) {
+    $date = new DateTime($dateString);
+    return $date->format('F j, Y');
+}
+
+// Check if we're running in debug mode
+$isDebugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate Verification - maJIStic 2k25</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <title>Certificate Verification | maJIStic 2k25</title>
+    <!-- Add favicon/icon -->
+    <link rel="icon" href="../images/majisticlogo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../images/majisticlogo.png" type="image/x-icon">
+    <!-- Alternative icon source using the logo image (as backup) -->
+    <link rel="apple-touch-icon" href="../images/majisticlogo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <?php include '../includes/links.php'; ?>
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../css/check_status.css">
     <style>
         body {
             background-image: url('../images/pageback.png');
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             color: #ffffff;
         }
-        
-        .coming-soon-container {
-            background: rgba(0, 0, 0, 0.6);
+
+        .verification-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .verification-card {
+            background-color: rgba(255, 255, 255, 0.08);
             border-radius: 15px;
-            padding: 40px 30px;
-            margin: 30px auto;
-            max-width: 800px;
-            text-align: center;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            animation: fadeIn 0.8s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
-        
-        .coming-soon-icon {
-            font-size: 60px;
-            color: #3498db;
-            margin-bottom: 20px;
-            display: inline-block;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .coming-soon-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 15px;
+
+        .card-header {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
             color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .coming-soon-message {
-            font-size: 17px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: rgba(255, 255, 255, 0.9);
+
+        .card-body {
+            padding: 30px;
         }
-        
-        .dev-progress {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
+
+        .verification-result {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
             border-radius: 10px;
-            margin: 20px auto;
+        }
+
+        .verification-result.success {
+            background-color: rgba(46, 204, 113, 0.15);
+            border: 1px solid rgba(46, 204, 113, 0.5);
             position: relative;
             overflow: hidden;
         }
         
-        .dev-progress-bar {
+        .verification-result.success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #3498db, #9b59b6);
-            width: 75%;
-            border-radius: 10px;
-            animation: progressAnimation 2s ease-in-out;
+            background: radial-gradient(circle at top right, rgba(46, 204, 113, 0.3), transparent 70%);
+            z-index: 0;
         }
         
-        @keyframes progressAnimation {
-            from { width: 0; }
-            to { width: 75%; }
+        .verification-result.success .verification-icon,
+        .verification-result.success .verification-title,
+        .verification-result.success .verification-message {
+            position: relative;
+            z-index: 1;
         }
         
-        .token-info {
-            background: rgba(52, 152, 219, 0.1);
+        .verification-result.success .verification-icon {
+            color: #2ecc71;
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+            animation: pulse-green 2s infinite;
+        }
+        
+        @keyframes pulse-green {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 20px rgba(46, 204, 113, 0.8);
+            }
+            100% {
+                transform: scale(1);
+                text-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+            }
+        }
+        
+        .verification-success-pattern {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #2ecc71, #27ae60, #2ecc71);
+            z-index: 0;
+        }
+
+        .verification-result.error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+        }
+
+        .verification-details {
+            background-color: rgba(0, 0, 0, 0.2);
             border-radius: 10px;
+            padding: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .detail-label {
+            flex: 0 0 40%;
+            color: #adb5bd;
+            font-size: 0.95rem;
+        }
+
+        .detail-value {
+            flex: 0 0 60%;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .certificate-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-valid {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+        }
+
+        .status-invalid {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .verification-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .verification-title {
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .verification-message {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .certificate-holder-name {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2ecc71;
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .info-alert {
+            background-color: rgba(52, 152, 219, 0.2);
+            border-left: 5px solid #3498db;
             padding: 15px;
             margin-top: 20px;
-            text-align: left;
-            border-left: 4px solid #3498db;
-            word-break: break-all;
+            border-radius: 5px;
+        }
+
+        .search-form {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .search-form input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 15px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .search-form button {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .logo {
+            width: 120px;
+            margin-bottom: 10px;
         }
         
+        /* For animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .verification-card {
+            animation: fadeUp 0.8s ease;
+        }
+        
+        /* For responsive design */
         @media (max-width: 768px) {
-            .coming-soon-container {
-                padding: 30px 20px;
-                margin: 20px auto;
+            .verification-container {
+                padding: 10px;
+                margin: 30px auto;
             }
             
-            .coming-soon-icon {
-                font-size: 50px;
+            .detail-row {
+                flex-direction: column;
             }
             
-            .coming-soon-title {
-                font-size: 24px;
+            .detail-label, .detail-value {
+                flex: 0 0 100%;
             }
             
-            .coming-soon-message {
-                font-size: 15px;
+            .detail-label {
+                margin-bottom: 5px;
             }
+        }
+
+        /* Security badge styles */
+        .security-badge {
+            position: relative;
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .security-badge-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            font-size: 24px;
+        }
+
+        .security-badge p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+        }
+
+        /* Debug console styles */
+        .debug-console {
+            margin-top: 30px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .debug-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-family: monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .debug-body {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .debug-log {
+            margin-bottom: 6px;
+            padding: 4px 0;
+            font-family: monospace;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .debug-log:last-child {
+            border-bottom: none;
+        }
+        
+        .debug-timestamp {
+            color: #7f8c8d;
+            display: inline-block;
+            width: 70px;
+        }
+        
+        .debug-level {
+            display: inline-block;
+            padding: 0px 5px;
+            border-radius: 3px;
+            margin-right: 5px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+        
+        .debug-level.info {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .debug-level.warning {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .debug-level.error {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .debug-message {
+            color: #ecf0f1;
+        }
+        
+        .debug-data {
+            color: #95a5a6;
+            font-size: 11px;
+            padding-left: 79px;
+            margin-top: 3px;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
     
-    <div class="status-container">
-        <div class="status-card">
+    <div class="verification-container">
+        <div class="verification-card">
             <div class="card-header">
-                <img src="../images/majisticlogo.png" alt="maJIStic Logo" class="logo">
-                
-                <div class="event-completion-banner">
-                    <h3 class="completion-title">Certificate Verification System</h3>
-                    <p>Verify the authenticity of maJIStic 2k25 certificates</p>
-                </div>
+                <img src="../images/majisticlogo.png" alt="MaJIStic Logo" class="logo">
+                <h1>Certificate Verification</h1>
+                <p>Verify the authenticity of maJIStic 2k25 certificates</p>
             </div>
             
             <div class="card-body">
-                <h2 class="page-title">Certificate Verification</h2>
-                
-                <div class="coming-soon-container">
-                    <i class="fas fa-cogs coming-soon-icon"></i>
-                    <h3 class="coming-soon-title">Verification System Under Development</h3>
-                    <p class="coming-soon-message">We're currently building this certificate verification portal to ensure the authenticity of all maJIStic 2k25 certificates. The system will be available soon.</p>
+                <?php if ($error): ?>
+                <div class="verification-result error">
+                    <i class="fas fa-times-circle verification-icon"></i>
+                    <h2 class="verification-title">Verification Failed</h2>
+                    <p class="verification-message"><?php echo $error; ?></p>
                     
-                    <div class="dev-progress">
-                        <div class="dev-progress-bar"></div>
-                    </div>
-                    <p style="margin-top: 10px; color: #3498db; font-weight: 500;">75% Complete</p>
-                    
-                    <?php if (!empty($token)): ?>
-                    <div class="token-info">
-                        <p><strong>Your verification token has been received</strong></p>
-                        <p>Token ID: <?php echo htmlspecialchars(substr($token, 0, 20) . '...'); ?></p>
-                        <p>This token will be verified when the system is online.</p>
-                    </div>
-                    <?php endif; ?>
-                    
-                    <div class="note" style="background-color: rgba(52, 152, 219, 0.15); border-left: 4px solid #3498db; padding: 15px; margin: 30px 0; text-align: left; border-radius: 4px;">
-                        <p><strong>Need an immediate certificate verification?</strong></p>
-                        <p>Please contact our support team with your certificate details for manual verification until the automated system is ready.</p>
+                    <!-- Show form to verify a different certificate -->
+                    <div class="search-form">
+                        <form method="GET" action="index.php">
+                            <input type="text" name="token" placeholder="Enter verification code or token" required>
+                            <button type="submit"><i class="fas fa-search"></i> Verify Certificate</button>
+                        </form>
                     </div>
                 </div>
                 
-                <!-- Support section -->
-                <div class="support-container">
-                    <div class="contact-section">
-                        <h2 class="contact-section-title">Need Help?</h2>
-                        
-                        <div class="contact-tabs">
-                            <button class="contact-tab active" data-target="tech-team">Tech Team</button>
-                            <button class="contact-tab" data-target="support-team">Support Team</button>
+                <?php elseif ($success && $certificateData): ?>
+                <div class="verification-result success">
+                    <i class="fas fa-check-circle verification-icon"></i>
+                    <h2 class="verification-title">Certificate Verified</h2>
+                    <p class="verification-message">
+                        This is an authentic certificate issued to<br>
+                        <span class="certificate-holder-name"><?php echo htmlspecialchars($certificateData['student_name']); ?></span>
+                        <br>by maJIStic 2k25.
+                    </p>
+                    <div class="verification-success-pattern"></div>
+                </div>
+                
+                <div class="verification-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <span class="certificate-status status-valid">
+                                <i class="fas fa-shield-alt"></i> Verified
+                            </span>
                         </div>
-                        
-                        <div class="contact-panel active" id="tech-team">
-                            <p class="contact-description">
-                                In case of any technical issues, feel free to contact our Tech Team
-                            </p>
-                            <div class="contact-cards">
-                                <div class="contact-card">
-                                    <div class="icon">
-                                        <i class="fas fa-user-cog"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h4>Priyanshu Nayan</h4>
-                                        <a href="tel:+917004706722">+91 7004706722</a>
-                                    </div>
-                                </div>
-                                <div class="contact-card">
-                                    <div class="icon">
-                                        <i class="fas fa-user-cog"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h4>Sk Riyaz</h4>
-                                        <a href="tel:+917029621489">+91 7029621489</a>
-                                    </div>
-                                </div>
-                                <div class="contact-card">
-                                    <div class="icon">
-                                        <i class="fas fa-user-cog"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h4>Ronit Pal</h4>
-                                        <a href="tel:+917501005155">+91 7501005155</a>
-                                    </div>
-                                </div>
-                                <div class="contact-card">
-                                    <div class="icon">
-                                        <i class="fas fa-user-cog"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h4>Mohit Kumar</h4>
-                                        <a href="tel:+918016804158">+91 8016804158</a>
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Certificate Holder</div>
+                        <div class="detail-value"><?php echo htmlspecialchars($certificateData['student_name']); ?></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Event</div>
+                        <div class="detail-value">maJIStic 2k25</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Role/Position</div>
+                        <div class="detail-value"><?php echo htmlspecialchars($certificateData['role']); ?></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Issue Date</div>
+                        <div class="detail-value"><?php echo formatDate($certificateData['generated_at']); ?></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Verification Code</div>
+                        <div class="detail-value">
+                            <span style="font-family: monospace; letter-spacing: 1px;"><?php echo substr($token, 0, 16) . '...'; ?></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-alert">
+                    <p><i class="fas fa-info-circle"></i> This certificate has been verified in our database as authentic. If you need any additional verification, please contact maJIStic organizing committee.</p>
+                </div>
+                
+                <div class="security-badge">
+                    <div class="security-badge-icon">
+                        <i class="fas fa-fingerprint"></i>
+                    </div>
+                    <p>This certificate is protected by secure encryption verification</p>
+                    <p><small>Verified on <?php echo date('Y-m-d H:i:s'); ?> | Reference ID: <?php echo bin2hex(random_bytes(4)); ?></small></p>
+                </div>
+                
+                <?php else: ?>
+                <div class="verification-result error">
+                    <i class="fas fa-search verification-icon"></i>
+                    <h2 class="verification-title">Certificate Verification</h2>
+                    <p class="verification-message">Please provide a verification code to check certificate authenticity.</p>
+                    
+                    <!-- Form to verify certificate -->
+                    <div class="search-form">
+                        <form method="GET" action="index.php">
+                            <input type="text" name="token" placeholder="Enter verification code or token" required>
+                            <button type="submit"><i class="fas fa-search"></i> Verify Certificate</button>
+                        </form>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <?php if ($isDebugMode && !empty($debugLogs)): ?>
+                <!-- Debug console for administrators -->
+                <div class="debug-console">
+                    <div class="debug-header">
+                        <span>Certificate Verification Logs</span>
+                        <span><?php echo count($debugLogs); ?> entries</span>
+                    </div>
+                    <div class="debug-body">
+                        <?php foreach ($debugLogs as $log): 
+                            $time = date('H:i:s', (int)$log['timestamp']); 
+                            $ms = sprintf(".%03d", ($log['timestamp'] - floor($log['timestamp'])) * 1000);
+                        ?>
+                            <div class="debug-log">
+                                <span class="debug-timestamp"><?php echo $time . $ms; ?></span>
+                                <span class="debug-level <?php echo $log['level']; ?>"><?php echo $log['level']; ?></span>
+                                <span class="debug-message"><?php echo htmlspecialchars($log['message']); ?></span>
+                                <?php if ($log['data'] !== null): ?>
+                                    <div class="debug-data"><?php echo htmlspecialchars(json_encode($log['data'])); ?></div>
+                                <?php endif; ?>
                             </div>
-                        </div>
-                        
-                        <div class="contact-panel" id="support-team">
-                            <p class="contact-description">
-                                For certificate verification support, contact our Support Team
-                            </p>
-                            <div class="contact-cards">
-                                <div class="contact-card">
-                                    <div class="icon">
-                                        <i class="fas fa-headset"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h4>Dr. Madhura Chakraborty</h4>
-                                        <a href="tel:+917980979789">+91 7980979789</a>
-                                    </div>
-                                </div>
-                                <div class="contact-card">
-                                    <div class="icon">
-                                        <i class="fas fa-headset"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h4>Dr. Proloy Ghosh</h4>
-                                        <a href="tel:+917980532913">+91 7980532913</a>
-                                    </div>
-                                </div>
-                                <div class="contact-card">
-                                    <div class="icon">
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h4>Email Support</h4>
-                                        <a href="mailto:majistic@jiscollege.ac.in">majistic@jiscollege.ac.in</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-                
-                <!-- Return to certificate download -->
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="/certificate/" class="btn btn-primary" style="background: linear-gradient(135deg,rgb(146, 46, 204),rgb(43, 22, 136)); color: white;">
-                        <i class="fas fa-arrow-left"></i> Back to Certificate Download
-                    </a>
-                </div>
-                
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -266,33 +657,43 @@ $token = isset($_GET['token']) ? $_GET['token'] : '';
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Support team tabs
-            const contactTabs = document.querySelectorAll('.contact-tab');
-            const contactPanels = document.querySelectorAll('.contact-panel');
-            
-            contactTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const target = this.getAttribute('data-target');
-                    
-                    // Remove active class from all tabs and panels
-                    contactTabs.forEach(t => t.classList.remove('active'));
-                    contactPanels.forEach(p => p.classList.remove('active'));
-                    
-                    // Add active class to clicked tab and its panel
-                    this.classList.add('active');
-                    document.getElementById(target).classList.add('active');
+            // Add focus effect to search input
+            const searchInput = document.querySelector('.search-form input');
+            if (searchInput) {
+                searchInput.addEventListener('focus', function() {
+                    this.style.boxShadow = '0 0 15px rgba(106, 17, 203, 0.4)';
                 });
-            });
-            
-            // Apply parallax effect to header
-            window.addEventListener('scroll', function() {
-                const header = document.querySelector('.card-header');
-                const scrollPosition = window.scrollY;
                 
-                if (header) {
-                    header.style.backgroundPosition = `0% ${scrollPosition * 0.05}%`;
-                }
-            });
+                searchInput.addEventListener('blur', function() {
+                    this.style.boxShadow = 'none';
+                });
+            }
+            
+            // Pulsing animation for success icon
+            const successIcon = document.querySelector('.verification-result.success .verification-icon');
+            if (successIcon) {
+                setInterval(() => {
+                    successIcon.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        successIcon.style.transform = 'scale(1)';
+                    }, 500);
+                }, 2000);
+            }
+            
+            // Console logging for debugging
+            <?php if (!empty($debugLogs)): ?>
+            console.group('Certificate Verification Debug Log');
+            <?php foreach ($debugLogs as $log): ?>
+            console.<?php echo $log['level']; ?>('<?php echo addslashes($log['message']); ?>', <?php echo json_encode($log['data']); ?>);
+            <?php endforeach; ?>
+            console.groupEnd();
+            <?php endif; ?>
+            
+            // Scroll debug console to bottom
+            const debugBody = document.querySelector('.debug-body');
+            if (debugBody) {
+                debugBody.scrollTop = debugBody.scrollHeight;
+            }
         });
     </script>
 </body>
